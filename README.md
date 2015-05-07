@@ -1,7 +1,7 @@
 listtodo
 ========
 
-Web Server with Restful API to provide File Storage
+TODO list app for DEMO.
 
 API
 ===
@@ -14,7 +14,7 @@ Browser
 =======
 
 ```
-
+http://localhost:3000/listtodo
 ```
 
 Configuration

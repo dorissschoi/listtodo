@@ -1,0 +1,26 @@
+<% 
+Model = @Model
+model = Model.toLowerCase()
+%>
+controller = require "../controller/<%= model %>.coffee"
+passport = require 'passport'
+bearer = passport.authenticate('bearer', { session: false })
+lib = require '../lib.coffee'
+ensurePermission = lib.ensurePermission
+ 
+@include = ->
+
+	@get '/api/<%= model %>', bearer, ensurePermission('<%- model %>:list'), ->
+		controller.<%= Model %>.list(@request, @response)
+		
+	@post '/api/<%= model %>', bearer, ensurePermission('<%- model %>:create'), ->
+		controller.<%= Model %>.create(@request, @response) 
+		
+	@get '/api/<%= model %>/:id', bearer, ensurePermission('<%- model %>:read'), ->
+		controller.<%= Model %>.read(@request, @response)
+		
+	@put '/api/<%= model %>/:id', bearer, ensurePermission('<%- model %>:update'), ->
+		controller.<%= Model %>.update(@request, @response)
+		
+	@del '/api/<%= model %>/:id', bearer, ensurePermission('<%- model %>:delete'), ->
+		controller.<%= Model %>.delete(@request, @response)
