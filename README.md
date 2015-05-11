@@ -3,6 +3,8 @@ listtodo
 
 TODO list app for DEMO.
 
+http://localhost:3000/listtodo
+
 API
 ===
 
@@ -12,13 +14,6 @@ API
 #todo/update/:id - update a record
 #todo/list - list all record
 
-```
-
-Browser
-=======
-
-```
-http://localhost:3000/listtodo
 ```
 
 Configuration
