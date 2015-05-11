@@ -7,6 +7,10 @@ API
 ===
 
 ```
+#todo/create - create record
+#todo/read/:id - read a record
+#todo/update/:id - update a record
+#todo/list - list all record
 
 ```
 
