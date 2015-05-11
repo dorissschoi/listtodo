@@ -1,7 +1,7 @@
 {
-  "name": "listtodo-app",
+  "name": "listtodo",
   "version": "0.0.0",
-  "homepage": "https://github.com/dorissschoi/listtodo-app",
+  "homepage": "https://github.com/dorissschoi/listtodo",
   "license": "MIT",
   "ignore": [
     "**/.*",

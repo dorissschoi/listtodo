@@ -48,11 +48,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dorissschoi/listtodo-app.git"
+    "url": "https://github.com/dorissschoi/listtodo.git"
   },
   "author": "",
   "license": "BSD",
   "bugs": {
-    "url": "https://github.com/dorissschoi/listtodo-app/issues"
+    "url": "https://github.com/dorissschoi/listtodo/issues"
   }
 }
