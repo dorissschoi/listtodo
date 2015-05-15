@@ -24,7 +24,6 @@ Configuration
 *   update environment variables in start.sh, env.coffee and client/env.cofffee
 *   npm install https://github.com/twhtanghk/nodejs-scaffold/archive/master.tar.gz
 *   npm install && bower install
-*   npm run-script dev
 *   npm start
 
 
