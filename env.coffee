@@ -4,7 +4,7 @@ app =
 	url:	"http://localhost:3000/#{proj}"
 	
 oauth2 =
-	url:	'https://mppsrc.ogcio.hksarg'
+	url:	'https://mob.myvnc.com'
 	
 env =
 	proj:		proj
