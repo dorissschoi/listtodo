@@ -1,7 +1,6 @@
 {
-  "name": "listtodo",
+  "name": "restfile",
   "version": "0.0.0",
-  "homepage": "https://github.com/dorissschoi/listtodo",
   "license": "MIT",
   "ignore": [
     "**/.*",
@@ -10,8 +9,19 @@
     "test",
     "tests"
   ],
+  "devDependencies": {
+    "ionic": "driftyco/ionic-bower#1.0.0-beta.14",
+    "ngCordova": "~0.1.12-alpha"
+  },
   "dependencies": {
-    "jquery": "2.0.3",
-    "bootstrap": "~3.1.1"
+    "angular-material": "~0.7.1",
+    "underscore": "~1.8.2",
+    "jquery": "~2.1.3",
+    "jquery-deparam": "~0.2.0",
+    "angular-http-auth": "~1.2.2",
+    "tagDirective": "https://github.com/twhtanghk/tagDirective/archive/master.tar.gz",
+    "angular-activerecord": "~0.3.0",
+    "ng-file-upload": "~3.2.4",
+    "angular-touch": "~1.3.15"
   }
 }

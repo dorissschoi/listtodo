@@ -1,4 +1,8 @@
+path = require 'path'
+env = require '../../env.coffee'
 model = require '../../model.coffee'
+
+logger = env.log4js.getLogger('permission')
 
 field = (name) ->
 	if name.charAt(0) == '-'
@@ -15,24 +19,15 @@ order_by = (name) ->
 	ret[field(name)] = order(name)
 	return ret
 		
-ensurePermission = (p) ->
+newHome = ->
 	(req, res, next) ->
-		user = req.user
-		
-		# if file/dir creation, check parent folder ownership and permission
-		if p == 'todo:create' or p == 'todo:list'
-			return next()
-			
-		#todo read, update, delete	
-		model.Todo.findOne {id: req.param.id}, (err, todo) ->
-			if err or todo == null
-				return res.json 501, error: err
-			if todo.createdBy.id == user._id.id
-				return next()
-			else res.json 401, error: 'Unauthorzied access'
-		
+		model.File.findOrCreate {path: "#{req.user.username}/", createdBy: req.user}, (err, file) ->
+			if err
+				res.json 501, error: err
+			else next()
+
 module.exports =
-	field:		field
-	order:		order
-	order_by:	order_by
-	ensurePermission:	ensurePermission
+	field:				field
+	order:				order
+	order_by:			order_by
+	newHome:			newHome
