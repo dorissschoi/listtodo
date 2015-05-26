@@ -120,6 +120,12 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 		@me: ->
 			(new User(username: 'me/')).$fetch()	
 
+	class Todo extends PageableCollection
+		$idAttribute: 'task'
+		
+		$add: ->
+			alert 'addmodel'
+			
 	class File extends PageableCollection
 		$idAttribute: 'path'
 	
@@ -245,6 +251,7 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 	Model:		Model
 	Collection:	Collection
 	User:		User
+	Todo:		Todo
 	File:		File
 	Permission:	Permission
 	Acl:		Acl

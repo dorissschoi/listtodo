@@ -72,3 +72,4 @@ require('zappajs') {port: port, express: express}, ->
 	@include './server/mongoose/url/role.coffee'
 	@include './server/mongoose/url/permission.coffee'
 	@include './server/mongoose/url/file.coffee'
+	#@include './server/mongoose/url/todo.coffee'

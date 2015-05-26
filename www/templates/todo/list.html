@@ -1,0 +1,23 @@
+<ion-view>
+	<ion-header-bar class="item-input-inset" align-title="left">
+	    <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        </button>
+        <h1 class='title'>All Todo Items</h1>
+        <button class="button" ui-sref="app.createTodo">New</button>
+	</ion-header-bar>
+	<ion-content>
+		<ion-list>
+			<ion-item ng-controller="TCtrl" 
+			ng-repeat="model in models"
+			>
+				<div class='row'>
+					<div class='col'>
+						{{model.task}}
+					</div>
+				</div>
+				
+			</ion-item>
+		</ion-list>
+		
+	</ion-content>
+</ion-view>

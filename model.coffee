@@ -192,6 +192,9 @@ FileSchema.pre 'remove', (next) ->
 
 File = mongoose.model 'File', FileSchema
 
+
+
+
 module.exports = 
 	Permission:	Permission
 	Tag:		Tag

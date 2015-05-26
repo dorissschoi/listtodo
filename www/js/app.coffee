@@ -1,4 +1,4 @@
-module = angular.module('starter', ['ionic', 'starter.controller', 'http-auth-interceptor', 'ngTagEditor', 'ActiveRecord', 'angularFileUpload', 'ngTouch'])
+module = angular.module('starter', ['ionic', 'starter.controller', 'http-auth-interceptor', 'ngTagEditor', 'ActiveRecord', 'angularFileUpload', 'ngTouch', 'ngAnimate', 'mgcrea.ngStrap'])
 
 module.run ($ionicPlatform, $location, $http, authService) ->
 	$ionicPlatform.ready ->
@@ -39,5 +39,19 @@ module.config ($stateProvider, $urlRouterProvider) ->
 			'menuContent':
 				templateUrl: "templates/file/list.html"
 				controller: 'FileCtrl'
-		
+
+	$stateProvider.state 'app.todo',
+		url: "/todo"
+		views:
+			'menuContent':
+				templateUrl: "templates/todo/list.html"
+				controller: 'TCtrl'
+
+	$stateProvider.state 'app.createTodo',
+		url: "/todo/create"
+		views:
+			'menuContent':
+				templateUrl: "templates/todo/create.html"
+				controller: 'TCtrl'
+										
 	$urlRouterProvider.otherwise('/file/file')
