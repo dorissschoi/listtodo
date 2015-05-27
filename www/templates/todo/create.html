@@ -14,23 +14,13 @@
 	        <div class="list">
 				<label class="item item-input item-stacked-label">
     				<span class="input-label">Task Name</span>
-    				<input type="text" placeholder="Task name..." ng-model="newtask">
+    				<input type="text" placeholder="Task name..." ng-model="todo.task">
   				</label>
   				
-				<label class="item item-input item-stacked-label control-label">
-					<i class="fa fa-calendar"></i> Start Date 
-					<input type="text" class="form-control" ng-model="selectedDate" 
-					name="date" bs-datepicker>
-				</label>
-				
-				<label class="item item-input item-stacked-label control-label">
-					<i class="fa fa-calendar"></i> End Date
-					<input type="text" class="form-control" ng-model="selectedDate" 
-					name="date" bs-datepicker>					            
-				</label>					            
+					            
 					            
 	            <ion-button class="button button-block button-light" 
-	            ng-controller="TCtrl" ng-click="controller.add()">
+	             ng-click="controller.add()">
 	                Add
 	            </ion-button>
 

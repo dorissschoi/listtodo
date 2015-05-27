@@ -12,7 +12,7 @@ source = require 'vinyl-source-stream'
 
 paths = sass: ['./scss/**/*.scss']
 
-gulp.task 'default', ['plugin', 'sass', 'coffee']
+gulp.task 'default', [ 'sass', 'coffee']
 
 gulp.task 'sass', (done) ->
   gulp.src('./scss/ionic.app.scss')
@@ -32,9 +32,7 @@ gulp.task 'coffee', ->
     .pipe(source('index.js'))
     .pipe(gulp.dest('./www/js/'))
 
-gulp.task 'plugin', ->
-  for plugin in require('./package.json').cordovaPlugins
-  	sh.exec "cordova plugin add #{plugin}"
+
   
 gulp.task 'watch', ->
   gulp.watch(paths.sass, ['sass'])

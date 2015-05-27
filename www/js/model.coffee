@@ -121,10 +121,9 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 			(new User(username: 'me/')).$fetch()	
 
 	class Todo extends PageableCollection
-		$idAttribute: 'task'
+		$idAttribute: '_id'
 		
-		$add: ->
-			alert 'addmodel'
+		$urlRoot: "http://localhost:3000/file/api/todo/"
 			
 	class File extends PageableCollection
 		$idAttribute: 'path'

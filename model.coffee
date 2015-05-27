@@ -192,8 +192,10 @@ FileSchema.pre 'remove', (next) ->
 
 File = mongoose.model 'File', FileSchema
 
+TodoSchema = new mongoose.Schema
+	task:	{ type: String, required: true }
 
-
+Todo = mongoose.model 'Todo', TodoSchema
 
 module.exports = 
 	Permission:	Permission
@@ -201,3 +203,4 @@ module.exports =
 	User: 		User
 	FileUtil:	FileUtil
 	File: 		File
+	Todo:		Todo

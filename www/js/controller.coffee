@@ -18,22 +18,18 @@ MenuCtrl = ($scope) ->
 
 TCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model) ->
 	class TView  			
+
 		constructor: (opts = {}) ->
-			_.each @events, (handler, event) =>
-				$scope.$on event, @[handler]
-			$scope.models = [{task: 'Item C'}, {task: 'Item D'}]
-			@collection = opts.collection
-			$scope.selectedDate = new Date()
+			$scope.todo = { task : ''}			
 
 		add: ->
-			$scope.models.push {task: $scope.newtask}
+			@model = new model.Todo
+			@model.task = $scope.todo.task
+			@model.$save().catch alert
+				
 			$state.go 'app.todo', null, { reload: true }
-		
-			
 			
 	$scope.controller = new TView model: $scope.models
-	$scope.$watch 'models', (newval, oldval) ->
-		$scope.models = newval	
 					
 TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model) ->
 	class TodoView
