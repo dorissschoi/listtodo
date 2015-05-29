@@ -15,19 +15,16 @@
 				<label class="item item-input">
 					<input type="text" placeholder="Task name..." ng-model="todo.task" required>
 				</label>
-  
 			
 			    <div class="row">
-			        <div class="col-md-12">
-			        	 <span class="input-label">Start date</span>
+					<span class="input-label">Start date</span>
+			        <div class="col-md-8">
 			            <p class="input-group">
-			             
 			              <input type="text" name="dateStart" 
 			                class="form-control" datepicker-popup="{{format}}" 
 			              	ng-model="todo.dateStart" is-open="datepickers.dateStart"   
 			              	min-date="minDate" max-date="'2015-06-22'" 
 			              	datepicker-options="dateOptions" 
-			              	 
 			              	ng-required="true" close-text="Close" />
 			              
 			              <span class="input-group-btn">
@@ -37,10 +34,15 @@
 			              </span>
 			            </p>
 			        </div>
+			        <div class="col-md-4">
+			        	<timepicker ng-model="todo.timeStart" 
+			        	ng-change="changed()" hour-step="hstep" 
+			        	minute-step="mstep" show-meridian="ismeridian"></timepicker>
+			     	</div>      
 			     </div>   
-			     <div class="row">   
-			        <div class="col-md-12">
-			        	 <span class="input-label">End date</span>
+			     <div class="row">
+					<span class="input-label">End date</span>
+			        <div class="col-md-8">
 			            <p class="input-group">
 			             
 			              <input type="text" name="dateEnd" 
@@ -48,7 +50,6 @@
 			              	ng-model="todo.dateEnd" is-open="datepickers.dateEnd"  
 			              	min-date="minDate" max-date="'2015-06-22'" 
 			              	datepicker-options="dateOptions" 
-			              	 
 			              	ng-required="true" close-text="Close" />
 			              
 			              <span class="input-group-btn">
@@ -58,6 +59,11 @@
 			              </span>
 			            </p>
 			        </div>
+			        <div class="col-md-4">
+			        	<timepicker ng-model="todo.timeEnd" 
+			        	ng-change="changed()" hour-step="hstep" 
+			        	minute-step="mstep" show-meridian="ismeridian"></timepicker>
+			     	</div>
 			   </div>
     			
     

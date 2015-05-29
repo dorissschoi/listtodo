@@ -198,6 +198,7 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 
 		constructor: (opts = {}) ->
 			$scope.todo = { task : ''}
+			# datepicker config
 			$scope.datepickers = 
 				dateEnd: false
 				dateStart: false
@@ -208,12 +209,22 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 			$scope.dateOptions =
 				formatYear: 'yy'
 				startingDay: 1
+			
+			# timepicker config
+			$scope.hstep = 1
+			$scope.mstep = 1
+
+			$scope.options = 
+				hstep: [1, 2, 3]
+				mstep: [1, 5, 10, 15, 25, 30]
+
+			$scope.ismeridian = true
 
 		add: ->
 			@model = new model.Todo
 			@model.task = $scope.todo.task
-			@model.dateStart = $scope.todo.dateStart.toLocaleDateString()
-			@model.dateEnd = $scope.todo.dateEnd
+			@model.dateEnd = new Date($scope.todo.dateEnd.toDateString() + " " + $scope.todo.timeEnd.toTimeString())
+			@model.dateStart = new Date($scope.todo.dateStart.toDateString() + " " + $scope.todo.timeStart.toTimeString())
 			
 			@model.$save().catch alert
 			$scope.todo.task = ''	
@@ -224,12 +235,9 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 			@model.id = id
 			@model.$fetch()
 			
-	
-
 		open: ($event, which) ->
 			$event.preventDefault()
 			$event.stopPropagation()
-			#$scope.opened = true
 			$scope.datepickers[which]= true;
 						
 	$scope.controller = new TodoView model: $scope.models
