@@ -7,7 +7,7 @@
 	</ion-header-bar>
 	<ion-content>
 		<ion-list>
-			<ion-item ng-controller="TCtrl" 
+			<ion-item ng-controller="TodoListCtrl" 
 			ng-repeat="model in models"
 			>
 				<div class='row'>
@@ -17,6 +17,17 @@
 				</div>
 				
 			</ion-item>
+			
+			<ion-item ng-controller="TodoListCtrl" 
+			ng-repeat="model in collection"
+			>
+				<div class='row'>
+					<div class='col'>{{model.task}}</div>
+				</div>
+				
+			</ion-item>
+			
+	            
 		</ion-list>
 		
 	</ion-content>

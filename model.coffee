@@ -193,7 +193,9 @@ FileSchema.pre 'remove', (next) ->
 File = mongoose.model 'File', FileSchema
 
 TodoSchema = new mongoose.Schema
-	task:	{ type: String, required: true }
+	task:		{ type: String, required: true }
+	dateStart:	{ type: Date }
+	dateEnd:	{ type: Date }
 
 Todo = mongoose.model 'Todo', TodoSchema
 

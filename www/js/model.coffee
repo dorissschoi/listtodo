@@ -119,11 +119,6 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 			
 		@me: ->
 			(new User(username: 'me/')).$fetch()	
-
-	class Todo extends PageableCollection
-		$idAttribute: '_id'
-		
-		$urlRoot: "http://localhost:3000/file/api/todo/"
 			
 	class File extends PageableCollection
 		$idAttribute: 'path'
@@ -246,17 +241,26 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 			
 		toString: ->
 			@selected()?.group
+
+
+	class Todo extends Collection
+		$idAttribute: '_id'
 		
+		$urlRoot: "http://localhost:3000/file/api/todo/"
+
+
+				
 	Model:		Model
 	Collection:	Collection
 	User:		User
-	Todo:		Todo
 	File:		File
 	Permission:	Permission
 	Acl:		Acl
 	UserGrps:	UserGrps
 	FileGrps:	FileGrps
-			
+	Todo:		Todo
+	
+				
 config = ->
 	return
 	

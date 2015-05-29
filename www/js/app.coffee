@@ -1,4 +1,4 @@
-module = angular.module('starter', ['ionic', 'starter.controller', 'http-auth-interceptor', 'ngTagEditor', 'ActiveRecord', 'angularFileUpload', 'ngTouch', 'ngAnimate', 'mgcrea.ngStrap'])
+module = angular.module('starter', ['ionic', 'starter.controller', 'http-auth-interceptor', 'ngTagEditor', 'ActiveRecord', 'angularFileUpload', 'ngTouch', 'ngAnimate', 'ui.bootstrap'])
 
 module.run ($ionicPlatform, $location, $http, authService) ->
 	$ionicPlatform.ready ->
@@ -14,6 +14,7 @@ module.run ($ionicPlatform, $location, $http, authService) ->
 			authService.loginConfirmed()
 		
 module.config ($stateProvider, $urlRouterProvider) ->
+	    
 	$stateProvider.state 'app',
 		url: "/file"
 		abstract: true
@@ -45,13 +46,15 @@ module.config ($stateProvider, $urlRouterProvider) ->
 		views:
 			'menuContent':
 				templateUrl: "templates/todo/list.html"
-				controller: 'TCtrl'
+				controller: 'TodoListCtrl'
 
 	$stateProvider.state 'app.createTodo',
 		url: "/todo/create"
 		views:
 			'menuContent':
 				templateUrl: "templates/todo/create.html"
-				controller: 'TCtrl'
-										
+				controller: 'TodoCtrl'
+
+	
+														
 	$urlRouterProvider.otherwise('/file/file')

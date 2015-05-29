@@ -15,38 +15,7 @@ AppCtrl = ($rootScope, $scope, $http, platform, authService, model) ->
 MenuCtrl = ($scope) ->
 	$scope.env = env
 	$scope.navigator = navigator
-
-TCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model) ->
-	class TView  			
-
-		constructor: (opts = {}) ->
-			$scope.todo = { task : ''}			
-
-		add: ->
-			@model = new model.Todo
-			@model.task = $scope.todo.task
-			@model.$save().catch alert
-				
-			$state.go 'app.todo', null, { reload: true }
-			
-	$scope.controller = new TView model: $scope.models
 					
-TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model) ->
-	class TodoView
-
-		constructor: (opts = {}) ->
-			_.each @events, (handler, event) =>
-				$scope.$on event, @[handler]
-			#$scope.models = [{task: 'Item C'}, {task: 'Item D'}]
-			@collection = opts.collection
-
-		add: ->
-			$scope.models.push {task: $scope.newtask}
-			$state.go 'app.todo', null, { reload: true }
-			
-	if _.isUndefined $scope.models
-		$scope.models = [{task: 'Item A'}, {task: 'Item B'}]
-	$scope.controller = new TodoView model: $scope.model
 					
 FileCtrl = ($rootScope, $scope, $stateParams, $location, $ionicModal, model) ->
 	class FileView
@@ -62,7 +31,7 @@ FileCtrl = ($rootScope, $scope, $stateParams, $location, $ionicModal, model) ->
 			@model = opts.model
 			
 		home: ->
-			$location.url("file/file/")
+			$location.url("file/todo/")
 		
 		cd: (folder = null) ->
 			if _.isEmpty folder or _.isNull folder or _.isUndefined folder
@@ -222,6 +191,62 @@ AclCtrl = ($rootScope, $scope, model) ->
 	$scope.collection = new model.Acl()
 	$scope.collection.$fetch()
 	$scope.controller = new AclView collection: $scope.collection 
+
+
+TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model) ->
+	class TodoView  			
+
+		constructor: (opts = {}) ->
+			$scope.todo = { task : ''}
+			$scope.datepickers = 
+				dateEnd: false
+				dateStart: false
+      
+			$scope.minDate = $scope.minDate ? null : new Date()	
+			$scope.maxDate = $scope.maxDate ? null : new Date(new Date().setYear(new Date().getFullYear() + 1))
+			$scope.formats = 'dd-MMMM-yyyy'	
+			$scope.dateOptions =
+				formatYear: 'yy'
+				startingDay: 1
+
+		add: ->
+			@model = new model.Todo
+			@model.task = $scope.todo.task
+			@model.dateStart = $scope.todo.dateStart.toLocaleDateString()
+			@model.dateEnd = $scope.todo.dateEnd
+			
+			@model.$save().catch alert
+			$scope.todo.task = ''	
+			$state.go 'app.todo', null, { reload: true }
+			
+		read: (id) ->
+			@model = new model.Todo 
+			@model.id = id
+			@model.$fetch()
+			
+	
+
+		open: ($event, which) ->
+			$event.preventDefault()
+			$event.stopPropagation()
+			#$scope.opened = true
+			$scope.datepickers[which]= true;
+						
+	$scope.controller = new TodoView model: $scope.models
+
+TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model) ->
+	class TodoListView
+		constructor: (opts = {}) ->
+			_.each @events, (handler, event) =>
+				$scope.$on event, @[handler]
+			
+			@collection = opts.collection
+				
+	
+	$scope.collection = new model.Todo()
+	#$scope.collection.$fetch()
+	$scope.controller = new TodoListView collection: $scope.collection 
+
 	
 config = ->
 	return
@@ -229,10 +254,10 @@ config = ->
 angular.module('starter.controller', ['ionic', 'ngCordova', 'http-auth-interceptor', 'starter.model', 'platform']).config [config]	
 angular.module('starter.controller').controller 'AppCtrl', ['$rootScope', '$scope', '$http', 'platform', 'authService', 'model', AppCtrl]
 angular.module('starter.controller').controller 'MenuCtrl', ['$scope', MenuCtrl]
-angular.module('starter.controller').controller 'TCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', TCtrl]
-angular.module('starter.controller').controller 'TodoCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', TodoCtrl]
 angular.module('starter.controller').controller 'FileCtrl', ['$rootScope', '$scope', '$stateParams', '$location', '$ionicModal', 'model', FileCtrl]
 angular.module('starter.controller').controller 'PermissionCtrl', ['$rootScope', '$scope', '$ionicModal', 'model', PermissionCtrl]
 angular.module('starter.controller').controller 'AclCtrl', ['$rootScope', '$scope', 'model', AclCtrl]
 angular.module('starter.controller').controller 'SelectCtrl', ['$scope', '$ionicModal', SelectCtrl]
 angular.module('starter.controller').controller 'MultiSelectCtrl', ['$scope', '$ionicModal', MultiSelectCtrl]
+angular.module('starter.controller').controller 'TodoCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', TodoCtrl]
+angular.module('starter.controller').controller 'TodoListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', TodoListCtrl]

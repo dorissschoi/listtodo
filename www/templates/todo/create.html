@@ -10,22 +10,65 @@
 	</ion-header-bar>
 	
 	<ion-content>
-	    <div ng-controller="TCtrl">
-	        <div class="list">
-				<label class="item item-input item-stacked-label">
-    				<span class="input-label">Task Name</span>
-    				<input type="text" placeholder="Task name..." ng-model="todo.task">
-  				</label>
-  				
-					            
-					            
-	            <ion-button class="button button-block button-light" 
+	    <div ng-controller="TodoCtrl">
+			<div class="list">
+				<label class="item item-input">
+					<input type="text" placeholder="Task name..." ng-model="todo.task" required>
+				</label>
+  
+			
+			    <div class="row">
+			        <div class="col-md-12">
+			        	 <span class="input-label">Start date</span>
+			            <p class="input-group">
+			             
+			              <input type="text" name="dateStart" 
+			                class="form-control" datepicker-popup="{{format}}" 
+			              	ng-model="todo.dateStart" is-open="datepickers.dateStart"   
+			              	min-date="minDate" max-date="'2015-06-22'" 
+			              	datepicker-options="dateOptions" 
+			              	 
+			              	ng-required="true" close-text="Close" />
+			              
+			              <span class="input-group-btn">
+			                <button type="button" class="btn btn-default" 
+			                ng-click="controller.open($event, 'dateStart')">
+			                <i class="glyphicon glyphicon-calendar"></i></button>
+			              </span>
+			            </p>
+			        </div>
+			     </div>   
+			     <div class="row">   
+			        <div class="col-md-12">
+			        	 <span class="input-label">End date</span>
+			            <p class="input-group">
+			             
+			              <input type="text" name="dateEnd" 
+			                class="form-control" datepicker-popup="{{format}}" 
+			              	ng-model="todo.dateEnd" is-open="datepickers.dateEnd"  
+			              	min-date="minDate" max-date="'2015-06-22'" 
+			              	datepicker-options="dateOptions" 
+			              	 
+			              	ng-required="true" close-text="Close" />
+			              
+			              <span class="input-group-btn">
+			                <button type="button" class="btn btn-default" 
+			                ng-click="controller.open($event, 'dateEnd')">
+			                <i class="glyphicon glyphicon-calendar"></i></button>
+			              </span>
+			            </p>
+			        </div>
+			   </div>
+    			
+    
+    
+				<ion-button class="button button-block button-light" 
 	             ng-click="controller.add()">
 	                Add
 	            </ion-button>
-
-	        </div>
-        
+			</div>
+			    
+	       
 	    </div>
 	</ion-content>
 </ion-view>
