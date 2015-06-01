@@ -198,6 +198,8 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 
 		constructor: (opts = {}) ->
 			$scope.todo = { task : ''}
+			
+			
 			# datepicker config
 			$scope.datepickers = 
 				dateEnd: false
@@ -223,8 +225,10 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 		add: ->
 			@model = new model.Todo
 			@model.task = $scope.todo.task
-			@model.dateEnd = new Date($scope.todo.dateEnd.toDateString() + " " + $scope.todo.timeEnd.toTimeString())
+			
 			@model.dateStart = new Date($scope.todo.dateStart.toDateString() + " " + $scope.todo.timeStart.toTimeString())
+			@model.dateEnd = new Date($scope.todo.dateEnd.toDateString() + " " + $scope.todo.timeEnd.toTimeString())
+			
 			
 			@model.$save().catch alert
 			$scope.todo.task = ''	
