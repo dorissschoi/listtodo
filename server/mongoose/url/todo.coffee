@@ -17,8 +17,8 @@ bearer = middleware.rest.user
 	@put '/api/todo/:id', ->
 		controller.Todo.update(@request, @response)	
 
-	@get '/api/todo', bearer, ->
+	@get '/api/todo',  ->
 		controller.Todo.list(@request, @response)
 				
-	@get '/api/todo/:id', bearer, ->
+	@get '/api/todo/:id',  ->
 		controller.Todo.read(@request, @response)		

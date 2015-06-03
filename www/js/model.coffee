@@ -243,12 +243,22 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 			@selected()?.group
 
 
-	class Todo extends Collection
+	class Todo extends Model
 		$idAttribute: '_id'
 		
 		$urlRoot: "http://localhost:3000/file/api/todo/"
+		
+	class TodoList extends Collection
+		$idAttribute: '_id'
+	
+		$urlRoot: "http://localhost:3000/file/api/todo/"
+		
+		$parse: (res, opts) ->
+			_.each res.results, (value, key) =>
+				res.results[key] = new Todo res.results[key]
+			return res.results
 
-
+		
 				
 	Model:		Model
 	Collection:	Collection
@@ -259,6 +269,7 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 	UserGrps:	UserGrps
 	FileGrps:	FileGrps
 	Todo:		Todo
+	TodoList:	TodoList
 	
 				
 config = ->

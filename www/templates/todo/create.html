@@ -20,7 +20,7 @@
 					<span class="input-label">Start date</span>
 			        <div class="col-md-8">
 			            <p class="input-group">
-			              <input type="text" name="dateStart" 
+			              <input type="text" name="dateStart" show-weeks="false"
 			                class="form-control" datepicker-popup="{{format}}" 
 			              	ng-model="todo.dateStart" is-open="datepickers.dateStart"   
 			              	min-date="minDate" max-date="'2015-06-22'" 
@@ -47,7 +47,7 @@
 			        <div class="col-md-8">
 			            <p class="input-group">
 			             
-			              <input type="text" name="dateEnd" 
+			              <input type="text" name="dateEnd" show-weeks="false"
 			                class="form-control" datepicker-popup="{{format}}" 
 			              	ng-model="todo.dateEnd" is-open="datepickers.dateEnd"  
 			              	min-date="minDate" max-date="'2015-06-22'" 

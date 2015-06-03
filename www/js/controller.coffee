@@ -198,7 +198,8 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 
 		constructor: (opts = {}) ->
 			$scope.todo = { task : ''}
-			
+			$scope.todo.timeStart = new Date()
+			$scope.todo.timeEnd = new Date()
 			
 			# datepicker config
 			$scope.datepickers = 
@@ -253,12 +254,18 @@ TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 				$scope.$on event, @[handler]
 			
 			@collection = opts.collection
-				
+			
+						
+		loadMore: ->
+			@collection.$fetch()
+				.then ->
+					$scope.$broadcast('scroll.infiniteScrollComplete')
+				.catch alert				
 	
-	$scope.collection = new model.Todo()
-	#$scope.collection.$fetch()
-	$scope.controller = new TodoListView collection: $scope.collection 
-
+	$scope.collection = new model.TodoList()
+	$scope.collection.$fetch()
+	$scope.controller = new TodoListView collection: $scope.collection
+	
 	
 config = ->
 	return

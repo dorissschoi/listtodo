@@ -7,28 +7,22 @@
 	</ion-header-bar>
 	<ion-content>
 		<ion-list>
+		
 			<ion-item ng-controller="TodoListCtrl" 
-			ng-repeat="model in models"
+			ng-repeat="model in controller.collection.models"
 			>
 				<div class='row'>
 					<div class='col'>
-						{{model.task}}
+						{{model.task}}-Start: {{model.dateStart}}-End: {{model.dateEnd}}
 					</div>
 				</div>
-				
+
 			</ion-item>
 			
-			<ion-item ng-controller="TodoListCtrl" 
-			ng-repeat="model in collection"
-			>
-				<div class='row'>
-					<div class='col'>{{model.task}}</div>
-				</div>
-				
-			</ion-item>
 			
 	            
 		</ion-list>
-		
+		<ion-infinite-scroll ng-if="model.state.page < model.state.total_page" on-infinite="controller.loadMore()">
+		</ion-infinite-scroll>
 	</ion-content>
 </ion-view>

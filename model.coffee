@@ -197,8 +197,16 @@ TodoSchema = new mongoose.Schema
 	dateStart:	{ type: Date }
 	dateEnd:	{ type: Date }
 
-Todo = mongoose.model 'Todo', TodoSchema
+TodoSchema.statics =
+	search_fields: ->
+		return ['task', 'dateStart']
+	ordering_fields: ->
+		return ['task', 'dateStart']
+	ordering: ->
+		return 'task'
 
+Todo = mongoose.model 'Todo', TodoSchema
+		
 module.exports = 
 	Permission:	Permission
 	Tag:		Tag
