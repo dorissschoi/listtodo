@@ -253,9 +253,16 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 	
 		$urlRoot: "http://localhost:3000/file/api/todo/"
 		
+		$parseModel: (res, opts) ->
+			res.dateStart = new Date(Date.parse(res.dateStart))
+			res.dateEnd = new Date(Date.parse(res.dateEnd))
+			return new Todo res
+			
 		$parse: (res, opts) ->
 			_.each res.results, (value, key) =>
-				res.results[key] = new Todo res.results[key]
+				#res.results[key] = new Todo res.results[key]
+				#a = res.results[key]
+				res.results[key] = @$parseModel(res.results[key], opts)
 			return res.results
 
 		
