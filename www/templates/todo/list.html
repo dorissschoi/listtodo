@@ -16,10 +16,7 @@
 						{{model.task}}-Start: {{model.dateStart}}-End: {{model.dateEnd}}
 					</div>
 				</div>
-
 			</ion-item>
-			
-			
 	            
 		</ion-list>
 		<ion-infinite-scroll ng-if="model.state.page < model.state.total_page" on-infinite="controller.loadMore()">

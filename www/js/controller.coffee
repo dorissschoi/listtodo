@@ -197,9 +197,12 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 	class TodoView  			
 
 		constructor: (opts = {}) ->
-			$scope.todo = { task : ''}
-			$scope.todo.timeStart = new Date()
-			$scope.todo.timeEnd = new Date()
+			$scope.todo = {task: '', timeStart: new Date(), timeEnd: new Date(), dateStart: new Date(), dateEnd: new Date()}
+			
+			#$scope.todo.timeStart = new Date()
+			#$scope.todo.timeEnd = new Date()
+			#$scope.todo.dateStart = new Date()
+			#$scope.todo.dateEnd = new Date()
 			
 			# datepicker config
 			$scope.datepickers = 
@@ -230,9 +233,9 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 			@model.dateStart = new Date($scope.todo.dateStart.toDateString() + " " + $scope.todo.timeStart.toTimeString())
 			@model.dateEnd = new Date($scope.todo.dateEnd.toDateString() + " " + $scope.todo.timeEnd.toTimeString())
 			
-			
 			@model.$save().catch alert
 			$scope.todo.task = ''	
+			$rootScope.$broadcast 'todo:listChanged'	
 			$state.go 'app.todo', null, { reload: true }
 			
 		read: (id) ->
@@ -259,9 +262,15 @@ TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 		loadMore: ->
 			@collection.$fetch()
 				.then ->
-					$scope.$broadcast('scroll.infiniteScrollComplete')
+					$rootScope.$broadcast('scroll.infiniteScrollComplete')
 				.catch alert				
 	
+		$rootScope.$on 'todo:listChanged', ->
+			$scope.collection = new model.TodoList()
+			$scope.collection.$fetch()
+			$scope.controller = new TodoListView collection: $scope.collection
+			  
+		
 	$scope.collection = new model.TodoList()
 	$scope.collection.$fetch()
 	$scope.controller = new TodoListView collection: $scope.collection
