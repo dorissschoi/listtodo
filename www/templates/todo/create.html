@@ -1,5 +1,5 @@
 <ion-view>
-	    <div ng-controller="TodoCtrl">
+	<div ng-controller="TodoCtrl">
 	<ion-header-bar class="item-input-inset" align-title="left">
 	    <button class="button" ui-sref="app.todo">Back</button>
 	    </button>
@@ -10,65 +10,61 @@
 	</ion-header-bar>
 	
 	<ion-content>
-
-			<div class="list">
-				<label class="item item-input">
-					<input type="text" placeholder="Task name..." ng-model="todo.task" required>
-				</label>
+		<div class="list">
+			<label class="item item-input">
+				<input type="text" placeholder="Task name..." ng-model="todo.task" required>
+			</label>
 		
-			    <div class="row">
+			<div class="row">
+				<div class="col-md-8">
 					<span class="input-label">Start date</span>
-			        <div class="col-md-8">
-			            <p class="input-group">
-			              <input type="text" name="dateStart" show-weeks="false"
-			                class="form-control" datepicker-popup="{{format}}" 
-			              	ng-model="todo.dateStart" is-open="datepickers.dateStart"   
-			              	min-date="minDate" max-date="'2015-06-22'" 
-			              	datepicker-options="dateOptions" 
-			              	ng-required="true" close-text="Close" />
+					<p class="input-group">
+					<input type="text" name="dateStart" show-weeks="false"
+						class="form-control" datepicker-popup="{{format}}" 
+						ng-model="todo.dateStart" is-open="datepickers.dateStart"   
+						min-date="minDate" max-date="'2015-06-22'" 
+						datepicker-options="dateOptions" 
+						ng-required="true" close-text="Close" />
 			              
-			              <span class="input-group-btn">
-			                <button type="button" class="btn btn-default" 
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-default" 
 			                ng-click="controller.open($event, 'dateStart')">
-			                <i class="glyphicon glyphicon-calendar"></i></button>
-			              </span>
-			            </p>
-			        </div>
-			        <div class="col-md-4">
-			        	<timepicker ng-model="todo.timeStart" 
+						<i class="glyphicon glyphicon-calendar"></i></button>
+					</span>
+					</p>
+				</div>
+				<div class="col-md-4">
+					<timepicker ng-model="todo.timeStart" 
 			        	ng-change="changed()" hour-step="hstep" 
 			        	minute-step="mstep" show-meridian="ismeridian"></timepicker>
-			        	
-						
-			     	</div>      
-			     </div>   
-				<div class="row">
-					<span class="input-label">End date</span>
-					<div class="col-md-8">
-						<p class="input-group">
-						<input type="text" name="dateEnd" show-weeks="false"
+				</div>      
+			</div>   
+			<div class="row">
+				<span class="input-label">End date</span>
+				<div class="col-md-8">
+					<p class="input-group">
+					<input type="text" name="dateEnd" show-weeks="false"
 			                class="form-control" datepicker-popup="{{format}}" 
 			              	ng-model="todo.dateEnd" is-open="datepickers.dateEnd"  
 			              	min-date="minDate" max-date="'2015-06-22'" 
 			              	datepicker-options="dateOptions" 
 			              	ng-required="true" close-text="Close" />
 			              
-						<span class="input-group-btn">
-			                <button type="button" class="btn btn-default" 
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-default" 
 			                ng-click="controller.open($event, 'dateEnd')">
-			                <i class="glyphicon glyphicon-calendar"></i></button>
-						</span>
-						</p>
-					</div>
-					<div class="col-md-4">
-			        	<timepicker ng-model="todo.timeEnd" 
+						<i class="glyphicon glyphicon-calendar"></i></button>
+					</span>
+					</p>
+				</div>
+				<div class="col-md-4">
+					<timepicker ng-model="todo.timeEnd" 
 			        	ng-change="changed()" hour-step="hstep" 
 			        	minute-step="mstep" show-meridian="ismeridian"></timepicker>
-			        	
-					</div>
 				</div>
 			</div>
-
+			
+		</div>
 	</ion-content>
-		    </div>
+	</div>
 </ion-view>

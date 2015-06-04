@@ -265,11 +265,20 @@ TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 					$rootScope.$broadcast('scroll.infiniteScrollComplete')
 				.catch alert				
 	
+		# refresh new add task
 		$rootScope.$on 'todo:listChanged', ->
 			$scope.collection = new model.TodoList()
 			$scope.collection.$fetch()
 			$scope.controller = new TodoListView collection: $scope.collection
 			  
+		
+		# update properties of specified file
+		edit: ->
+			$ionicModal.fromTemplateUrl('templates/todo/edit.html', scope: $scope).then (modal) =>
+				$scope.model.newname = $scope.model.name
+				$scope.modal = modal
+				$scope.modal.show()
+				
 		
 	$scope.collection = new model.TodoList()
 	$scope.collection.$fetch()
