@@ -1,0 +1,68 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <button class="button button-clear button-positive" 
+    	ng-click="model.$save({task: model.newtask,   	
+    	dateStart: model.newdateStart, timeStart: model.newtimeStart,
+    	dateEnd: model.newdateEnd, timeEnd: model.newtimeEnd }); modal.hide();">Save</button>
+      <h1 class="title">Edit</h1>
+    <button class="button button-clear" ng-click="modal.hide()">Close</button>
+  </ion-header-bar>
+  <ion-content padding="true">
+  	<div class="list">
+	  <label class="item item-input">
+	  	<input type="text" ng-model="model.newtask" required>
+	  </label>
+	  
+			<div class="row">
+				<div class="col-md-8">
+					<span class="input-label">Start date</span>
+					<p class="input-group">
+					<input type="text" name="dateStart" show-weeks="false"
+			                class="form-control" datepicker-popup="{{format}}" 
+			              	ng-model="model.newdateStart" is-open="datepickers.dateStart"  
+			              	datepicker-options="dateOptions" 
+			              	ng-required="true" close-text="Close" />
+			              
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-default" 
+			                ng-click="$parent.controller.open($event, 'dateStart')"
+			                ng-controller="TodoListCtrl" >
+						<i class="icon ion-calendar"></i></button>
+					</span>
+					</p>
+				</div>
+				<div class="col-md-4">
+					<timepicker ng-model="model.newtimeStart" 
+			        	ng-change="changed()" hour-step="hstep" 
+			        	minute-step="mstep" show-meridian="ismeridian"></timepicker>
+				</div>      
+			</div> 	  
+	  
+	  		<div class="row">
+				<div class="col-md-8">
+					<span class="input-label">End date</span>
+					<p class="input-group">
+					<input type="text" name="dateEnd" show-weeks="false"
+			                class="form-control" datepicker-popup="{{format}}" 
+			              	ng-model="model.newdateEnd" is-open="datepickers.dateEnd"  
+			              	datepicker-options="dateOptions" 
+			              	ng-required="true" close-text="Close" />
+			              
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-default" 
+			                ng-click="$parent.controller.open($event, 'dateEnd')"
+			                ng-controller="TodoListCtrl" >
+						<i class="icon ion-calendar"></i></button>
+					</span>
+					</p>
+				</div>
+				<div class="col-md-4">
+					<timepicker ng-model="model.newtimeEnd" 
+			        	ng-change="changed()" hour-step="hstep" 
+			        	minute-step="mstep" show-meridian="ismeridian"></timepicker>
+				</div>      
+			</div>
+	  
+	</div>
+  </ion-content>
+</ion-modal-view>
