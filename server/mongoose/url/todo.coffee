@@ -21,4 +21,7 @@ bearer = middleware.rest.user
 		controller.Todo.list(@request, @response)
 				
 	@get '/api/todo/:id',   ->
-		controller.Todo.read(@request, @response)		
+		controller.Todo.read(@request, @response)
+		
+	@del '/api/todo/:id',  ->
+		controller.Todo.delete(@request, @response)		

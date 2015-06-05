@@ -69,6 +69,17 @@ class Todo
 					error res, err
 				else res.json todo						
 
-					
+	@delete: (req, res) ->
+		id = req.param('id')
+		model.Todo.findOne {_id: id}, (err, todo) ->		
+			if err or todo == null
+				return error res, if err then err else "Todo not found"
+			
+			todo.remove (err, todo) ->
+				if err
+					error res, err
+				else
+					res.json {deleted: true}
+								
 module.exports = 
 	Todo: 		Todo

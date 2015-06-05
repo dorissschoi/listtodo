@@ -199,19 +199,14 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 		constructor: (opts = {}) ->
 			$scope.todo = {task: '', timeStart: new Date(), timeEnd: new Date(), dateStart: new Date(), dateEnd: new Date()}
 			
-			#$scope.todo.timeStart = new Date()
-			#$scope.todo.timeEnd = new Date()
-			#$scope.todo.dateStart = new Date()
-			#$scope.todo.dateEnd = new Date()
-			
 			# datepicker config
 			$scope.datepickers = 
 				dateEnd: false
 				dateStart: false
       
 			$scope.minDate = $scope.minDate ? null : new Date()	
-			$scope.maxDate = $scope.maxDate ? null : new Date(new Date().setYear(new Date().getFullYear() + 1))
-			$scope.formats = 'dd-MMMM-yyyy'	
+			$scope.maxDate = $scope.maxDate ? null : new Date(new Date().setYear(new Date().getFullYear() + 3))
+			$scope.format = 'dd-MMMM-yyyy'	
 			$scope.dateOptions =
 				formatYear: 'yy'
 				startingDay: 1
@@ -230,8 +225,10 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 			@model = new model.Todo
 			@model.task = $scope.todo.task
 			
-			@model.dateStart = new Date($scope.todo.dateStart.toDateString() + " " + $scope.todo.timeStart.toTimeString())
-			@model.dateEnd = new Date($scope.todo.dateEnd.toDateString() + " " + $scope.todo.timeEnd.toTimeString())
+			@model.dateStart = $scope.todo.dateStart
+			@model.dateEnd = $scope.todo.dateEnd
+			@model.timeStart = $scope.todo.timeStart
+			@model.timeEnd = $scope.todo.timeEnd
 			
 			@model.$save().catch alert
 			$scope.todo.task = ''	
@@ -258,6 +255,25 @@ TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 			
 			@collection = opts.collection
 			
+			# datepicker config
+			$scope.datepickers = 
+				dateEnd: false
+				dateStart: false
+      
+			$scope.format = 'dd-MMMM-yyyy'	
+			$scope.dateOptions =
+				formatYear: 'yy'
+				startingDay: 1
+			
+			# timepicker config
+			$scope.hstep = 1
+			$scope.mstep = 1
+
+			$scope.options = 
+				hstep: [1, 2, 3]
+				mstep: [1, 5, 10, 15, 25, 30]
+
+			$scope.ismeridian = true
 						
 		loadMore: ->
 			@collection.$fetch()
@@ -270,15 +286,27 @@ TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 			$scope.collection = new model.TodoList()
 			$scope.collection.$fetch()
 			$scope.controller = new TodoListView collection: $scope.collection
-			  
+
+		remove: (todo) ->
+			@model.remove(todo)			  
 		
 		# update properties of specified file
-		edit: ->
+		edit: (selectedItem) ->
 			$ionicModal.fromTemplateUrl('templates/todo/edit.html', scope: $scope).then (modal) =>
-				$scope.model.newname = $scope.model.name
+				$scope.model = selectedItem
+				$scope.model.newtask = selectedItem.task
+				$scope.model.newdateStart = selectedItem.dateStart
+				$scope.model.newdateEnd = selectedItem.dateEnd
+				$scope.model.newtimeStart = selectedItem.dateStart
+				$scope.model.newtimeEnd = selectedItem.dateEnd				
 				$scope.modal = modal
 				$scope.modal.show()
-				
+
+		# open datepicker
+		open: ($event, which) ->
+			$event.preventDefault()
+			$event.stopPropagation()
+			$scope.datepickers[which]= true				
 		
 	$scope.collection = new model.TodoList()
 	$scope.collection.$fetch()

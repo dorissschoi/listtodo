@@ -248,6 +248,20 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 		
 		$urlRoot: "http://localhost:3000/file/api/todo/"
 		
+		$save: (values, opts) ->
+			if @$hasChanged()
+				if _.isUndefined(values)
+					this.dateStart = new Date(this.dateStart.toDateString() + " " + this.timeStart.toTimeString())
+					this.dateEnd = new Date(this.dateEnd.toDateString() + " " + this.timeEnd.toTimeString())
+				else				
+					values.dateStart = new Date(values.dateStart.toDateString() + " " + values.timeStart.toTimeString())
+					values.dateEnd = new Date(values.dateEnd.toDateString() + " " + values.timeEnd.toTimeString())
+							
+				super(values, opts)
+			else
+				return new Promise (fulfill, reject) ->
+					fulfill @		
+		
 	class TodoList extends Collection
 		$idAttribute: '_id'
 	
@@ -260,8 +274,6 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 			
 		$parse: (res, opts) ->
 			_.each res.results, (value, key) =>
-				#res.results[key] = new Todo res.results[key]
-				#a = res.results[key]
 				res.results[key] = @$parseModel(res.results[key], opts)
 			return res.results
 
