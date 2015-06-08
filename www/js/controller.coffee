@@ -275,11 +275,11 @@ TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 
 			$scope.ismeridian = true
 						
-		loadMore: ->
-			@collection.$fetch()
-				.then ->
-					$rootScope.$broadcast('scroll.infiniteScrollComplete')
-				.catch alert				
+		#loadMore: ->
+		#	@collection.$fetch()
+		#		.then ->
+		#			$rootScope.$broadcast('scroll.infiniteScrollComplete')
+		#		.catch alert				
 	
 		# refresh new add task
 		$rootScope.$on 'todo:listChanged', ->
@@ -306,8 +306,14 @@ TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 		open: ($event, which) ->
 			$event.preventDefault()
 			$event.stopPropagation()
-			$scope.datepickers[which]= true				
-		
+			$scope.datepickers[which]= true
+			
+		# transform json date to js date
+		refresh: ->
+			$rootScope.$broadcast 'todo:listChanged'	
+			$state.go 'app.todo', null, { reload: true }
+			
+				
 	$scope.collection = new model.TodoList()
 	$scope.collection.$fetch()
 	$scope.controller = new TodoListView collection: $scope.collection

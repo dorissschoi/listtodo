@@ -246,7 +246,8 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 	class Todo extends Model
 		$idAttribute: '_id'
 		
-		$urlRoot: "http://localhost:3000/file/api/todo/"
+		$urlRoot: "#{env.serverUrl()}/api/todo"
+		#$urlRoot: "http://localhost:3000/file/api/todo/"
 		
 		$save: (values, opts) ->
 			if @$hasChanged()
@@ -265,7 +266,8 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 	class TodoList extends Collection
 		$idAttribute: '_id'
 	
-		$urlRoot: "http://localhost:3000/file/api/todo/"
+		#$urlRoot: "http://localhost:3000/file/api/todo/"
+		$urlRoot: "#{env.serverUrl()}/api/todo"
 		
 		$parseModel: (res, opts) ->
 			res.dateStart = new Date(Date.parse(res.dateStart))

@@ -32,7 +32,6 @@ gulp.task 'coffee', ->
     .pipe(source('index.js'))
     .pipe(gulp.dest('./www/js/'))
 
- 	  
 gulp.task 'watch', ->
   gulp.watch(paths.sass, ['sass'])
 

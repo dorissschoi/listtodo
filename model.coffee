@@ -196,7 +196,9 @@ TodoSchema = new mongoose.Schema
 	task:		{ type: String, required: true }
 	dateStart:	{ type: Date }
 	dateEnd:	{ type: Date }
-
+	createdBy:		{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+	updatedBy:		{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+	
 TodoSchema.statics =
 	search_fields: ->
 		return ['task', 'dateStart']

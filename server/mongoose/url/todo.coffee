@@ -11,17 +11,17 @@ bearer = middleware.rest.user
  
 @include = ->
 		
-	@post '/api/todo',  ->
+	@post '/api/todo', bearer,  ->
 		controller.Todo.create(@request, @response)
 		 
-	@put '/api/todo/:id',  ->
+	@put '/api/todo/:id', bearer,  ->
 		controller.Todo.update(@request, @response)	
 
-	@get '/api/todo',  ->
+	@get '/api/todo', bearer, ->
 		controller.Todo.list(@request, @response)
 				
-	@get '/api/todo/:id',   ->
+	@get '/api/todo/:id', bearer,   ->
 		controller.Todo.read(@request, @response)
 		
-	@del '/api/todo/:id',  ->
+	@del '/api/todo/:id', bearer,  ->
 		controller.Todo.delete(@request, @response)		

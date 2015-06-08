@@ -13,7 +13,7 @@
 			>
 				<div class='row'>
 					<div class='col'>
-						{{model._id}}-{{model.task}}-Start: {{model.dateStart.toLocaleString()}}-End: {{model.dateEnd.toLocaleString()}}
+						Task: {{model.task}}-Start: {{model.dateStart.toLocaleString()}}-End: {{model.dateEnd.toLocaleString()}}
 					</div>
 				</div>
 				<ion-option-button class="button button-positive icon-left ion-edit" on-tap="$event.stopPropagation();controller.edit(model);">Edit</ion-option-button>
