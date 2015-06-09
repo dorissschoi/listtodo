@@ -3,8 +3,9 @@
     <button class="button button-clear button-positive" 
     	ng-click="model.$save({task: model.newtask,   	
     	dateStart: model.newdateStart, timeStart: model.newtimeStart,
-    	dateEnd: model.newdateEnd, timeEnd: model.newtimeEnd }); 
-    	$parent.controller.refresh();modal.hide();">Save</button>
+    	dateEnd: model.newdateEnd, timeEnd: model.newtimeEnd });
+    	modal.hide(); 
+    	$parent.controller.refresh();">Save</button>
       <h1 class="title">Edit</h1>
     <button class="button button-clear" ng-click="modal.hide()">Close</button>
   </ion-header-bar>
