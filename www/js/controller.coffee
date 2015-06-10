@@ -232,7 +232,6 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 			
 			@model.$save().catch alert
 			$scope.todo.task = ''	
-			$rootScope.$broadcast 'todo:listChanged'	
 			$state.go 'app.todo', null, { reload: true }
 			
 		read: (id) ->
@@ -308,9 +307,8 @@ TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 			$event.stopPropagation()
 			$scope.datepickers[which]= true
 			
-		# transform json date to js date
+		# edit page to list page
 		refresh: ->
-			$rootScope.$broadcast 'todo:listChanged'	
 			$state.go 'app.todo', null, { reload: true }
 			
 				

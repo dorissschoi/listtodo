@@ -47,6 +47,10 @@ module.config ($stateProvider, $urlRouterProvider) ->
 			'menuContent':
 				templateUrl: "templates/todo/list.html"
 				controller: 'TodoListCtrl'
+		onEnter: ($state, $rootScope) ->
+				$rootScope.$broadcast 'todo:listChanged'
+    		
+	
 	
 	$stateProvider.state 'app.createTodo',
 		url: "/todo/create"
