@@ -1,20 +1,22 @@
 <ion-view>
 	<div ng-controller="TodoCtrl">
+	<form name="myForm"  class="my-form">
 	<ion-header-bar class="item-input-inset" align-title="left">
 	    <button class="button ion-close-round" ui-sref="app.todo"></button>
 	    </button>
-	    <div class="buttons">
+	    <div class="buttons" ng-init="isDisabled = false">
 	        <h1 class="title">Create Todo</h1>
-	        <ion-button class="button ion-checkmark-round" ng-click="controller.add()"></ion-button>
+	        <ion-button ng-disabled="myForm.taskname.$error.required" 
+	        class="button ion-checkmark-round" ng-click="controller.add()"></ion-button>
 	    </div>
 	</ion-header-bar>
 	
 	<ion-content>
 		<div class="list">
 			<label class="item item-input">
-				<input type="text" placeholder="Task name..." ng-model="todo.task" required>
+				<input type="text" placeholder="Task name..." name="taskname" ng-model="todo.task" required>
 			</label>
-		
+
 			<div class="row">
 				<div class="col-md-8">
 					<span class="input-label">Start date</span>
@@ -65,6 +67,8 @@
 			</div>
 			
 		</div>
+		
 	</ion-content>
+	</form>
 	</div>
 </ion-view>

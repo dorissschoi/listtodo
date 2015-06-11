@@ -1,18 +1,20 @@
 <ion-modal-view>
+  <form name="myForm" class="my-form">
   <ion-header-bar>
     <button class="button button-clear button-positive" 
     	ng-click="model.$save({task: model.newtask,   	
     	dateStart: model.newdateStart, timeStart: model.newtimeStart,
     	dateEnd: model.newdateEnd, timeEnd: model.newtimeEnd });
     	modal.hide(); 
-    	$parent.controller.refresh();">Save</button>
+    	$parent.controller.refresh();"
+    	ng-disabled="myForm.taskname.$error.required" >Save</button>
       <h1 class="title">Edit</h1>
     <button class="button button-clear" ng-click="modal.hide()">Close</button>
   </ion-header-bar>
   <ion-content padding="true">
   	<div class="list">
 	  <label class="item item-input">
-	  	<input type="text" ng-model="model.newtask" required>
+	  	<input type="text" ng-model="model.newtask" required name="taskname">
 	  </label>
 	  
 			<div class="row">
@@ -67,4 +69,5 @@
 	  
 	</div>
   </ion-content>
+  </form>
 </ion-modal-view>
