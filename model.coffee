@@ -201,11 +201,11 @@ TodoSchema = new mongoose.Schema
 	
 TodoSchema.statics =
 	search_fields: ->
-		return ['task', 'dateStart']
+		return ['task', 'dateStart', dateEnd]
 	ordering_fields: ->
-		return ['task', 'dateStart']
+		return ['dateStart', 'task']
 	ordering: ->
-		return 'task'
+		return 'dateStart'
 
 Todo = mongoose.model 'Todo', TodoSchema
 		

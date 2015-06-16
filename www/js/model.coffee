@@ -264,6 +264,7 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 					fulfill @		
 		
 	class TodoList extends Collection
+	#class TodoList extends PageableCollection 
 		$idAttribute: '_id'
 	
 		#$urlRoot: "http://localhost:3000/file/api/todo/"
@@ -278,7 +279,12 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 			_.each res.results, (value, key) =>
 				res.results[key] = @$parseModel(res.results[key], opts)
 			return res.results
-
+		
+		###	
+		$fetch: (opts = {}) ->
+			opts.data = _.extend opts.data || {}, dtStart: new Date()
+			super(opts)
+		###	
 		
 				
 	Model:		Model

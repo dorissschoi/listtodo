@@ -232,7 +232,7 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 			
 			@model.$save().catch alert
 			$scope.todo.task = ''	
-			$state.go 'app.todo', null, { reload: true }
+			$state.go 'app.todo'
 			
 		read: (id) ->
 			@model = new model.Todo 
@@ -315,7 +315,14 @@ TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 	$scope.collection = new model.TodoList()
 	$scope.collection.$fetch()
 	$scope.controller = new TodoListView collection: $scope.collection
-	
+
+TodosFilter = ->
+	(todos, search) ->
+	 	return _.filter todos, (todo) ->
+	 		if _.isUndefined(search)
+	 			true
+	 		else	
+	 			todo.task.indexOf(search) > -1 
 	
 config = ->
 	return
@@ -330,3 +337,5 @@ angular.module('starter.controller').controller 'SelectCtrl', ['$scope', '$ionic
 angular.module('starter.controller').controller 'MultiSelectCtrl', ['$scope', '$ionicModal', MultiSelectCtrl]
 angular.module('starter.controller').controller 'TodoCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', TodoCtrl]
 angular.module('starter.controller').controller 'TodoListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', TodoListCtrl]
+
+angular.module('starter.controller').filter 'todosFilter', TodosFilter

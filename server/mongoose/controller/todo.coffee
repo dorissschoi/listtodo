@@ -23,8 +23,15 @@ class Todo
 				ret = {}
 				ret[field] = pattern
 				return ret
-			cond = $or: fields 
-		
+			cond = $or: fields
+			 
+		if req.query.dtStart 
+			date1 = new Date(req.query.dtStart)
+			#cond1 = $gte: date1
+			cond1 = dateStart : {$gte: date1}
+			#cond1 = dateStart : {$gte: new Date("2015-06-14T00:00:00.000Z")}
+			cond = cond1
+					
 		order_by = lib.order_by model.Todo.ordering()
 		if req.query.order_by and lib.field(req.query.order_by) in model.Todo.ordering_fields() 
 			order_by = lib.order_by req.query.order_by
@@ -35,8 +42,9 @@ class Todo
 			model.Todo.count {}, (err, count) ->
 				if err
 					return error res, err
-				res.json {count: count, results: todos}
-			
+				#res.json {count: count, results: todos}
+				res.json {count: todos.length, results: todos}
+							
 	@create: (req, res) ->
 		data = req.body
 		data.createdBy = req.user 
