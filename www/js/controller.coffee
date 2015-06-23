@@ -321,6 +321,8 @@ TodosFilter = ->
 	 	return _.filter todos, (todo) ->
 	 		if _.isUndefined(search)
 	 			true
+	 		else if _.isEmpty(search)
+	 			true
 	 		else	
 	 			todo.task.indexOf(search) > -1 
 	

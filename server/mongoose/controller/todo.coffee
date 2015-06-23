@@ -42,8 +42,10 @@ class Todo
 			model.Todo.count {}, (err, count) ->
 				if err
 					return error res, err
-				#res.json {count: count, results: todos}
-				res.json {count: todos.length, results: todos}
+				if req.query.dtStart 	
+					res.json {count: todos.length, results: todos}
+				else	
+					res.json {count: count, results: todos}
 							
 	@create: (req, res) ->
 		data = req.body
