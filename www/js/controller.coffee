@@ -233,7 +233,24 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 			@model.$save().catch alert
 			$scope.todo.task = ''	
 			$state.go 'app.todo'
+
+		# update properties of specified file
+		edit: (selectedItem) ->
+			$ionicModal.fromTemplateUrl('templates/todo/edit.html', scope: $scope).then (modal) =>
+				$scope.model = selectedItem
+				$scope.model.newtask = selectedItem.task
+				$scope.model.newdateStart = selectedItem.dateStart
+				$scope.model.newdateEnd = selectedItem.dateEnd
+				$scope.model.newtimeStart = selectedItem.dateStart
+				$scope.model.newtimeEnd = selectedItem.dateEnd				
+				$scope.modal = modal
+				$scope.modal.show()
+
 			
+		# edit page to list page
+		refresh: ->
+			$state.go 'app.todo', null, { reload: true }
+										
 		read: (id) ->
 			@model = new model.Todo 
 			@model.id = id
@@ -274,11 +291,11 @@ TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 
 			$scope.ismeridian = true
 						
-		#loadMore: ->
-		#	@collection.$fetch()
-		#		.then ->
-		#			$rootScope.$broadcast('scroll.infiniteScrollComplete')
-		#		.catch alert				
+		loadMore: ->
+			@collection.$fetch()
+				.then ->
+					$rootScope.$broadcast('scroll.infiniteScrollComplete')
+				.catch alert				
 	
 		# refresh new add task
 		$rootScope.$on 'todo:listChanged', ->
@@ -289,31 +306,19 @@ TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 		remove: (todo) ->
 			@model.remove(todo)			  
 		
-		# update properties of specified file
-		edit: (selectedItem) ->
-			$ionicModal.fromTemplateUrl('templates/todo/edit.html', scope: $scope).then (modal) =>
-				$scope.model = selectedItem
-				$scope.model.newtask = selectedItem.task
-				$scope.model.newdateStart = selectedItem.dateStart
-				$scope.model.newdateEnd = selectedItem.dateEnd
-				$scope.model.newtimeStart = selectedItem.dateStart
-				$scope.model.newtimeEnd = selectedItem.dateEnd				
-				$scope.modal = modal
-				$scope.modal.show()
+
 
 		# open datepicker
 		open: ($event, which) ->
 			$event.preventDefault()
 			$event.stopPropagation()
 			$scope.datepickers[which]= true
+
 			
-		# edit page to list page
-		refresh: ->
-			$state.go 'app.todo', null, { reload: true }
-			
-				
-	$scope.collection = new model.TodoList()
-	$scope.collection.$fetch()
+
+	if _.isUndefined $scope.collection				
+		$scope.collection = new model.TodoList()
+		$scope.collection.$fetch()
 	$scope.controller = new TodoListView collection: $scope.collection
 
 TodosFilter = ->

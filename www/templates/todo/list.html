@@ -13,8 +13,8 @@
 </div>
 <ion-content class='has-subheader'>
 	<ion-list>
-		<ion-item ng-controller="TodoListCtrl"
-			ng-repeat="model in controller.collection.models | todosFilter:search"
+		<ion-item ng-controller="TodoCtrl"
+			ng-repeat="model in controller.collection.models  | todosFilter:search"
 			>
 				<div class='row'>
 					<div class='col'>
@@ -23,9 +23,11 @@
 				</div>
 				<ion-option-button class="button button-positive icon-left ion-edit" on-tap="$event.stopPropagation();controller.edit(model);">Edit</ion-option-button>
 				<ion-option-button class="button button-assertive icon-left ion-trash-a" on-tap="$event.stopPropagation(); $parent.controller.collection.remove(model);">Delete</ion-option-button>
-			</ion-item>
-	</ion-list>
-	<ion-infinite-scroll ng-if="model.state.page < model.state.total_page" on-infinite="controller.loadMore()">
-		</ion-infinite-scroll>
-	
+		</ion-item>
+	</ion-list> 
+	<ion-infinite-scroll
+	 ng-if="collection.state.page < collection.state.total_page " 
+	 on-infinite="controller.loadMore()"
+	 >
+	</ion-infinite-scroll>
 </ion-content>
