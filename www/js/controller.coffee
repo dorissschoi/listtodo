@@ -221,6 +221,51 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 
 			$scope.ismeridian = true
 
+			###
+			#Start Angular Calendar
+			#These variables MUST be set as a minimum for the calendar to work
+			$scope.calendarView = 'month'
+			$scope.calendarDay = new Date()
+			
+			$scope.events = [
+				{
+					title: 'My event title'
+					type: 'info'
+					startsAt: new Date()
+					endsAt: new Date(2015,6,16,15)
+					editable: false
+					deletable: false
+					draggable: true
+					resizable: true
+					incrementsBadgeTotal: true
+					recursOn: 'year' 
+					cssClass: 'a-css-class-name' 
+				}
+			]
+			$scope.eventClicked = (event) ->
+				showModal 'Clicked', event
+			$scope.eventEdited = (event) ->
+				showModal 'Edited', event
+			$scope.eventDeleted = (event) ->
+				showModal 'eventDeleted', event	
+			$scope.eventTimesChanged = (event) ->
+				showModal 'eventTimesChanged', event	 
+			$scope.toggle = ($event, field, event) ->
+				$event.preventDefault()
+				$event.stopPropagation()
+				event[field] = !event[field]  
+			showModal = (action, event) ->
+				$modal.open
+					templateUrl: 'modalContent.html'
+					controller: ->
+						$scope.action = action
+						$scope.event = event
+	
+				controllerAs: 'vm'			 	  
+			
+			#End Angular Calendar
+			###
+			
 		add: ->
 			@model = new model.Todo
 			@model.task = $scope.todo.task
@@ -306,8 +351,6 @@ TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 		remove: (todo) ->
 			@model.remove(todo)			  
 		
-
-
 		# open datepicker
 		open: ($event, which) ->
 			$event.preventDefault()
@@ -321,6 +364,86 @@ TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 		$scope.collection.$fetch()
 	$scope.controller = new TodoListView collection: $scope.collection
 
+
+
+TodoCalCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model) ->
+	class TodoCalView
+		constructor: (opts = {}) ->
+			_.each @events, (handler, event) =>
+				$scope.$on event, @[handler]
+			@collection = opts.collection	
+			
+			
+			$scope.events = @collection
+			
+			#Start Angular Calendar
+			#These variables MUST be set as a minimum for the calendar to work
+			$scope.calendarView = 'month'
+			$scope.calendarDay = new Date()
+			
+			$scope.events = [
+				{
+					title: 'My event title'
+					type: 'info'
+					startsAt: new Date()
+					endsAt: new Date(2015,6,16,15)
+					editable: false
+					deletable: false
+					draggable: true
+					resizable: true
+					incrementsBadgeTotal: true
+					recursOn: 'year' 
+					cssClass: 'a-css-class-name' 
+				}
+			]
+			$scope.eventClicked = (event) ->
+				showModal 'Clicked', event
+			$scope.eventEdited = (event) ->
+				showModal 'Edited', event
+			$scope.eventDeleted = (event) ->
+				showModal 'eventDeleted', event	
+			$scope.eventTimesChanged = (event) ->
+				showModal 'eventTimesChanged', event	 
+			$scope.toggle = ($event, field, event) ->
+				$event.preventDefault()
+				$event.stopPropagation()
+				event[field] = !event[field]  
+			showModal = (action, event) ->
+				$modal.open
+					templateUrl: 'modalContent.html'
+					controller: ->
+						$scope.action = action
+						$scope.event = event
+	
+				controllerAs: 'vm'			 	  
+			
+			#End Angular Calendar	
+					
+	$scope.collection = new model.TodoListCol()
+	$scope.collection.$fetch()
+		.then ->
+			$scope.eventsafter = 1
+			$scope.eventsafter = [
+				{
+					title: 'Testing'
+					type: 'info'
+					startsAt: new Date(2015,6,1,15)
+					endsAt: new Date(2015,6,6,15)
+					editable: false
+					deletable: false
+					draggable: true
+					resizable: true
+					incrementsBadgeTotal: true
+					recursOn: 'year' 
+					cssClass: 'a-css-class-name' 
+				}
+			]
+			$scope.events = $scope.collection.models
+	$scope.controller = new TodoCalView collection: $scope.collection
+
+	 
+
+				
 TodosFilter = ->
 	(todos, search) ->
 	 	return _.filter todos, (todo) ->
@@ -344,5 +467,5 @@ angular.module('starter.controller').controller 'SelectCtrl', ['$scope', '$ionic
 angular.module('starter.controller').controller 'MultiSelectCtrl', ['$scope', '$ionicModal', MultiSelectCtrl]
 angular.module('starter.controller').controller 'TodoCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', TodoCtrl]
 angular.module('starter.controller').controller 'TodoListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', TodoListCtrl]
-
+angular.module('starter.controller').controller 'TodoCalCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', TodoCalCtrl]
 angular.module('starter.controller').filter 'todosFilter', TodosFilter

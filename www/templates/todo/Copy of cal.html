@@ -1,0 +1,43 @@
+<ion-header-bar class="item-input-inset">
+    <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+    </button>
+    <h1 class='title'>List Todo Cal</h1>
+    
+     
+</ion-header-bar>
+
+<ion-content class='has-subheader'>
+
+	<div ng-controller="TodoCalCtrl">
+			<div id="calendar">
+          
+        </div>
+		
+		<div ui-calendar="uiConfig.calendar" 
+		 
+		 
+		ng-model="eventSource"></div>
+		
+		<li ng-repeat="e in eventSource">
+        es:{{e.title}} {{e.start}} {{e}}
+    	</li>
+    	
+    	<li ng-repeat="e in events">
+        e: {{e.title}} {{e.start}}
+    	</li>
+	</div>
+
+<script>
+      $(function () {
+        $('#calendar').fullCalendar({
+          events: [
+            {
+            title: "Meet Somebody",
+            start: "2013-05-30"
+            }
+          ],
+          defaultView: 'agendaWeek'
+        });
+        });
+    </script>
+</ion-content>

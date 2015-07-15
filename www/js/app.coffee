@@ -1,4 +1,4 @@
-module = angular.module('starter', ['ionic', 'starter.controller', 'http-auth-interceptor', 'ngTagEditor', 'ActiveRecord', 'angularFileUpload', 'ngTouch', 'ngAnimate', 'ui.bootstrap'])
+module = angular.module('starter', ['ionic', 'starter.controller', 'http-auth-interceptor', 'ngTagEditor', 'ActiveRecord', 'angularFileUpload', 'ngTouch', 'ngAnimate', 'ui.bootstrap', 'mwl.calendar'])
 
 module.run ($ionicPlatform, $location, $http, authService) ->
 	$ionicPlatform.ready ->
@@ -58,7 +58,13 @@ module.config ($stateProvider, $urlRouterProvider) ->
 			'menuContent':
 				templateUrl: "templates/todo/create.html"
 				controller: 'TodoCtrl'
-
+	
+	$stateProvider.state 'app.calTodo',
+		url: "/todo/cal"
+		views:
+			'menuContent':
+				templateUrl: "templates/todo/cal.html"
+				controller: 'TodoCalCtrl'
 	
 														
 	$urlRouterProvider.otherwise('/file/file')

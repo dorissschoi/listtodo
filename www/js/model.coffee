@@ -281,8 +281,27 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 			#return res.results
 			return @$parseModel(res, opts)
 			
+	#class TodoListCol extends Collection
+	class TodoListCol extends PageableCollection 
+		$idAttribute: '_id'
+	
+		#$urlRoot: "http://localhost:3000/file/api/todo/"
+		$urlRoot: "#{env.serverUrl()}/api/todo"
 		
-				
+		$parseModel: (res, opts) ->
+			res.startsAt = new Date(Date.parse(res.dateStart))
+			res.endsAt = new Date(Date.parse(res.dateEnd))
+			res.title = res.task
+			res.type = 'info'
+			return new Todo res
+			
+
+		$parse: (res, opts) ->
+			_.each res.results, (value, key) =>
+				res.results[key] = @$parseModel(res.results[key], opts)
+			#return res.results
+			return @$parseModel(res, opts)		
+		
 	Model:		Model
 	Collection:	Collection
 	User:		User
@@ -293,6 +312,7 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 	FileGrps:	FileGrps
 	Todo:		Todo
 	TodoList:	TodoList
+	TodoListCol: TodoListCol
 	
 				
 config = ->

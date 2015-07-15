@@ -1,0 +1,58 @@
+<ion-header-bar class="item-input-inset">
+    <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+    </button>
+    <h1 class='title'>{{ calendarTitle }}</h1>
+    
+     
+</ion-header-bar>
+
+<ion-content class='has-subheader'>
+
+<button
+  class="btn btn-primary"
+  mwl-date-modifier
+  date="calendarDay"
+  decrement="calendarView">
+  Previous
+</button>
+
+<button
+  class="btn btn-default"
+  mwl-date-modifier
+  date="calendarDay"
+  set-to-today>
+  Today
+</button>
+
+<button
+  class="btn btn-primary"
+  mwl-date-modifier
+  date="calendarDay"
+  increment="calendarView">
+  Next
+</button>
+
+	<div class="btn-group">
+		<label class="btn btn-primary ng-pristine ng-untouched ng-valid" ng-model="calendarView"  ng-click="$event.stopPropagation();controller.switchView('year');">Year</label>
+		<label class="btn btn-primary ng-pristine ng-untouched ng-valid" ng-model="calendarView" >Month</label>
+		<label class="btn btn-primary ng-pristine ng-untouched ng-valid" ng-model="calendarView" >Week</label>
+		<label class="btn btn-primary ng-pristine ng-untouched ng-valid" ng-model="calendarView" ng-click="$scope.calendarView='day'">Day</label>
+	</div>
+              
+	<div ng-controller="TodoCalCtrl">
+	<mwl-calendar
+    view="calendarView"
+    current-day="calendarDay"
+    events="events"
+    view-title="calendarTitle"
+    on-event-click="eventClicked(calendarEvent)"
+    on-event-times-changed="calendarEvent.startsAt = calendarNewEventStart; calendarEvent.endsAt = calendarNewEventEnd"
+    edit-event-html="'<i class=\'glyphicon glyphicon-pencil\'></i>'"
+    delete-event-html="'<i class=\'glyphicon glyphicon-remove\'></i>'"
+    on-edit-event-click="eventEdited(calendarEvent)"
+    on-delete-event-click="eventDeleted(calendarEvent)"
+    auto-open="true">
+	</mwl-calendar>			
+	</div>
+
+</ion-content>
