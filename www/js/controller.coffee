@@ -221,50 +221,7 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 
 			$scope.ismeridian = true
 
-			###
-			#Start Angular Calendar
-			#These variables MUST be set as a minimum for the calendar to work
-			$scope.calendarView = 'month'
-			$scope.calendarDay = new Date()
 			
-			$scope.events = [
-				{
-					title: 'My event title'
-					type: 'info'
-					startsAt: new Date()
-					endsAt: new Date(2015,6,16,15)
-					editable: false
-					deletable: false
-					draggable: true
-					resizable: true
-					incrementsBadgeTotal: true
-					recursOn: 'year' 
-					cssClass: 'a-css-class-name' 
-				}
-			]
-			$scope.eventClicked = (event) ->
-				showModal 'Clicked', event
-			$scope.eventEdited = (event) ->
-				showModal 'Edited', event
-			$scope.eventDeleted = (event) ->
-				showModal 'eventDeleted', event	
-			$scope.eventTimesChanged = (event) ->
-				showModal 'eventTimesChanged', event	 
-			$scope.toggle = ($event, field, event) ->
-				$event.preventDefault()
-				$event.stopPropagation()
-				event[field] = !event[field]  
-			showModal = (action, event) ->
-				$modal.open
-					templateUrl: 'modalContent.html'
-					controller: ->
-						$scope.action = action
-						$scope.event = event
-	
-				controllerAs: 'vm'			 	  
-			
-			#End Angular Calendar
-			###
 			
 		add: ->
 			@model = new model.Todo
@@ -369,79 +326,58 @@ TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 TodoCalCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model) ->
 	class TodoCalView
 		constructor: (opts = {}) ->
+			@collection = opts.collection
 			_.each @events, (handler, event) =>
 				$scope.$on event, @[handler]
-			@collection = opts.collection	
-			
-			
-			$scope.events = @collection
-			
-			#Start Angular Calendar
-			#These variables MUST be set as a minimum for the calendar to work
-			$scope.calendarView = 'month'
-			$scope.calendarDay = new Date()
-			
-			$scope.events = [
-				{
-					title: 'My event title'
-					type: 'info'
-					startsAt: new Date()
-					endsAt: new Date(2015,6,16,15)
-					editable: false
-					deletable: false
-					draggable: true
-					resizable: true
-					incrementsBadgeTotal: true
-					recursOn: 'year' 
-					cssClass: 'a-css-class-name' 
-				}
-			]
-			$scope.eventClicked = (event) ->
-				showModal 'Clicked', event
-			$scope.eventEdited = (event) ->
-				showModal 'Edited', event
-			$scope.eventDeleted = (event) ->
-				showModal 'eventDeleted', event	
-			$scope.eventTimesChanged = (event) ->
-				showModal 'eventTimesChanged', event	 
-			$scope.toggle = ($event, field, event) ->
-				$event.preventDefault()
-				$event.stopPropagation()
-				event[field] = !event[field]  
-			showModal = (action, event) ->
-				$modal.open
-					templateUrl: 'modalContent.html'
-					controller: ->
-						$scope.action = action
-						$scope.event = event
-	
-				controllerAs: 'vm'			 	  
-			
-			#End Angular Calendar	
-					
-	$scope.collection = new model.TodoListCol()
-	$scope.collection.$fetch()
-		.then ->
-			$scope.eventsafter = 1
-			$scope.eventsafter = [
-				{
-					title: 'Testing'
-					type: 'info'
-					startsAt: new Date(2015,6,1,15)
-					endsAt: new Date(2015,6,6,15)
-					editable: false
-					deletable: false
-					draggable: true
-					resizable: true
-					incrementsBadgeTotal: true
-					recursOn: 'year' 
-					cssClass: 'a-css-class-name' 
-				}
-			]
-			$scope.events = $scope.collection.models
+		
+			$scope.collection = new model.TodoListCol()
+			$scope.collection.$fetch().then ->
+				$scope.events = [
+					{
+						title: 'ABC'
+						type: 'info'
+						startsAt: new Date(2015,6,1,15) 
+						endsAt: new Date(2015,6,1,18)
+						editable: false
+						deletable: false
+						draggable: true
+						resizable: true
+						incrementsBadgeTotal: true
+						recursOn: 'year' 
+						cssClass: 'a-css-class-name' 
+					}
+				]	
+				$scope.eventsafter = 1			
+				#@events.push(title: 'After event', type: 'info', draggable: true, resizable: true, startsAt: 1436839367000 , endsAt: 1436925767000)
 	$scope.controller = new TodoCalView collection: $scope.collection
-
-	 
+						
+	#Start Angular Calendar
+	#These variables MUST be set as a minimum for the calendar to work
+	$scope.calendarView = 'month'
+	$scope.calendarDay = new Date()
+				
+			
+	$scope.eventClicked = (event) ->
+		showModal 'Clicked', event
+	$scope.eventEdited = (event) ->
+		showModal 'Edited', event
+	$scope.eventDeleted = (event) ->
+		showModal 'eventDeleted', event	
+	$scope.eventTimesChanged = (event) ->
+		showModal 'eventTimesChanged', event	 
+	$scope.toggle = ($event, field, event) ->
+		$event.preventDefault()
+		$event.stopPropagation()
+		event[field] = !event[field]  
+	showModal = (action, event) ->
+		$modal.open
+			templateUrl: 'modalContent.html'
+			controller: ->
+				$scope.action = action
+				$scope.event = event
+				controllerAs: 'vm'			 	  
+	#End Angular Calendar	
+		 
 
 				
 TodosFilter = ->

@@ -1,4 +1,4 @@
-<div ng-controller="TodoCtrl">
+<div >
 <ion-header-bar class="item-input-inset">
     <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
     </button>
@@ -6,10 +6,19 @@
 
 <ion-content class='has-subheader'>
 
-{{controller.collection.models }} --controller
+
+ <div ng-repeat="t in controller.collection.models">
+ t -----------{{t.title}}-{{t.dateStart}}-{{t.endsAt}}------------t 
+ </div>
+ 
+
 {{ calendarTitle }}---calendarTitle
 {{ events }} --events
 {{ eventsafter }}--eventsafter
+
+<button class="btn btn-primary pull-right" 
+ng-click="events.push({title: 'New event', type: 'important', draggable: true, resizable: true, startsAt: 1436839367000 , endsAt: 1436925767000  })">
+Add new</button>
 
 	<h2 class="text-center">{{ calendarTitle }}</h2>
 
@@ -28,7 +37,7 @@
 	</div>
               
 
-	<mwl-calendar
+	<mwl-calendar id="test"
     view="calendarView"
     current-day="calendarDay"
     events="events"
