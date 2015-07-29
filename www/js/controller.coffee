@@ -201,8 +201,10 @@ TodoReadCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 			@model = opts.model
 			$scope.model = $stateParams.SelectedTodo
 			$scope.model.newtask = $scope.model.task
-			$scope.model.newdateStart = $scope.model.dateStart
-			$scope.model.newdateEnd = $scope.model.dateEnd
+			newdate = @changeFormat($scope.model.dateStart) 
+			$scope.model.newdateStart = newdate
+			newdate = @changeFormat($scope.model.dateEnd)
+			$scope.model.newdateEnd = newdate
 			$scope.model.newtimeStart = $scope.model.dateStart
 			$scope.model.newtimeEnd = $scope.model.dateEnd	
 			# datepicker config
@@ -212,7 +214,7 @@ TodoReadCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 				      
 			$scope.minDate = $scope.minDate ? null : new Date()	
 			$scope.maxDate = $scope.maxDate ? null : new Date(new Date().setYear(new Date().getFullYear() + 3))
-			$scope.format = 'dd.MM.yyyy'	
+			$scope.format = 'dd/MM/yyyy'	
 			$scope.dateOptions =
 				formatYear: 'yy'
 				startingDay: 1
@@ -226,6 +228,17 @@ TodoReadCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 				mstep: [1, 5, 10, 15, 25, 30]
 
 			$scope.ismeridian = true
+		
+		changeFormat: (dateIn) ->
+			dateMonth = dateIn.getMonth()+1
+			if dateMonth < 10
+				dateMonth = "0"+dateMonth
+			
+			dateDay = dateIn.getDate()
+			if dateDay < 10
+				dateDay = "0"+dateDay
+			dateYear = dateIn.getFullYear()
+			return dateDay+ "/" + dateMonth + "/"+ dateYear
 											
 		open: ($event, which) ->
 			$event.preventDefault()
@@ -235,14 +248,10 @@ TodoReadCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 		# edit page to list page
 		refresh: ->
 			$state.go 'app.todo', null, { reload: true }
-						
 			
 	$scope.ctrlname = 'TodoReadCtrl'
-		
-			
 	$scope.controller = new TodoReadView model: $scope.model
 
-			
 	
 TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model) ->
 	class TodoView  			
@@ -251,7 +260,6 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 			_.each @events, (handler, event) =>
 				$scope.$on event, @[handler]
 			@model = opts.model
-			
 			
 			
 			$scope.todo = {task: '', timeStart: new Date(), timeEnd: new Date(), dateStart: new Date(), dateEnd: new Date()}

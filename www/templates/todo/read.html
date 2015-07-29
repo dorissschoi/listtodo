@@ -17,43 +17,43 @@
     	dateEnd: model.newdateEnd, timeEnd: model.newtimeEnd });
     	controller.refresh();"
     	ng-disabled="myForm.taskname.$error.required" 
-    	ng-hide="button">Save</button>
+    	ng-hide="button"
+    	ng-click="button=false">Save</button>
     </div>
   </ion-header-bar>
   <ion-content padding="true">
-  	<div class="list">
-	  <label class="item item-input">
+	<div class="list">
+	  	<label class="item item-input">
 	  	<input type="text" ng-model="model.newtask" ng-disabled="button" 
 			 required name="taskname">
-	  </label>
-	  
-			<div class="row">
-				<div class="col-md-8">
-					<span class="input-label">Start date</span>
-					<p class="input-group" >
-					<input type="text" name="dateStart" show-weeks="false" 
+	  	</label>
+			  
+		<div class="row">
+			<div class="col-md-8">
+				<span class="input-label">Start date</span>
+				<p class="input-group" >
+				<input type="text" name="dateStart" show-weeks="false" 
 			                class="form-control" datepicker-popup="{{format}}" 
 			              	ng-model="model.newdateStart" is-open="datepickers.dateStart"  
 			              	datepicker-options="dateOptions" 
 			              	ng-required="true" close-text="Close" ng-disabled="button" />
-			              
-					<span class="input-group-btn">
-						<button type="button" class="btn btn-default" 
-			                ng-click="$parent.controller.open($event, 'dateStart')"
-			                ng-controller="TodoListCtrl" ng-disabled="button" >
+			    <span class="input-group-btn">
+			    	<button type="button" class="btn btn-default" 
+			                ng-click="controller.open($event, 'dateStart')"
+			                
+			                ng-disabled="button" >
 						<i class="icon ion-calendar"></i></button>
-					</span>
-					</p>
-				</div>
-				<div class="col-md-4" ng-disabled="button">
-					<timepicker ng-model="model.newtimeStart" 
-			        	ng-change="changed()" hour-step="hstep" 
-			        	minute-step="mstep" show-meridian="ismeridian"  ></timepicker>
-				</div>      
-			</div> 	  
-	  
-	  		<div class="row">
-				<div class="col-md-8">
+			    </span>          	
+				</p>
+			</div>
+			<div class="col-md-4" ng-disabled="button">
+				<timepicker ng-model="model.newtimeStart" 
+		        	ng-change="changed()" hour-step="hstep" 
+		        	minute-step="mstep" show-meridian="ismeridian"  ></timepicker>
+			</div>      
+		</div>
+		<div class="row">
+			<div class="col-md-8">
 					<span class="input-label">End date</span>
 					<p class="input-group">
 					<input type="text" name="dateEnd" show-weeks="false"
@@ -64,20 +64,21 @@
 			              
 					<span class="input-group-btn">
 						<button type="button" class="btn btn-default" 
-			                ng-click="$parent.controller.open($event, 'dateEnd')"
-			                ng-controller="TodoListCtrl" ng-disabled="button" >
+			                ng-click="controller.open($event, 'dateEnd')"
+			                ng-disabled="button" >
 						<i class="icon ion-calendar"></i></button>
 					</span>
 					</p>
 				</div>
-				<div class="col-md-4">
-					<timepicker ng-model="model.newtimeEnd" 
+		
+		
+			<div class="col-md-4">
+				<timepicker ng-model="model.newtimeEnd" 
 			        	ng-change="changed()" hour-step="hstep" 
 			        	minute-step="mstep" show-meridian="ismeridian" ng-disabled="button" ></timepicker>
-				</div>      
-			</div>
-	  
-	</div>
+			</div> 	  
+	  	</div>
+	</div>	    	
   </ion-content>
   </form>
 </ion-view>
