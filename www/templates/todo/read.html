@@ -1,44 +1,54 @@
-<ion-view>
+<ion-view ng-init="button=true">
   <form name="myForm" class="my-form">
   <ion-header-bar>
-    <button class="button button-clear button-positive" 
+  	<div ng-show="button">
+  		<button class="button ion-close-round" ui-sref="app.todo"></button>
+  		<h1 class="title">Read</h1>
+  		<button class="button button-clear button-positive" 
+    		ng-click="button=false">Edit</button>
+    
+    </div>
+    <div ng-hide="button">
+    	<button class="button ion-close-round" ui-sref="app.todo"></button>
+    	<h1 class="title">Edit</h1>
+    	<button class="button button-clear button-positive" 
     	ng-click="model.$save({task: model.newtask,   	
     	dateStart: model.newdateStart, timeStart: model.newtimeStart,
     	dateEnd: model.newdateEnd, timeEnd: model.newtimeEnd });
-    	modal.hide(); 
-    	$parent.controller.refresh();"
-    	ng-disabled="myForm.taskname.$error.required" >Save</button>
-      <h1 class="title">Edit</h1>
-    <button class="button button-clear" ng-click="modal.hide()">Close</button>
+    	controller.refresh();"
+    	ng-disabled="myForm.taskname.$error.required" 
+    	ng-hide="button">Save</button>
+    </div>
   </ion-header-bar>
   <ion-content padding="true">
   	<div class="list">
 	  <label class="item item-input">
-	  	<input type="text" ng-model="model.newtask" required name="taskname">
+	  	<input type="text" ng-model="model.newtask" ng-disabled="button" 
+			 required name="taskname">
 	  </label>
 	  
 			<div class="row">
 				<div class="col-md-8">
 					<span class="input-label">Start date</span>
-					<p class="input-group">
-					<input type="text" name="dateStart" show-weeks="false"
+					<p class="input-group" >
+					<input type="text" name="dateStart" show-weeks="false" 
 			                class="form-control" datepicker-popup="{{format}}" 
 			              	ng-model="model.newdateStart" is-open="datepickers.dateStart"  
 			              	datepicker-options="dateOptions" 
-			              	ng-required="true" close-text="Close" />
+			              	ng-required="true" close-text="Close" ng-disabled="button" />
 			              
 					<span class="input-group-btn">
 						<button type="button" class="btn btn-default" 
 			                ng-click="$parent.controller.open($event, 'dateStart')"
-			                ng-controller="TodoListCtrl" >
+			                ng-controller="TodoListCtrl" ng-disabled="button" >
 						<i class="icon ion-calendar"></i></button>
 					</span>
 					</p>
 				</div>
-				<div class="col-md-4">
+				<div class="col-md-4" ng-disabled="button">
 					<timepicker ng-model="model.newtimeStart" 
 			        	ng-change="changed()" hour-step="hstep" 
-			        	minute-step="mstep" show-meridian="ismeridian"></timepicker>
+			        	minute-step="mstep" show-meridian="ismeridian"  ></timepicker>
 				</div>      
 			</div> 	  
 	  
@@ -50,12 +60,12 @@
 			                class="form-control" datepicker-popup="{{format}}" 
 			              	ng-model="model.newdateEnd" is-open="datepickers.dateEnd"  
 			              	datepicker-options="dateOptions" 
-			              	ng-required="true" close-text="Close" />
+			              	ng-required="true" close-text="Close" ng-disabled="button" />
 			              
 					<span class="input-group-btn">
 						<button type="button" class="btn btn-default" 
 			                ng-click="$parent.controller.open($event, 'dateEnd')"
-			                ng-controller="TodoListCtrl" >
+			                ng-controller="TodoListCtrl" ng-disabled="button" >
 						<i class="icon ion-calendar"></i></button>
 					</span>
 					</p>
@@ -63,7 +73,7 @@
 				<div class="col-md-4">
 					<timepicker ng-model="model.newtimeEnd" 
 			        	ng-change="changed()" hour-step="hstep" 
-			        	minute-step="mstep" show-meridian="ismeridian"></timepicker>
+			        	minute-step="mstep" show-meridian="ismeridian" ng-disabled="button" ></timepicker>
 				</div>      
 			</div>
 	  

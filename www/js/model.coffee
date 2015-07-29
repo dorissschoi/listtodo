@@ -293,6 +293,8 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 			res.endsAt = new Date(Date.parse(res.dateEnd))
 			res.title = res.task
 			res.type = 'info'
+			res.draggable= 'true'
+			res.resizable= 'true'
 			return new Todo res
 			
 

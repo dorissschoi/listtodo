@@ -3,7 +3,6 @@
 	<form name="myForm"  class="my-form">
 	<ion-header-bar class="item-input-inset" align-title="left">
 	    <button class="button ion-close-round" ui-sref="app.todo"></button>
-	    </button>
 	    <div class="buttons" ng-init="isDisabled = false">
 	        <h1 class="title">Create Todo</h1>
 	        <ion-button ng-disabled="myForm.taskname.$error.required" 
@@ -19,7 +18,10 @@
 
 			<div class="row">
 				<div class="col-md-8">
-					<span class="input-label">Start date</span>
+					<span class="input-label">Start date</span> 
+					
+					{{format}} - format {{ctrlname}} - ctrlname
+					
 					<p class="input-group">
 					<input type="text" name="dateStart" show-weeks="false"
 						class="form-control" datepicker-popup="{{format}}" 

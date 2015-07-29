@@ -50,8 +50,6 @@ module.config ($stateProvider, $urlRouterProvider) ->
 		onEnter: ($state, $rootScope) ->
 				$rootScope.$broadcast 'todo:listChanged'
     		
-	
-	
 	$stateProvider.state 'app.createTodo',
 		url: "/todo/create"
 		views:
@@ -59,6 +57,15 @@ module.config ($stateProvider, $urlRouterProvider) ->
 				templateUrl: "templates/todo/create.html"
 				controller: 'TodoCtrl'
 	
+	$stateProvider.state 'app.readTodo',
+		url: "/todo/read"
+		params: SelectedTodo: null
+		views:
+			'menuContent':
+				templateUrl: "templates/todo/read.html"
+				controller: 'TodoReadCtrl'
+				
+				
 	$stateProvider.state 'app.calTodo',
 		url: "/todo/cal"
 		views:
@@ -66,5 +73,6 @@ module.config ($stateProvider, $urlRouterProvider) ->
 				templateUrl: "templates/todo/cal.html"
 				controller: 'TodoCalCtrl'
 	
+			
 														
 	$urlRouterProvider.otherwise('/file/file')

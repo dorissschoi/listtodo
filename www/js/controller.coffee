@@ -192,11 +192,68 @@ AclCtrl = ($rootScope, $scope, model) ->
 	$scope.collection.$fetch()
 	$scope.controller = new AclView collection: $scope.collection 
 
+TodoReadCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model) ->
+	class TodoReadView  			
 
+		constructor: (opts = {}) ->
+			_.each @events, (handler, event) =>
+				$scope.$on event, @[handler]
+			@model = opts.model
+			$scope.model = $stateParams.SelectedTodo
+			$scope.model.newtask = $scope.model.task
+			$scope.model.newdateStart = $scope.model.dateStart
+			$scope.model.newdateEnd = $scope.model.dateEnd
+			$scope.model.newtimeStart = $scope.model.dateStart
+			$scope.model.newtimeEnd = $scope.model.dateEnd	
+			# datepicker config
+			$scope.datepickers = 
+				dateEnd: false
+				dateStart: false
+				      
+			$scope.minDate = $scope.minDate ? null : new Date()	
+			$scope.maxDate = $scope.maxDate ? null : new Date(new Date().setYear(new Date().getFullYear() + 3))
+			$scope.format = 'dd.MM.yyyy'	
+			$scope.dateOptions =
+				formatYear: 'yy'
+				startingDay: 1
+								
+			# timepicker config
+			$scope.hstep = 1
+			$scope.mstep = 1
+
+			$scope.options = 
+				hstep: [1, 2, 3]
+				mstep: [1, 5, 10, 15, 25, 30]
+
+			$scope.ismeridian = true
+											
+		open: ($event, which) ->
+			$event.preventDefault()
+			$event.stopPropagation()
+			$scope.datepickers[which]= true
+		
+		# edit page to list page
+		refresh: ->
+			$state.go 'app.todo', null, { reload: true }
+						
+			
+	$scope.ctrlname = 'TodoReadCtrl'
+		
+			
+	$scope.controller = new TodoReadView model: $scope.model
+
+			
+	
 TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model) ->
 	class TodoView  			
 
 		constructor: (opts = {}) ->
+			_.each @events, (handler, event) =>
+				$scope.$on event, @[handler]
+			@model = opts.model
+			
+			
+			
 			$scope.todo = {task: '', timeStart: new Date(), timeEnd: new Date(), dateStart: new Date(), dateEnd: new Date()}
 			
 			# datepicker config
@@ -206,7 +263,7 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
       
 			$scope.minDate = $scope.minDate ? null : new Date()	
 			$scope.maxDate = $scope.maxDate ? null : new Date(new Date().setYear(new Date().getFullYear() + 3))
-			$scope.format = 'dd-MMMM-yyyy'	
+			$scope.format = 'dd.MM.yyyy'	
 			$scope.dateOptions =
 				formatYear: 'yy'
 				startingDay: 1
@@ -248,22 +305,38 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 				$scope.modal = modal
 				$scope.modal.show()
 
+		
+		newedit: (selectedItem) ->
+			$scope.model = selectedItem
+			$scope.model.newtask = selectedItem.task
+			$scope.model.newdateStart = selectedItem.dateStart
+			$scope.model.newdateEnd = selectedItem.dateEnd
+			$scope.model.newtimeStart = selectedItem.dateStart
+			$state.go('app.readTodo')
+			
 			
 		# edit page to list page
 		refresh: ->
 			$state.go 'app.todo', null, { reload: true }
-										
+		
+		itemClick: (selectedModel) ->
+			$state.go('app.readTodo', {'model': selectedModel})
+													
 		read: (id) ->
 			@model = new model.Todo 
 			@model.id = id
 			@model.$fetch()
+			$scope.model = @model
 			
 		open: ($event, which) ->
 			$event.preventDefault()
 			$event.stopPropagation()
-			$scope.datepickers[which]= true;
+			$scope.datepickers[which]= true
 						
-	$scope.controller = new TodoView model: $scope.models
+	$scope.controller = new TodoView model: $scope.model
+	$scope.format = 'dd.MM.yyyy'	
+	$scope.ctrlname = 'TodoCtrl'
+	
 
 TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model) ->
 	class TodoListView
@@ -320,7 +393,7 @@ TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 		$scope.collection = new model.TodoList()
 		$scope.collection.$fetch()
 	$scope.controller = new TodoListView collection: $scope.collection
-
+	$scope.ctrlname = 'TodoListCtrl'
 
 
 TodoCalCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model) ->
@@ -330,32 +403,31 @@ TodoCalCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal,
 			_.each @events, (handler, event) =>
 				$scope.$on event, @[handler]
 		
-			$scope.collection = new model.TodoListCol()
-			$scope.collection.$fetch().then ->
-				$scope.events = [
-					{
-						title: 'ABC'
-						type: 'info'
-						startsAt: new Date(2015,6,1,15) 
-						endsAt: new Date(2015,6,1,18)
-						editable: false
-						deletable: false
-						draggable: true
-						resizable: true
-						incrementsBadgeTotal: true
-						recursOn: 'year' 
-						cssClass: 'a-css-class-name' 
-					}
-				]	
-				$scope.eventsafter = 1			
-				#@events.push(title: 'After event', type: 'info', draggable: true, resizable: true, startsAt: 1436839367000 , endsAt: 1436925767000)
+	$scope.collection = new model.TodoListCol()
+	$scope.collection.$fetch().then ->
+	
+		$scope.eventsafter = 1			
+		$scope.events.push({title: 'After event', type: 'info', draggable: true, resizable: true, startsAt: new Date(2015,6,1,15)  , endsAt: new Date(2015,6,2,15) })
+		_.each $scope.collection.models, (todo) =>
+			newtodo = _.pick todo, 'title', 'type', 'startsAt', 'endsAt', 'resizable', 'draggable'
+			$scope.events.push(newtodo)
+		$scope.eventsafter = 2
 	$scope.controller = new TodoCalView collection: $scope.collection
 						
 	#Start Angular Calendar
 	#These variables MUST be set as a minimum for the calendar to work
 	$scope.calendarView = 'month'
 	$scope.calendarDay = new Date()
-				
+	$scope.events = [
+		{
+			title: 'ABC'
+			type: 'info'
+			startsAt: new Date(2015,6,1,15) 
+			endsAt: new Date(2015,6,1,18)
+			draggable: true
+			resizable: true
+		}
+	]				
 			
 	$scope.eventClicked = (event) ->
 		showModal 'Clicked', event
@@ -379,7 +451,7 @@ TodoCalCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal,
 	#End Angular Calendar	
 		 
 
-				
+								
 TodosFilter = ->
 	(todos, search) ->
 	 	return _.filter todos, (todo) ->
@@ -402,6 +474,9 @@ angular.module('starter.controller').controller 'AclCtrl', ['$rootScope', '$scop
 angular.module('starter.controller').controller 'SelectCtrl', ['$scope', '$ionicModal', SelectCtrl]
 angular.module('starter.controller').controller 'MultiSelectCtrl', ['$scope', '$ionicModal', MultiSelectCtrl]
 angular.module('starter.controller').controller 'TodoCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', TodoCtrl]
+angular.module('starter.controller').controller 'TodoReadCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', TodoReadCtrl]
+
 angular.module('starter.controller').controller 'TodoListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', TodoListCtrl]
 angular.module('starter.controller').controller 'TodoCalCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', TodoCalCtrl]
+
 angular.module('starter.controller').filter 'todosFilter', TodosFilter
