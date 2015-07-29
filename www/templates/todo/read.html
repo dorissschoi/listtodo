@@ -29,7 +29,7 @@
 	  	</label>
 			  
 		<div class="row">
-			<div class="col-md-8">
+			<div class="col col-50">
 				<span class="input-label">Start date</span>
 				<p class="input-group" >
 				<input type="text" name="dateStart" show-weeks="false" 
@@ -46,14 +46,14 @@
 			    </span>          	
 				</p>
 			</div>
-			<div class="col-md-4" ng-disabled="button">
+			<div class="col" ng-disabled="button">
 				<timepicker ng-model="model.newtimeStart" 
 		        	ng-change="changed()" hour-step="hstep" 
 		        	minute-step="mstep" show-meridian="ismeridian"  ></timepicker>
 			</div>      
 		</div>
 		<div class="row">
-			<div class="col-md-8">
+			<div class="col col-50">
 					<span class="input-label">End date</span>
 					<p class="input-group">
 					<input type="text" name="dateEnd" show-weeks="false"
@@ -72,7 +72,7 @@
 				</div>
 		
 		
-			<div class="col-md-4">
+			<div class="col">
 				<timepicker ng-model="model.newtimeEnd" 
 			        	ng-change="changed()" hour-step="hstep" 
 			        	minute-step="mstep" show-meridian="ismeridian" ng-disabled="button" ></timepicker>

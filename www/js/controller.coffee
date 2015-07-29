@@ -383,8 +383,8 @@ TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 		# refresh new add task
 		$rootScope.$on 'todo:listChanged', ->
 			$scope.collection = new model.TodoList()
-			$scope.collection.$fetch()
-			$scope.controller = new TodoListView collection: $scope.collection
+			$scope.collection.$fetch().then =>
+				$scope.controller = new TodoListView collection: $scope.collection
 
 		remove: (todo) ->
 			@model.remove(todo)			  
