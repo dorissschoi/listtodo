@@ -56,7 +56,6 @@ require('zappajs') {port: port, express: express}, ->
 			res.locals.setLocale 'zh-tw'
 		next()
 	
-	
 	@get env.oauth2.authURL, passport.authenticate('provider', scope: env.oauth2.scope)
 	
 	@get env.oauth2.cbURL, passport.authenticate('provider', scope: env.oauth2.scope), ->
@@ -74,4 +73,3 @@ require('zappajs') {port: port, express: express}, ->
 	@include './server/mongoose/url/permission.coffee'
 	@include './server/mongoose/url/todo.coffee'
 	@include './server/mongoose/url/file.coffee'
-	

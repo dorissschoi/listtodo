@@ -246,8 +246,8 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 	class Todo extends Model
 		$idAttribute: '_id'
 		
-		$urlRoot: "#{env.serverUrl()}/api/todo"
-		#$urlRoot: "http://localhost:3000/file/api/todo/"
+		#$urlRoot: "#{env.serverUrl()}/api/todo"
+		$urlRoot: "http://localhost:3000/api/todo/"
 		
 		
 		changeFormat: (dateIn, timeIn) ->
@@ -278,8 +278,8 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 	class TodoList extends PageableCollection 
 		$idAttribute: '_id'
 	
-		#$urlRoot: "http://localhost:3000/file/api/todo/"
-		$urlRoot: "#{env.serverUrl()}/api/todo"
+		$urlRoot: "http://localhost:3000/api/todo"
+		#$urlRoot: "#{env.serverUrl()}/api/todo"
 		
 		$parseModel: (res, opts) ->
 			res.dateStart = new Date(Date.parse(res.dateStart))
@@ -295,10 +295,10 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 	#class TodoListCol extends Collection
 	class TodoListCol extends PageableCollection 
 		$idAttribute: '_id'
-	
-		#$urlRoot: "http://localhost:3000/file/api/todo/"
-		$urlRoot: "#{env.serverUrl()}/api/todo"
 		
+		$urlRoot: "http://localhost:3000/api/todo"
+		#$urlRoot: "http://localhost:3000/file/api/todo/"
+				
 		$parseModel: (res, opts) ->
 			res.startsAt = new Date(Date.parse(res.dateStart))
 			res.endsAt = new Date(Date.parse(res.dateEnd))

@@ -9,20 +9,13 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item nav-clear menu-close href="#/file/file/">
-          File
-        </ion-item>
-        <ion-item nav-clear menu-close href="#/file/permission">
-          Permission
-        </ion-item>
         
-        <ion-item nav-clear menu-close href="#/file/todo">
+		<ion-item nav-clear menu-close href="#/todo">
           Todo
         </ion-item>
-        <ion-item nav-clear menu-close href="#/file/todo/cal">
+        <ion-item nav-clear menu-close href="#/todo/cal">
           Calendar View
         </ion-item>
-        
         <ion-item nav-clear menu-close ng-if="env.isNative()" ng-click="navigator.app.exitApp()">
           Exit
         </ion-item>
