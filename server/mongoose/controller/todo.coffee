@@ -9,6 +9,18 @@ error = (res, msg) ->
 
 class Todo
 
+	@mylist: (req, res) ->
+		model.Todo.find({createdBy: req.user}).populate('resource createdBy').exec (err, todos) ->
+			if err
+				return error res, err
+			model.Todo.count {}, (err, count) ->
+				if err
+					return error res, err
+				if req.query.dtStart 	
+					res.json {count: todos.length, results: todos}
+				else	
+					res.json {count: count, results: todos}
+			
 	@list: (req, res) ->
 		page = if req.query.page then req.query.page else 1
 		limit = if req.query.per_page then req.query.per_page else env.pageSize

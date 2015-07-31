@@ -40,7 +40,8 @@ module.config ($stateProvider, $urlRouterProvider) ->
 			'menuContent':
 				templateUrl: "templates/file/list.html"
 				controller: 'FileCtrl'
-
+				
+	# All Todo List
 	$stateProvider.state 'app.todo',
 		url: "/todo"
 		views:
@@ -49,6 +50,16 @@ module.config ($stateProvider, $urlRouterProvider) ->
 				controller: 'TodoListCtrl'
 		onEnter: ($state, $rootScope) ->
 				$rootScope.$broadcast 'todo:listChanged'
+    
+	# My todo list
+	$stateProvider.state 'app.mytodo',
+		url: "/todo/mytodo"
+		views:
+			'menuContent':
+				templateUrl: "templates/todo/mylist.html"
+				controller: 'MyTodoListCtrl'
+		onEnter: ($state, $rootScope) ->
+				$rootScope.$broadcast 'todo:mylistChanged'				    
     		
 	$stateProvider.state 'app.createTodo',
 		url: "/todo/create"
@@ -73,4 +84,4 @@ module.config ($stateProvider, $urlRouterProvider) ->
 				templateUrl: "templates/todo/cal.html"
 				controller: 'TodoCalCtrl'
 														
-	$urlRouterProvider.otherwise('/todo')
+	$urlRouterProvider.otherwise('/todo/mytodo')

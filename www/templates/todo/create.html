@@ -2,11 +2,17 @@
 	<div ng-controller="TodoCtrl">
 	<form name="myForm"  class="my-form">
 	<ion-header-bar class="item-input-inset" align-title="left">
-	    <button class="button ion-close-round" ui-sref="app.todo"></button>
+	    <button class="button ion-close-round" ui-sref="app.mytodo"></button>
 	    <div class="buttons" ng-init="isDisabled = false">
 	        <h1 class="title">Create Todo</h1>
-	        <ion-button ng-disabled="myForm.taskname.$error.required" 
-	        class="button ion-checkmark-round" ng-click="controller.add()"></ion-button>
+	        
+	        
+	        
+			<button class="button button-clear button-positive" 
+    	ng-click="controller.add()"
+    	ng-disabled="myForm.taskname.$error.required" 
+    	>Save</button>	        
+	        
 	    </div>
 	</ion-header-bar>
 	

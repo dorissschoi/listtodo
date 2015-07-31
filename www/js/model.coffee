@@ -262,8 +262,8 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 				if _.isUndefined(values)
 					#new rec
 					#"Mon Jun 01 2015" "14:51:04 GMT+0800 (HKT)"
-					this.dateStart = new Date(this.dateStart.toDateString() + " " + this.timeStart.toTimeString())
-					this.dateEnd = new Date(this.dateEnd.toDateString() + " " + this.timeEnd.toTimeString())
+					this.dateStart =  @changeFormat(this.dateStart, this.timeStart)
+					this.dateEnd = @changeFormat(this.dateEnd, this.timeEnd)
 				else
 					#update rec
 					values.dateStart = @changeFormat(values.dateStart, values.timeStart)
@@ -291,6 +291,10 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 				res.results[key] = @$parseModel(res.results[key], opts)
 			#return res.results
 			return @$parseModel(res, opts)
+
+	# MyTodoList
+	class MyTodoList extends TodoList
+		$urlRoot: "http://localhost:3000/api/mytodo"
 			
 	#class TodoListCol extends Collection
 	class TodoListCol extends PageableCollection 
@@ -308,12 +312,13 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 			res.resizable= 'true'
 			return new Todo res
 			
-
 		$parse: (res, opts) ->
 			_.each res.results, (value, key) =>
 				res.results[key] = @$parseModel(res.results[key], opts)
 			#return res.results
 			return @$parseModel(res, opts)		
+
+
 		
 	Model:		Model
 	Collection:	Collection
@@ -325,8 +330,8 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 	FileGrps:	FileGrps
 	Todo:		Todo
 	TodoList:	TodoList
+	MyTodoList:	MyTodoList
 	TodoListCol: TodoListCol
-	
 				
 config = ->
 	return
