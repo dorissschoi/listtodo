@@ -10,7 +10,11 @@ error = (res, msg) ->
 class Todo
 
 	@mylist: (req, res) ->
-		model.Todo.find({createdBy: req.user}).populate('resource createdBy').exec (err, todos) ->
+		order_by = lib.order_by model.Todo.ordering()
+		if req.query.order_by and lib.field(req.query.order_by) in model.Todo.ordering_fields() 
+			order_by = lib.order_by req.query.order_by
+				
+		model.Todo.find({createdBy: req.user}).populate('resource createdBy').sort(order_by).exec (err, todos) ->
 			if err
 				return error res, err
 			model.Todo.count {}, (err, count) ->
