@@ -19,7 +19,7 @@
 			>
 				<div class='row'>
 					<div class='col'>
-						{{model.dateStart.getDate()}}/{{model.dateStart.getMonth()+1}}/{{model.dateStart.getFullYear()}} {{model.dateStart.getHours()}}:{{model.dateStart.getMinutes()}} 
+						{{(model.dateStart.getDate()<10?'0':'') + model.dateStart.getDate() }}/{{('0'+(model.dateStart.getMonth()+1)).slice(-2)}}/{{model.dateStart.getFullYear()}} {{(model.dateStart.getHours()<10?'0':'') + model.dateStart.getHours() }}:{{(model.dateStart.getMinutes()<10?'0':'') + model.dateStart.getMinutes() }} 
 						
 						<b>Task:</b> {{model.task}}
 					</div>

@@ -15,17 +15,15 @@
 	<ion-list>
 		<ion-item 
 			ng-repeat="model in controller.collection.models  | todosFilter:search"
-			ui-sref="app.readTodo({ SelectedTodo: model })"
+			ui-sref="app.readOnlyTodo({ SelectedTodo: model })"
 			>
 				<div class='row'>
 					<div class='col'>
-						{{model.dateStart.getDate()}}/{{model.dateStart.getMonth()+1}}/{{model.dateStart.getFullYear()}} {{model.dateStart.getHours()}}:{{model.dateStart.getMinutes()}} 
+						{{(model.dateStart.getDate()<10?'0':'') + model.dateStart.getDate() }}/{{('0'+(model.dateStart.getMonth()+1)).slice(-2)}}/{{model.dateStart.getFullYear()}} {{(model.dateStart.getHours()<10?'0':'') + model.dateStart.getHours() }}:{{(model.dateStart.getMinutes()<10?'0':'') + model.dateStart.getMinutes() }} 
 						
-						Task: {{model.task}}
+						<b>Task:</b> {{model.task}}
 					</div>
 				</div>
-				
-				<ion-option-button class="button button-assertive icon-left ion-trash-a" on-tap="$event.stopPropagation(); $parent.controller.collection.remove(model);">Delete</ion-option-button>
 		</ion-item>
 	</ion-list> 
 	<ion-infinite-scroll

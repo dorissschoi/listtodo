@@ -76,7 +76,14 @@ module.config ($stateProvider, $urlRouterProvider) ->
 				templateUrl: "templates/todo/read.html"
 				controller: 'TodoReadCtrl'
 				
-				
+	$stateProvider.state 'app.readOnlyTodo',
+		url: "/todo/readonly"
+		params: SelectedTodo: null
+		views:
+			'menuContent':
+				templateUrl: "templates/todo/readonly.html"
+				controller: 'TodoReadCtrl'
+								
 	$stateProvider.state 'app.calTodo',
 		url: "/todo/cal"
 		views:

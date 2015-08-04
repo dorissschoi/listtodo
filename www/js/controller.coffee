@@ -334,7 +334,7 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 		formatYear: 'yy'
 		startingDay: 1	
 
-TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, $ionicHistory, $ionicViewSwitcher, model) ->
+TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, $ionicHistory, model) ->
 	class TodoListView
 		constructor: (opts = {}) ->
 			_.each @events, (handler, event) =>
@@ -373,7 +373,6 @@ TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 			$scope.collection = new model.TodoList()
 			$scope.collection.$fetch().then =>
 				$scope.controller = new TodoListView collection: $scope.collection
-			$ionicViewSwitcher.nextDirection('back')  
 			$ionicHistory.nextViewOptions({historyRoot: true})
 			$ionicHistory.clearCache()
 
@@ -450,7 +449,7 @@ TodoCalCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal,
 	#End Angular Calendar	
 		 
 
-MyTodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, $ionicHistory, $ionicViewSwitcher, model) ->
+MyTodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, $ionicHistory, model) ->
 	class MyTodoListView
 		constructor: (opts = {}) ->
 			_.each @events, (handler, event) =>
@@ -467,7 +466,6 @@ MyTodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicMod
 			$scope.collection = new model.MyTodoList()
 			$scope.collection.$fetch().then =>
 				$scope.controller = new MyTodoListView collection: $scope.collection
-			$ionicViewSwitcher.nextDirection('back')  
 			$ionicHistory.nextViewOptions({historyRoot: true})
 			$ionicHistory.clearCache()			
 						
@@ -500,9 +498,9 @@ angular.module('starter.controller').controller 'MultiSelectCtrl', ['$scope', '$
 angular.module('starter.controller').controller 'TodoReadCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', TodoReadCtrl]
 angular.module('starter.controller').controller 'TodoCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', TodoCtrl]
 
-angular.module('starter.controller').controller 'TodoListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', '$ionicHistory', '$ionicViewSwitcher', 'model', TodoListCtrl]
+angular.module('starter.controller').controller 'TodoListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', '$ionicHistory', 'model', TodoListCtrl]
 angular.module('starter.controller').controller 'TodoCalCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', TodoCalCtrl]
-angular.module('starter.controller').controller 'MyTodoListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', '$ionicHistory', '$ionicViewSwitcher', 'model', MyTodoListCtrl]
+angular.module('starter.controller').controller 'MyTodoListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', '$ionicHistory', 'model', MyTodoListCtrl]
 
 
 angular.module('starter.controller').filter 'todosFilter', TodosFilter
