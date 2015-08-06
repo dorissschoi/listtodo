@@ -264,13 +264,13 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 	$scope.endTime = 12600	
 	$scope.dateStartPickerCallback = (val) ->
 		if typeof val == 'undefined'
-			$scope.startDate = new Date($filter('date')(val, 'MMM dd yyyy UTC'))
+			$scope.startDate = new Date($filter('date')(currDate, 'MMM dd yyyy UTC'))
 		else
 			$scope.startDate = val	
 		return	
 	$scope.dateEndPickerCallback = (val) ->
 		if typeof val == 'undefined'
-			$scope.endDate = new Date($filter('date')(val, 'MMM dd yyyy UTC'))
+			$scope.endDate = new Date($filter('date')(currDate, 'MMM dd yyyy UTC'))
 		else 	
 			$scope.endDate = val
 		return	
