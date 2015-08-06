@@ -198,9 +198,9 @@ TodoReadCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 			
 			# ionic-datepicker
 			$scope.slots = [{epochTime: 0, format: 12, step: 15},{epochTime: 0, format: 12, step: 15}]
-			newdate = new Date($filter('date')($scope.model.dateStart, 'dd-MMM-yyyy'))
+			newdate = new Date($filter('date')($scope.model.dateStart, 'MMM dd yyyy UTC'))
 			$scope.model.newdateStart = newdate
-			newdate = new Date($filter('date')($scope.model.dateEnd, 'dd-MMM-yyyy'))
+			newdate = new Date($filter('date')($scope.model.dateEnd, 'MMM dd yyyy UTC'))
 			$scope.model.newdateEnd = newdate
 			$scope.model.newtimeStart = $scope.model.dateStart.getHours()*60*60 + $scope.model.dateStart.getMinutes()*60
 			$scope.model.newtimeEnd = $scope.model.dateEnd.getHours()*60*60 + $scope.model.dateEnd.getMinutes()*60
@@ -258,19 +258,19 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 	
 	# ionic-datepicker
 	currDate = new Date	
-	$scope.startDate = new Date($filter('date')(currDate, 'dd-MMM-yyyy'))
-	$scope.endDate = new Date($filter('date')(currDate, 'dd-MMM-yyyy'))
+	$scope.startDate = new Date($filter('date')(currDate, 'MMM dd yyyy UTC'))
+	$scope.endDate = new Date($filter('date')(currDate, 'MMM dd yyyy UTC'))
 	$scope.startTime = 12600
 	$scope.endTime = 12600	
 	$scope.dateStartPickerCallback = (val) ->
 		if typeof val == 'undefined'
-			$scope.startDate = new Date($filter('date')(val, 'dd-MMM-yyyy'))
+			$scope.startDate = new Date($filter('date')(val, 'MMM dd yyyy UTC'))
 		else
 			$scope.startDate = val	
 		return	
 	$scope.dateEndPickerCallback = (val) ->
 		if typeof val == 'undefined'
-			$scope.endDate = new Date($filter('date')(val, 'dd-MMM-yyyy'))
+			$scope.endDate = new Date($filter('date')(val, 'MMM dd yyyy UTC'))
 		else 	
 			$scope.endDate = val
 		return	
