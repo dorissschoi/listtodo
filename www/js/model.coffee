@@ -249,22 +249,13 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 		#$urlRoot: "#{env.serverUrl()}/api/todo"
 		$urlRoot: "http://localhost:3000/api/todo/"
 		
-		
 		changeFormat: (dateIn, timeIn) ->
-			if typeof(dateIn) =="object"
-				output = new Date(dateIn.toDateString() + " " + timeIn.toTimeString())
-			else	
-				dateIn = dateIn.split("/")
-				output = new Date(dateIn[2], dateIn[1] - 1, dateIn[0], timeIn.getHours(), timeIn.getMinutes())
+			output = new Date(dateIn.getFullYear(), dateIn.getMonth(), dateIn.getDate(), parseInt(timeIn / 3600), timeIn / 60 % 60)	
 			return output
+
 		$save: (values, opts) ->
 			if @$hasChanged()
-				if _.isUndefined(values)
-					#new rec
-					#"Mon Jun 01 2015" "14:51:04 GMT+0800 (HKT)"
-					this.dateStart =  @changeFormat(this.dateStart, this.timeStart)
-					this.dateEnd = @changeFormat(this.dateEnd, this.timeEnd)
-				else
+				if !_.isUndefined(values)
 					#update rec
 					values.dateStart = @changeFormat(values.dateStart, values.timeStart)
 					values.dateEnd = @changeFormat(values.dateEnd, values.timeEnd)

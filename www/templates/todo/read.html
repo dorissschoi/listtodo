@@ -27,56 +27,45 @@
 	  	<input type="text" ng-model="model.newtask" ng-disabled="button" 
 			 required name="taskname">
 	  	</label>
-			  
 		<div class="row">
-			<div class="col col-50">
-				<span class="input-label">Start date</span>
-				<p class="input-group" >
-				<input type="text" name="dateStart" show-weeks="false" 
-			                class="form-control" datepicker-popup="{{format}}" 
-			              	ng-model="model.newdateStart" is-open="datepickers.dateStart"  
-			              	datepicker-options="dateOptions" 
-			              	ng-required="true" close-text="Close" ng-disabled="button" />
-			    <span class="input-group-btn">
-			    	<button type="button" class="btn btn-default" 
-			                ng-click="controller.open($event, 'dateStart')"
-			                
-			                ng-disabled="button" >
-						<i class="icon ion-calendar"></i></button>
-			    </span>          	
-				</p>
+			<div class="col col-50"><span class="input-label">Start date</span> 
+				<ionic-datepicker idate="model.newdateStart" 
+						disablepreviousdates="false"  
+						callback="newdateStartPickerCallback">
+					    <button class="button button-block button-positive"> 
+					    {{ model.newdateStart | date:'dd - MMMM - yyyy' }} </button>
+					</ionic-datepicker>	
 			</div>
-			<div class="col" ng-disabled="button">
-				<timepicker ng-model="model.newtimeStart" 
-		        	ng-change="changed()" hour-step="hstep" 
-		        	minute-step="mstep" show-meridian="ismeridian"  ></timepicker>
-			</div>      
+			<div class="col"><span class="input-label">Start time</span>
+				<ionic-timepicker 
+					etime="model.newtimeStart" 
+					format="slots[0].format" 
+					step="slots[0].step" callback="newtimeStartPickerCallback">    
+					<button class="button button-block button-positive">  
+					<standard-time-meridian etime='model.newtimeStart'></standard-time-meridian>
+					</button>
+				</ionic-timepicker>
+			</div>    			  
 		</div>
 		<div class="row">
-			<div class="col col-50">
-					<span class="input-label">End date</span>
-					<p class="input-group">
-					<input type="text" name="dateEnd" show-weeks="false"
-			                class="form-control" datepicker-popup="{{format}}" 
-			              	ng-model="model.newdateEnd" is-open="datepickers.dateEnd"  
-			              	datepicker-options="dateOptions" 
-			              	ng-required="true" close-text="Close" ng-disabled="button" />
-			              
-					<span class="input-group-btn">
-						<button type="button" class="btn btn-default" 
-			                ng-click="controller.open($event, 'dateEnd')"
-			                ng-disabled="button" >
-						<i class="icon ion-calendar"></i></button>
-					</span>
-					</p>
-				</div>
-		
-		
-			<div class="col">
-				<timepicker ng-model="model.newtimeEnd" 
-			        	ng-change="changed()" hour-step="hstep" 
-			        	minute-step="mstep" show-meridian="ismeridian" ng-disabled="button" ></timepicker>
-			</div> 	  
+			<div class="col col-50"><span class="input-label">End date</span>
+				<ionic-datepicker idate="model.newdateEnd" 
+					disablepreviousdates="false"  
+					callback="newdateEndPickerCallback">
+				    <button class="button button-block button-positive"> 
+				    {{ model.newdateEnd | date:'dd - MMMM - yyyy' }} </button>
+				</ionic-datepicker>			
+			</div>
+			<div class="col"><span class="input-label">End time</span>
+				<ionic-timepicker 
+					etime="model.newtimeEnd" 
+					format="slots[1].format" 
+					step="slots[1].step" callback="newtimeEndPickerCallback">    
+					<button class="button button-block button-positive">  
+					<standard-time-meridian etime='model.newtimeEnd'></standard-time-meridian> 
+					</button>
+				</ionic-timepicker>
+			</div>				  
 	  	</div>
 	</div>	    	
   </ion-content>
