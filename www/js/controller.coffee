@@ -193,17 +193,19 @@ TodoReadCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 			_.each @events, (handler, event) =>
 				$scope.$on event, @[handler]
 			@model = opts.model
+			@collection = $stateParams.myTodoCol
 			$scope.model = $stateParams.SelectedTodo
 			$scope.model.newtask = $scope.model.task
 			
-			# ionic-datepicker
-			$scope.slots = [{epochTime: 0, format: 12, step: 15},{epochTime: 0, format: 12, step: 15}]
 			newdate = new Date($filter('date')($scope.model.dateStart, 'MMM dd yyyy UTC'))
 			$scope.model.newdateStart = newdate
 			newdate = new Date($filter('date')($scope.model.dateEnd, 'MMM dd yyyy UTC'))
 			$scope.model.newdateEnd = newdate
 			$scope.model.newtimeStart = $scope.model.dateStart.getHours()*60*60 + $scope.model.dateStart.getMinutes()*60
 			$scope.model.newtimeEnd = $scope.model.dateEnd.getHours()*60*60 + $scope.model.dateEnd.getMinutes()*60
+
+			# ionic-datepicker
+			$scope.slots = [{epochTime: 0, format: 12, step: 15},{epochTime: 0, format: 12, step: 15}]
 			$scope.newdateStartPickerCallback = (val) ->
 				if typeof val != 'undefined'
 					$scope.model.newdateStart = val	
@@ -224,9 +226,22 @@ TodoReadCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 					$scope.model.newtimeEnd = val
 				return			
 
+		update: ->
+			angular.forEach @collection, (element) =>
+				if element._id == $scope.model.id
+					@model = element
+			@model.task = $scope.model.newtask
+			output = new Date($scope.model.newdateStart.getFullYear(),$scope.model.newdateStart.getMonth(), $scope.model.newdateStart.getDate(), parseInt($scope.model.newtimeStart / 3600), $scope.model.newtimeStart / 60 % 60)
+			@model.dateStart = output
+			output = new Date($scope.model.newdateEnd.getFullYear(),$scope.model.newdateEnd.getMonth(), $scope.model.newdateEnd.getDate(), parseInt($scope.model.newtimeEnd / 3600), $scope.model.newtimeEnd / 60 % 60)
+			@model.dateEnd = output 
+			@model.$save().then =>
+				#$state.transitionTo $rootScope.URL, {}, { reload: true }
+				$state.go $rootScope.URL, {}, { reload: true }
+			
 		# edit page to list page
-		refresh: ->
-			$state.go 'app.mytodo', null, { reload: true }
+		backpage: ->
+			$state.go $rootScope.URL
 			
 	$scope.controller = new TodoReadView model: $scope.model
 
@@ -325,57 +340,43 @@ TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 TodoCalCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model) ->
 	class TodoCalView
 		constructor: (opts = {}) ->
-			@collection = opts.collection
 			_.each @events, (handler, event) =>
 				$scope.$on event, @[handler]
+			@collection = opts.collection
 		
-	$scope.collection = new model.TodoListCol()
-	$scope.collection.$fetch().then ->
-	
-		$scope.eventsafter = 1			
-		$scope.events.push({title: 'After event', type: 'info', draggable: true, resizable: true, startsAt: new Date(2015,6,1,15)  , endsAt: new Date(2015,6,2,15) })
-		_.each $scope.collection.models, (todo) =>
-			newtodo = _.pick todo, 'title', 'type', 'startsAt', 'endsAt', 'resizable', 'draggable'
-			$scope.events.push(newtodo)
-		$scope.eventsafter = 2
-	$scope.controller = new TodoCalView collection: $scope.collection
-						
+	$scope.collection = new model.MyTodoList()
+	$scope.collection.$fetch().then =>
+		$scope.controller = new TodoCalView collection: $scope.collection
+		angular.forEach $scope.collection.models, (element) ->
+        	#convert data to suit the calendar format
+			$scope.events.push
+				title: element.task,
+				type: 'info',
+				startsAt: element.dateStart,
+				endsAt: element.dateEnd
+				editable: false,
+				deletable: false,
+				draggable: false,
+				resizable: false,
+				id: element._id,
+				dateStart: element.dateStart,
+				dateEnd: element.dateEnd,
+				task: element.task
+			return
+		$scope.$apply()
+
 	#Start Angular Calendar
 	#These variables MUST be set as a minimum for the calendar to work
-	$scope.calendarView = 'month'
+	if !_.isUndefined($stateParams.SelectedTodoView)
+		$scope.calendarView = $stateParams.SelectedTodoView
+	else	
+		$scope.calendarView = 'month'
 	$scope.calendarDay = new Date()
-	$scope.events = [
-		{
-			title: 'ABC'
-			type: 'info'
-			startsAt: new Date(2015,6,1,15) 
-			endsAt: new Date(2015,6,1,18)
-			draggable: true
-			resizable: true
-		}
-	]				
-			
 	$scope.eventClicked = (event) ->
-		showModal 'Clicked', event
-	$scope.eventEdited = (event) ->
-		showModal 'Edited', event
-	$scope.eventDeleted = (event) ->
-		showModal 'eventDeleted', event	
-	$scope.eventTimesChanged = (event) ->
-		showModal 'eventTimesChanged', event	 
-	$scope.toggle = ($event, field, event) ->
-		$event.preventDefault()
-		$event.stopPropagation()
-		event[field] = !event[field]  
-	showModal = (action, event) ->
-		$modal.open
-			templateUrl: 'modalContent.html'
-			controller: ->
-				$scope.action = action
-				$scope.event = event
-				controllerAs: 'vm'			 	  
-	#End Angular Calendar	
-		 
+		$rootScope.URL = 'app.calTodo'
+		# click to read 
+		$state.go 'app.readTodo', { SelectedTodo: event , myTodoCol: $scope.collection.models}, {reload: true}
+		
 
 MyTodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, $ionicHistory, model) ->
 	class MyTodoListView
@@ -462,7 +463,10 @@ angular.module('starter.controller').controller 'TodoReadCtrl', ['$rootScope', '
 angular.module('starter.controller').controller 'TodoCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', '$filter', TodoCtrl]
 
 angular.module('starter.controller').controller 'TodoListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', '$ionicHistory', 'model', TodoListCtrl]
+
 angular.module('starter.controller').controller 'TodoCalCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', TodoCalCtrl]
+
+
 angular.module('starter.controller').controller 'MyTodoListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', '$ionicHistory', 'model', MyTodoListCtrl]
 
 angular.module('starter.controller').filter 'todosFilter', TodosFilter

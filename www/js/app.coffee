@@ -1,4 +1,4 @@
-module = angular.module('starter', ['ionic', 'starter.controller', 'http-auth-interceptor', 'ngTagEditor', 'ActiveRecord', 'angularFileUpload', 'ngTouch', 'ngAnimate', 'ionic-datepicker', 'ionic-timepicker'])
+module = angular.module('starter', ['ionic', 'starter.controller', 'http-auth-interceptor', 'ngTagEditor', 'ActiveRecord', 'angularFileUpload', 'ngTouch', 'ngAnimate', 'ionic-datepicker', 'ionic-timepicker', 'mwl.calendar'])
 
 module.run ($ionicPlatform, $location, $http, authService) ->
 	$ionicPlatform.ready ->
@@ -70,25 +70,51 @@ module.config ($stateProvider, $urlRouterProvider) ->
 	
 	$stateProvider.state 'app.readTodo',
 		url: "/todo/read"
-		params: SelectedTodo: null
+		params: SelectedTodo: null, myTodoCol: null
 		views:
 			'menuContent':
 				templateUrl: "templates/todo/read.html"
 				controller: 'TodoReadCtrl'
-				
-	$stateProvider.state 'app.readOnlyTodo',
-		url: "/todo/readonly"
-		params: SelectedTodo: null
-		views:
-			'menuContent':
-				templateUrl: "templates/todo/readonly.html"
-				controller: 'TodoReadCtrl'
 								
 	$stateProvider.state 'app.calTodo',
 		url: "/todo/cal"
+		params: SelectedTodoView: 'month'
 		views:
 			'menuContent':
 				templateUrl: "templates/todo/cal.html"
 				controller: 'TodoCalCtrl'
+		onEnter: ($state, $rootScope) ->
+				$rootScope.$broadcast 'todo:mylistChanged'			
+
+	$stateProvider.state 'app.weekTodo',
+		url: "/todo/cal"
+		params: SelectedTodoView: 'week'
+		views:
+			'menuContent':
+				templateUrl: "templates/todo/cal.html"
+				controller: 'TodoCalCtrl'
+		onEnter: ($state, $rootScope) ->
+				$rootScope.$broadcast 'todo:mylistChanged'			
+
+	$stateProvider.state 'app.yearTodo',
+		url: "/todo/cal"
+		params: SelectedTodoView: 'year'
+		views:
+			'menuContent':
+				templateUrl: "templates/todo/cal.html"
+				controller: 'TodoCalCtrl'
+		onEnter: ($state, $rootScope) ->
+				$rootScope.$broadcast 'todo:mylistChanged'			
+
+	$stateProvider.state 'app.dayTodo',
+		url: "/todo/cal"
+		params: SelectedTodoView: 'day'
+		views:
+			'menuContent':
+				templateUrl: "templates/todo/cal.html"
+				controller: 'TodoCalCtrl'
+		onEnter: ($state, $rootScope) ->
+				$rootScope.$broadcast 'todo:mylistChanged'	
 														
-	$urlRouterProvider.otherwise('/todo/mytodo')
+	#$urlRouterProvider.otherwise('/todo/mytodo')
+	$urlRouterProvider.otherwise('/todo/cal')

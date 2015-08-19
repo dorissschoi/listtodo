@@ -2,23 +2,21 @@
   <form name="myForm" class="my-form">
   <ion-header-bar>
   	<div ng-show="button">
-  		<button class="button ion-close-round" ui-sref="app.mytodo"></button>
+  		<button class="button ion-close-round" ng-click="controller.backpage();"></button>
+  		
   		<h1 class="title">Read</h1>
   		<button class="button button-clear button-positive" 
     		ng-click="button=false">Edit</button>
     
     </div>
     <div ng-hide="button">
-    	<button class="button ion-close-round" ui-sref="app.todo"></button>
+    	<button class="button ion-close-round" ui-sref="app.calTodo"></button>
     	<h1 class="title">Edit</h1>
     	<button class="button button-clear button-positive" 
-    	ng-click="model.$save({task: model.newtask,   	
-    	dateStart: model.newdateStart, timeStart: model.newtimeStart,
-    	dateEnd: model.newdateEnd, timeEnd: model.newtimeEnd });
-    	controller.refresh();"
+    	ng-click="button=false;controller.update();"
     	ng-disabled="myForm.taskname.$error.required" 
     	ng-hide="button"
-    	ng-click="button=false">Save</button>
+    	>Save</button>
     </div>
   </ion-header-bar>
   <ion-content padding="true">

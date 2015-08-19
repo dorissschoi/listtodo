@@ -28,9 +28,5 @@
 				<ion-option-button class="button button-assertive icon-left ion-trash-a" on-tap="$event.stopPropagation(); $parent.controller.collection.remove(model);">Delete</ion-option-button>
 		</ion-item>
 	</ion-list> 
-	<ion-infinite-scroll
-	 ng-if="collection.state.page < collection.state.total_page " 
-	 on-infinite="controller.loadMore()"
-	 >
-	</ion-infinite-scroll>
+
 </ion-content>

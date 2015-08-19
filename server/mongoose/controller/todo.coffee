@@ -21,9 +21,9 @@ class Todo
 				if err
 					return error res, err
 				if req.query.dtStart 	
-					res.json {count: todos.length, results: todos}
+					res.json {results: todos}
 				else	
-					res.json {count: count, results: todos}
+					res.json {results: todos}
 			
 	@list: (req, res) ->
 		page = if req.query.page then req.query.page else 1

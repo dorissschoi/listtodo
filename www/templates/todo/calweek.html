@@ -13,6 +13,14 @@
 		<button class="btn btn-default" mwl-date-modifier date="calendarDay" set-to-today>Today</button>
 		<button class="btn btn-primary" mwl-date-modifier date="calendarDay" increment="calendarView">Next</button>
 	</div>
+	
+ 
+ 
+<ion-radio ng-model="calendarView" ng-value="'month'">Choose month</ion-radio>
+<ion-radio ng-model="calendarView" ng-value="'year'">Choose year</ion-radio>
+<ion-radio ng-model="calendarView" ng-value="'week'">Choose week</ion-radio>
+
+
  
 	<mwl-calendar id="test"
     view="calendarView"

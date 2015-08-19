@@ -70,8 +70,8 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 				@$sync('read', @, opts)
 					.then (res) =>
 						data = @$parse(res.data, opts)
-						if _.isArray data
-							@add data
+						if _.isArray data.results
+							@add data.results
 							fulfill @
 						else
 							reject 'Not a valid response type'
@@ -255,18 +255,12 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 
 		$save: (values, opts) ->
 			if @$hasChanged()
-				if !_.isUndefined(values)
-					#update rec
-					values.dateStart = @changeFormat(values.dateStart, values.timeStart)
-					values.dateEnd = @changeFormat(values.dateEnd, values.timeEnd)
-							
 				super(values, opts)
 			else
 				return new Promise (fulfill, reject) ->
 					fulfill @		
 		
-	#class TodoList extends Collection
-	class TodoList extends PageableCollection 
+	class TodoList extends Collection
 		$idAttribute: '_id'
 	
 		$urlRoot: "http://localhost:3000/api/todo"
@@ -287,8 +281,7 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 	class MyTodoList extends TodoList
 		$urlRoot: "http://localhost:3000/api/mytodo"
 			
-	#class TodoListCol extends Collection
-	class TodoListCol extends PageableCollection 
+	class TodoListCol extends Collection
 		$idAttribute: '_id'
 		
 		$urlRoot: "http://localhost:3000/api/todo"
@@ -301,7 +294,9 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 			res.type = 'info'
 			res.draggable= 'true'
 			res.resizable= 'true'
-			return new Todo res
+			result = _.pick res, 'startsAt', 'endsAt', 'title', 'draggable', 'resizable', 'type'
+			
+			return new Todo result
 			
 		$parse: (res, opts) ->
 			_.each res.results, (value, key) =>
