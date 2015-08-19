@@ -192,18 +192,7 @@ TodoReadCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 		constructor: (opts = {}) ->
 			_.each @events, (handler, event) =>
 				$scope.$on event, @[handler]
-			@model = opts.model
-			@collection = $stateParams.myTodoCol
-			$scope.model = $stateParams.SelectedTodo
-			$scope.model.newtask = $scope.model.task
 			
-			newdate = new Date($filter('date')($scope.model.dateStart, 'MMM dd yyyy UTC'))
-			$scope.model.newdateStart = newdate
-			newdate = new Date($filter('date')($scope.model.dateEnd, 'MMM dd yyyy UTC'))
-			$scope.model.newdateEnd = newdate
-			$scope.model.newtimeStart = $scope.model.dateStart.getHours()*60*60 + $scope.model.dateStart.getMinutes()*60
-			$scope.model.newtimeEnd = $scope.model.dateEnd.getHours()*60*60 + $scope.model.dateEnd.getMinutes()*60
-
 			# ionic-datepicker
 			$scope.slots = [{epochTime: 0, format: 12, step: 15},{epochTime: 0, format: 12, step: 15}]
 			$scope.newdateStartPickerCallback = (val) ->
@@ -227,24 +216,38 @@ TodoReadCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 				return			
 
 		update: ->
-			angular.forEach @collection, (element) =>
+			angular.forEach $scope.collection, (element) =>
 				if element._id == $scope.model.id
 					@model = element
+					
 			@model.task = $scope.model.newtask
 			output = new Date($scope.model.newdateStart.getFullYear(),$scope.model.newdateStart.getMonth(), $scope.model.newdateStart.getDate(), parseInt($scope.model.newtimeStart / 3600), $scope.model.newtimeStart / 60 % 60)
 			@model.dateStart = output
 			output = new Date($scope.model.newdateEnd.getFullYear(),$scope.model.newdateEnd.getMonth(), $scope.model.newdateEnd.getDate(), parseInt($scope.model.newtimeEnd / 3600), $scope.model.newtimeEnd / 60 % 60)
 			@model.dateEnd = output 
 			@model.$save().then =>
-				#$state.transitionTo $rootScope.URL, {}, { reload: true }
-				$state.go $rootScope.URL, {}, { reload: true }
+				$rootScope.$broadcast 'todo:mylistCalChanged'
+				if _.isNull $stateParams.backpage
+					$state.go $rootScope.URL, {}, { reload: true }
+				else	
+					$state.go $stateParams.backpage, {}, { reload: true }
 			
-		# edit page to list page
 		backpage: ->
-			$state.go $rootScope.URL
+			if _.isNull $stateParams.backpage
+				$state.go $rootScope.URL, {}, { reload: true }
+			else	
+				$state.go $stateParams.backpage, {}, { reload: true }
 			
+	$scope.collection = $stateParams.myTodoCol
+	$scope.model = $stateParams.SelectedTodo
+	$scope.model.newtask = $scope.model.task
+	newdate = new Date($filter('date')($scope.model.dateStart, 'MMM dd yyyy UTC'))
+	$scope.model.newdateStart = newdate
+	newdate = new Date($filter('date')($scope.model.dateEnd, 'MMM dd yyyy UTC'))
+	$scope.model.newdateEnd = newdate
+	$scope.model.newtimeStart = $scope.model.dateStart.getHours()*60*60 + $scope.model.dateStart.getMinutes()*60
+	$scope.model.newtimeEnd = $scope.model.dateEnd.getHours()*60*60 + $scope.model.dateEnd.getMinutes()*60
 	$scope.controller = new TodoReadView model: $scope.model
-
 	
 TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model, $filter) ->
 	class TodoView  			
@@ -263,8 +266,11 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 			output = new Date($scope.endDate.getFullYear(),  $scope.endDate.getMonth(),   $scope.endDate.getDate(), parseInt($scope.endTime / 3600), $scope.endTime / 60 % 60)
 			@model.dateEnd = output
 			@model.$save().catch alert
-			$scope.todo.task = ''	
-			$state.go 'app.mytodo'
+			$scope.todo.task = ''
+			$rootScope.$broadcast 'todo:mylistCalChanged'
+			if _.isUndefined $rootScope.URL
+				$rootScope.URL = 'app.calTodo'	
+			$state.go $rootScope.URL, {}, { reload: true }
 		
 		itemClick: (selectedModel) ->
 			$state.go('app.readTodo', {'model': selectedModel})
@@ -329,21 +335,27 @@ TodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 
 		remove: (todo) ->
 			@model.remove(todo)			  
-		
-		
+			
 	if _.isUndefined $scope.collection				
 		$scope.collection = new model.TodoList()
 		$scope.collection.$fetch()
 	$scope.controller = new TodoListView collection: $scope.collection
 
 
-TodoCalCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model) ->
+TodoCalCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, $ionicHistory, model) ->
 	class TodoCalView
 		constructor: (opts = {}) ->
 			_.each @events, (handler, event) =>
 				$scope.$on event, @[handler]
 			@collection = opts.collection
 		
+		# refresh new add task
+		$rootScope.$on 'todo:mylistCalChanged', ->
+			$scope.collection = new model.MyTodoList()
+			$scope.collection.$fetch()
+			$ionicHistory.nextViewOptions({historyRoot: true})
+			$ionicHistory.clearCache()
+			
 	$scope.collection = new model.MyTodoList()
 	$scope.collection.$fetch().then =>
 		$scope.controller = new TodoCalView collection: $scope.collection
@@ -372,9 +384,17 @@ TodoCalCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal,
 	else	
 		$scope.calendarView = 'month'
 	$scope.calendarDay = new Date()
+
+	# click to read todo
 	$scope.eventClicked = (event) ->
-		$rootScope.URL = 'app.calTodo'
-		# click to read 
+		if $scope.calendarView == 'month'
+			$rootScope.URL = 'app.calTodo'
+		else if $scope.calendarView == 'week'
+			$rootScope.URL = 'app.weekTodo'
+		else if $scope.calendarView == 'day'
+			$rootScope.URL = 'app.dayTodo'
+		else if $scope.calendarView == 'year'
+			$rootScope.URL = 'app.yearTodo'			
 		$state.go 'app.readTodo', { SelectedTodo: event , myTodoCol: $scope.collection.models}, {reload: true}
 		
 
@@ -464,8 +484,7 @@ angular.module('starter.controller').controller 'TodoCtrl', ['$rootScope', '$sco
 
 angular.module('starter.controller').controller 'TodoListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', '$ionicHistory', 'model', TodoListCtrl]
 
-angular.module('starter.controller').controller 'TodoCalCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', TodoCalCtrl]
-
+angular.module('starter.controller').controller 'TodoCalCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', '$ionicHistory', 'model', TodoCalCtrl]
 
 angular.module('starter.controller').controller 'MyTodoListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', '$ionicHistory', 'model', MyTodoListCtrl]
 

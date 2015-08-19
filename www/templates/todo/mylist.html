@@ -5,7 +5,7 @@
     
     <button class="button button-clear button-positive" ui-sref="app.createTodo">New</button>  
 </ion-header-bar>
-<div class="bar bar-subheader item-input-inset">
+<div class="bar bar-subheader item-input-inset mylistfilter">
 	<label class="item-input-wrapper">
 		<i class="icon ion-search placeholder-icon"></i>
 	    <input type="text" ng-model="search">
@@ -15,7 +15,8 @@
 	<ion-list>
 		<ion-item 
 			ng-repeat="model in controller.collection.models  | todosFilter:search"
-			ui-sref="app.readTodo({ SelectedTodo: model })"
+			ui-sref="app.readTodo({ SelectedTodo: model, myTodoCol: null, backpage: 'app.mytodo'})"
+			
 			>
 				<div class='row'>
 					<div class='col'>

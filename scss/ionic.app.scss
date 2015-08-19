@@ -73,17 +73,22 @@ span.input-label {
 	width: 100px;
 }
 
-/* datePicker edit view */
-ion-modal-view.modal {
-	bottom: 0%;
-}	
-
-.bar-subheader {
-	position: absolute;
-}
 
 
 /* angular bootstrap calendar */
 .cal-month-day .cal-events-num {
     display: none;
+}
+
+/* ionic datepicker */
+.ionic-datepicker .row {
+    margin-left: 0px;
+}
+
+.mylistfilter {
+	top: 0px;
+}
+
+a.item-content {
+    text-decoration: none;
 }

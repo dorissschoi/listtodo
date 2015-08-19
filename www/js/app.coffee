@@ -44,6 +44,7 @@ module.config ($stateProvider, $urlRouterProvider) ->
 	# All Todo List
 	$stateProvider.state 'app.todo',
 		url: "/todo"
+		cache: false
 		views:
 			'menuContent':
 				templateUrl: "templates/todo/list.html"
@@ -54,6 +55,7 @@ module.config ($stateProvider, $urlRouterProvider) ->
 	# My todo list
 	$stateProvider.state 'app.mytodo',
 		url: "/todo/mytodo"
+		cache: false
 		views:
 			'menuContent':
 				templateUrl: "templates/todo/mylist.html"
@@ -63,6 +65,7 @@ module.config ($stateProvider, $urlRouterProvider) ->
     		
 	$stateProvider.state 'app.createTodo',
 		url: "/todo/create"
+		cache: false
 		views:
 			'menuContent':
 				templateUrl: "templates/todo/create.html"
@@ -70,7 +73,8 @@ module.config ($stateProvider, $urlRouterProvider) ->
 	
 	$stateProvider.state 'app.readTodo',
 		url: "/todo/read"
-		params: SelectedTodo: null, myTodoCol: null
+		params: SelectedTodo: null, myTodoCol: null, backpage: null
+		cache: false
 		views:
 			'menuContent':
 				templateUrl: "templates/todo/read.html"
@@ -79,6 +83,7 @@ module.config ($stateProvider, $urlRouterProvider) ->
 	$stateProvider.state 'app.calTodo',
 		url: "/todo/cal"
 		params: SelectedTodoView: 'month'
+		cache: false
 		views:
 			'menuContent':
 				templateUrl: "templates/todo/cal.html"
@@ -89,6 +94,7 @@ module.config ($stateProvider, $urlRouterProvider) ->
 	$stateProvider.state 'app.weekTodo',
 		url: "/todo/cal"
 		params: SelectedTodoView: 'week'
+		cache: false
 		views:
 			'menuContent':
 				templateUrl: "templates/todo/cal.html"
@@ -99,6 +105,7 @@ module.config ($stateProvider, $urlRouterProvider) ->
 	$stateProvider.state 'app.yearTodo',
 		url: "/todo/cal"
 		params: SelectedTodoView: 'year'
+		cache: false
 		views:
 			'menuContent':
 				templateUrl: "templates/todo/cal.html"
@@ -109,6 +116,7 @@ module.config ($stateProvider, $urlRouterProvider) ->
 	$stateProvider.state 'app.dayTodo',
 		url: "/todo/cal"
 		params: SelectedTodoView: 'day'
+		cache: false
 		views:
 			'menuContent':
 				templateUrl: "templates/todo/cal.html"
