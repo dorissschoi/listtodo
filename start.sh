@@ -1,8 +1,8 @@
 #!/bin/sh
 
-root=~/prod/file
+root=~/prod/todouat
 
-export PORT=3000
+export PORT=8009
 
-cd ${root}
-/usr/local/bin/forever start -a -l stdout.log /usr/bin/npm start
+
+forever start --workingDir ${root} -a -l todouat.log /usr/bin/npm start

@@ -226,7 +226,7 @@ TodoReadCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 			output = new Date($scope.model.newdateEnd.getFullYear(),$scope.model.newdateEnd.getMonth(), $scope.model.newdateEnd.getDate(), parseInt($scope.model.newtimeEnd / 3600), $scope.model.newtimeEnd / 60 % 60)
 			@model.dateEnd = output 
 			@model.$save().then =>
-				$rootScope.$broadcast 'todo:mylistCalChanged'
+				#$rootScope.$broadcast 'todo:mylistCalChanged'
 				if _.isNull $stateParams.backpage
 					$state.go $rootScope.URL, {}, { reload: true }
 				else	
@@ -267,14 +267,11 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 			@model.dateEnd = output
 			@model.$save().catch alert
 			$scope.todo.task = ''
-			$rootScope.$broadcast 'todo:mylistCalChanged'
+			#$rootScope.$broadcast 'todo:mylistCalChanged'
 			if _.isUndefined $rootScope.URL
 				$rootScope.URL = 'app.calTodo'	
 			$state.go $rootScope.URL, {}, { reload: true }
 		
-		itemClick: (selectedModel) ->
-			$state.go('app.readTodo', {'model': selectedModel})
-						
 	$scope.controller = new TodoView model: $scope.model
 	
 	# ionic-datepicker
