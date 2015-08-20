@@ -79,6 +79,14 @@ span.input-label {
 .cal-month-day .cal-events-num {
     display: none;
 }
+.cal-day-panel .row {
+	margin-left: 0px;
+	padding: 0px;
+}
+.cal-row-fluid.cal-row-head {
+	padding-left: 15px;
+	padding-right: 15px;
+}
 
 /* ionic datepicker */
 .ionic-datepicker .row {
@@ -89,6 +97,3 @@ span.input-label {
 	top: 0px;
 }
 
-a.item-content {
-    text-decoration: none;
-}
