@@ -10,13 +10,13 @@
 
 <ion-list>
 	<div 
-		ng-repeat="(oStDate, lTasks) in controller.collection.models "
+		ng-repeat="(oStDate, lTasks) in controller.collection.todos | orderBy:['oStDate']"
 		on-tap="$event.stopPropagation(); controller.read(model);"
 		>
 			<ion-item >
 			<div class='row'>
 				<div class="col-md-2 nowrap font-bold">
-					{{oStDate| limitTo:10 }}
+					{{formatDate(oStDate, "dd MMM yyyy")}}				
 				</div>
 			</div>
 			</ion-item >		 
@@ -33,7 +33,7 @@
 					</div>
 				</div>
 				<ion-option-button class="button button-assertive icon-left ion-trash-a" 
-					on-tap="$event.stopPropagation(); $parent.controller.collection.remove(model);">
+					on-tap="$event.stopPropagation(); controller.remove(model);">
 					Delete
 				</ion-option-button>
 			</ion-item>
