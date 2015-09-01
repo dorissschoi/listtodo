@@ -9,6 +9,31 @@ error = (res, msg) ->
 
 class Todo
 
+	@upcominglist: (req, res) ->
+		page = if req.query.page then req.query.page else 1
+		limit = if req.query.per_page then req.query.per_page else env.pageSize
+		opts = 
+			skip:	(page - 1) * limit
+			limit:	limit
+			
+		order_by = lib.order_by model.Todo.ordering()
+		if req.query.order_by and lib.field(req.query.order_by) in model.Todo.ordering_fields() 
+			order_by = lib.order_by req.query.order_by
+
+		today = new Date()
+		today = today.setHours(0,0,0,0)
+		cond = { $and: [ { dateStart: { $gte: today } }, { createdBy: req.user } ] }
+		#cond = { $and: [ { dateStart: { $gte: new Date() } }, { createdBy: req.user } ] }
+		
+		model.Todo.find(cond, null, opts).populate('resource createdBy').sort(order_by).exec (err, todos) ->				
+			if err
+				return error res, err
+			model.Todo.count {}, (err, count) ->
+				if err
+					return error res, err
+				else
+					res.json {results: todos}
+
 	@mylist: (req, res) ->
 		order_by = lib.order_by model.Todo.ordering()
 		if req.query.order_by and lib.field(req.query.order_by) in model.Todo.ordering_fields() 

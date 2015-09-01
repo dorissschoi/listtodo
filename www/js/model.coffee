@@ -280,6 +280,10 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 	# MyTodoList
 	class MyTodoList extends TodoList
 		$urlRoot: "http://localhost:3000/api/mytodo"
+
+	# UpcomingList
+	class UpcomingList extends TodoList
+		$urlRoot: "http://localhost:3000/api/myupcomingtodo"
 			
 	class TodoListCol extends Collection
 		$idAttribute: '_id'
@@ -315,9 +319,10 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 	UserGrps:	UserGrps
 	FileGrps:	FileGrps
 	Todo:		Todo
-	TodoList:	TodoList
-	MyTodoList:	MyTodoList
-	TodoListCol: TodoListCol
+	TodoList:		TodoList
+	MyTodoList:		MyTodoList
+	UpcomingList:	UpcomingList
+	TodoListCol: 	TodoListCol
 				
 config = ->
 	return

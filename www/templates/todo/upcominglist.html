@@ -1,0 +1,43 @@
+<ion-header-bar class="item-input-inset">
+    <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+    </button>
+    <h1 class='title'>Upcoming Todo</h1>
+    
+    <button class="button button-clear button-positive" ui-sref="app.createTodo">New</button>  
+</ion-header-bar>
+
+<ion-content >
+
+<ion-list>
+	<div 
+		ng-repeat="(oStDate, lTasks) in controller.collection.models "
+		on-tap="$event.stopPropagation(); controller.read(model);"
+		>
+			<ion-item >
+			<div class='row'>
+				<div class="col-md-2 nowrap font-bold">
+					{{oStDate| limitTo:10 }}
+				</div>
+			</div>
+			</ion-item >		 
+			<ion-item   ng-repeat="model in lTasks | orderBy:['oStTime','task']"
+				on-tap="$event.stopPropagation(); controller.read(model);">
+				<div class='row'>
+					<div class="col-md-2 nowrap">
+					</div>
+					<div class="col-md-2 nowrap">
+						{{model.oStTime | date:'HH:mm'}}-{{model.oEnTime| date:'HH:mm'}}
+					</div>
+					<div class="col-md-8 nowrap font-bold">
+						{{model.task}}
+					</div>
+				</div>
+				<ion-option-button class="button button-assertive icon-left ion-trash-a" 
+					on-tap="$event.stopPropagation(); $parent.controller.collection.remove(model);">
+					Delete
+				</ion-option-button>
+			</ion-item>
+	</div>
+</ion-list> 
+				
+</ion-content>

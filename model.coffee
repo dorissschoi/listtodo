@@ -194,6 +194,7 @@ File = mongoose.model 'File', FileSchema
 
 TodoSchema = new mongoose.Schema
 	task:		{ type: String, required: true }
+	location:	{ type: String }
 	dateStart:	{ type: Date }
 	dateEnd:	{ type: Date }
 	createdBy:		{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }
