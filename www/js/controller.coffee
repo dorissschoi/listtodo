@@ -419,10 +419,10 @@ UpcomingListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicM
 				$scope.$on event, @[handler]
 			@collection = opts.collection
 
-		remove: (todo) ->
-			@collection.remove(todo)
-			$scope.collection = new model.UpcomingList()
+
+		$rootScope.$on 'todo:getListView', ->
 			#start
+			$scope.collection = new model.UpcomingList()
 			$scope.collection.$fetch().then ->
 				$scope.$apply ->
 					#expand day range task
@@ -470,9 +470,11 @@ UpcomingListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicM
 											
 					$scope.collection.todos = $scope.groupedByDate
 					$scope.controller = new UpcomingListView collection: $scope.collection
-			#end
-					
-			
+			#end		
+		
+		remove: (todo) ->
+			@collection.remove(todo)
+			$rootScope.$broadcast 'todo:getListView'
 			
 		read: (selectedModel) ->
 			$state.go 'app.readTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.mytodo' }, { reload: true }
@@ -480,57 +482,8 @@ UpcomingListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicM
 		$scope.formatDate = (inStr, format) ->
 			inStr = new Date(parseInt(inStr))
 			return $filter("date")(inStr, format)
-			
-		
-	$scope.collection = new model.UpcomingList()
-	$scope.collection.$fetch().then ->
-		$scope.$apply ->
-			#expand day range task
-			$scope.events = []
-			oneDay = 24*60*60*1000
-			angular.forEach $scope.collection.models, (element) ->
-				sdate = new Date(element.dateStart)
-				sdate = new Date(sdate.setHours(0,0,0,0))
-				edate = new Date(element.dateEnd)
-				edate = new Date(edate.setHours(0,0,0,0))
-						
-				diffDays = Math.round(Math.abs((sdate.getTime() - edate.getTime())/(oneDay)))
-				tomorrow = new Date(element.dateStart)
-				tomorrow = new Date(tomorrow.setHours(0,0,0,0))
-				i=0
-				while i <= diffDays
-					@newmodel = new model.Todo element
-					@newmodel.oStDate = tomorrow
-					if i == 0
-						@newmodel.oStTime = element.dateStart
-						@newmodel.oStDate = sdate
-					else
-						tomorrow = new Date(tomorrow.setDate(tomorrow.getDate()+1))
-						@newmodel.oStTime = tomorrow
-							
-					if diffDays == i	
-						@newmodel.oEnTime = element.dateEnd
-					
-					if i < diffDays 
-						dayEnd = new Date(@newmodel.oStDate)
-						dayEnd = new Date(dayEnd.setHours(23,59,0,0))
-						@newmodel.oEnTime = dayEnd 
-							
-					$scope.events.push @newmodel
-					i++
-					
-			#grouping
-			$scope.eventsGP = _.groupBy($scope.events,'oStDate')
-			
-			#new groupby
-			$scope.groupedByDate = _.groupBy($scope.events, (item) ->
-				item.oStDate.setHours(0,0,0,0)
-			)	
-				#item.getFullYear() + item.getMonth() + item.getDate() + "-" + item 
-									
-			$scope.collection.todos = $scope.groupedByDate
-			$scope.controller = new UpcomingListView collection: $scope.collection
 	
+	$rootScope.$broadcast 'todo:getListView'
 								
 TodosFilter = ->
 	(todos, search) ->
