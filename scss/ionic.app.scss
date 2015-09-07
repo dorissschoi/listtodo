@@ -101,3 +101,30 @@ span.input-label {
 .font-bold {
     font-weight: bold;
 }
+.daterow {
+    padding: 0px;
+    border-bottom: solid;
+    border-width: 1px;
+    border-color: #ddd;
+}
+.datelist {
+	margin-left: 0px;
+}
+
+.datefield {
+	padding-top: 16px;
+	padding-left: 15px;
+}
+.noborder {
+	border-style: none;
+}
+.timelist {
+	padding-right: 10%
+}
+
+
+/*day view*/
+.tblday {
+	width: 100%;
+	margin: 20px
+}

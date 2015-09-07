@@ -27,30 +27,6 @@ module.config ($stateProvider, $urlRouterProvider) ->
 			'menuContent':
 				templateUrl: "templates/search.html"
 	
-	$stateProvider.state 'app.permission',
-		url: "/permission"
-		views:
-			'menuContent':
-				templateUrl: "templates/permission/list.html"
-				controller: "AclCtrl"
-
-	$stateProvider.state 'app.file',
-		url: "/file?path"
-		views:
-			'menuContent':
-				templateUrl: "templates/file/list.html"
-				controller: 'FileCtrl'
-				
-	# All Todo List
-	$stateProvider.state 'app.todo',
-		url: "/todo"
-		cache: false
-		views:
-			'menuContent':
-				templateUrl: "templates/todo/list.html"
-				controller: 'TodoListCtrl'
-		onEnter: ($state, $rootScope) ->
-				$rootScope.$broadcast 'todo:listChanged'
     
 	# My todo list
 	$stateProvider.state 'app.mytodo',
@@ -71,8 +47,6 @@ module.config ($stateProvider, $urlRouterProvider) ->
 			'menuContent':
 				templateUrl: "templates/todo/upcominglist.html"
 				controller: 'UpcomingListCtrl'
-		#onEnter: ($state, $rootScope) ->
-		#		$rootScope.$broadcast 'todo:myupcomingChanged'	    		
     		
 	$stateProvider.state 'app.createTodo',
 		url: "/todo/create"
@@ -112,28 +86,8 @@ module.config ($stateProvider, $urlRouterProvider) ->
 				controller: 'TodoCalCtrl'
 		onEnter: ($state, $rootScope) ->
 				$rootScope.$broadcast 'todo:mylistChanged'			
-
-	$stateProvider.state 'app.yearTodo',
-		url: "/todo/cal"
-		params: SelectedTodoView: 'year'
-		cache: false
-		views:
-			'menuContent':
-				templateUrl: "templates/todo/cal.html"
-				controller: 'TodoCalCtrl'
-		onEnter: ($state, $rootScope) ->
-				$rootScope.$broadcast 'todo:mylistChanged'			
-
-	$stateProvider.state 'app.dayTodo',
-		url: "/todo/cal"
-		params: SelectedTodoView: 'day'
-		cache: false
-		views:
-			'menuContent':
-				templateUrl: "templates/todo/cal.html"
-				controller: 'TodoCalCtrl'
-		onEnter: ($state, $rootScope) ->
-				$rootScope.$broadcast 'todo:mylistChanged'	
+	
+						
 														
-	#$urlRouterProvider.otherwise('/todo/mytodo')
 	$urlRouterProvider.otherwise('/todo/upcomingList')
+	
