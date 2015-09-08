@@ -16,8 +16,6 @@ MenuCtrl = ($scope) ->
 	$scope.env = env
 	$scope.navigator = navigator
 					
-
-
 TodoReadCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model, $filter) ->
 	class TodoReadView  			
 
@@ -74,6 +72,93 @@ TodoReadCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 	$scope.model.newtimeStart = $scope.model.dateStart.getHours()*60*60 + $scope.model.dateStart.getMinutes()*60
 	$scope.model.newtimeEnd = $scope.model.dateEnd.getHours()*60*60 + $scope.model.dateEnd.getMinutes()*60
 	$scope.controller = new TodoReadView model: $scope.model
+						
+
+
+TodoEditCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model, $filter) ->
+	class TodoEditView  			
+
+		constructor: (opts = {}) ->
+			_.each @events, (handler, event) =>
+				$scope.$on event, @[handler]
+			
+			# ionic-timepicker
+			$scope.slots = [{epochTime: 0, format: 12, step: 30},{epochTime: 0, format: 12, step: 30}]
+			$scope.newtimeStartPickerCallback = (val) ->
+				if typeof val != 'undefined'
+					$scope.model.newtimeStart = val
+				return	
+			$scope.newtimeEndPickerCallback = (val) ->
+				if typeof val != 'undefined'
+					$scope.model.newtimeEnd = val
+				return			
+
+		update: ->
+			@model = $scope.model		
+			@model.task = $scope.model.newtask
+			@model.location = $scope.model.newlocation
+			$scope.model.newdateStart = $scope.datepickerObjectStart.inputDate
+			$scope.model.newdateEnd = $scope.datepickerObjectEnd.inputDate
+			output = new Date($scope.model.newdateStart.getFullYear(),$scope.model.newdateStart.getMonth(), $scope.model.newdateStart.getDate(), parseInt($scope.model.newtimeStart / 3600), $scope.model.newtimeStart / 60 % 60)
+			@model.dateStart = output
+			output = new Date($scope.model.newdateEnd.getFullYear(),$scope.model.newdateEnd.getMonth(), $scope.model.newdateEnd.getDate(), parseInt($scope.model.newtimeEnd / 3600), $scope.model.newtimeEnd / 60 % 60)
+			@model.dateEnd = output 
+			@model.$save().then =>
+				$state.go 'app.upcomingList', {}, { reload: true }
+				
+		backpage: ->
+			if _.isNull $stateParams.backpage
+				$state.go $rootScope.URL, {}, { reload: true }
+			else	
+				$state.go $stateParams.backpage, {}, { reload: true }
+			
+	$scope.collection = $stateParams.myTodoCol
+	$scope.model = $stateParams.SelectedTodo
+	$scope.model.newtask = $scope.model.task
+	$scope.model.newlocation = $scope.model.location
+	newdate = new Date($filter('date')($scope.model.dateStart, 'MMM dd yyyy UTC'))
+	#$scope.model.newdateStart = newdate
+	
+	# ionic-datepicker 0.9
+	currDate = new Date
+	$scope.datepickerObjectStart = {
+		titleLabel: 'start date',
+		inputDate: newdate,
+		callback: (val) ->
+			$scope.datePickerStartCallback(val)
+	}
+	$scope.datePickerStartCallback = (val) ->
+		if typeof val == 'undefined'
+			$scope.datepickerObjectStart.inputDate = new Date($filter('date')(currDate, 'MMM dd yyyy UTC'))
+		else
+			$scope.datepickerObjectStart.inputDate = val
+			$scope.datepickerObjectEnd.from = new Date(val)				
+			if $scope.datepickerObjectEnd.inputDate < val
+				$scope.datepickerObjectEnd.inputDate = val
+		return
+		
+	newdate = new Date($filter('date')($scope.model.dateEnd, 'MMM dd yyyy UTC'))
+	#$scope.model.newdateEnd = newdate
+		
+	$scope.datepickerObjectEnd = {
+		titleLabel: 'end date',
+		inputDate: newdate,
+		callback: (val) ->
+			$scope.datePickerEndCallback(val)
+	}	
+	$scope.datePickerEndCallback = (val) ->
+		if typeof val == 'undefined'
+			$scope.datepickerObjectEnd.inputDate = new Date($filter('date')(currDate, 'MMM dd yyyy UTC'))
+		else
+			$scope.datepickerObjectEnd.inputDate = val
+			$scope.datepickerObjectStart.to = new Date(val)	
+			if $scope.datepickerObjectStart.inputDate > val
+				$scope.datepickerObjectStart.inputDate = val
+		return
+			
+	$scope.model.newtimeStart = $scope.model.dateStart.getHours()*60*60 + $scope.model.dateStart.getMinutes()*60
+	$scope.model.newtimeEnd = $scope.model.dateEnd.getHours()*60*60 + $scope.model.dateEnd.getMinutes()*60
+	$scope.controller = new TodoEditView model: $scope.model
 	
 TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model, $filter) ->
 	class TodoView  			
@@ -88,6 +173,8 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 			@model = new model.Todo
 			@model.task = $scope.todo.task
 			@model.location = $scope.todo.location
+			$scope.endDate = $scope.datepickerObjectEnd.inputDate
+			$scope.startDate = $scope.datepickerObjectStart.inputDate
 			output = new Date($scope.startDate.getFullYear(),$scope.startDate.getMonth(), $scope.startDate.getDate(), parseInt($scope.startTime / 3600), $scope.startTime / 60 % 60)
 			@model.dateStart = output
 			output = new Date($scope.endDate.getFullYear(),  $scope.endDate.getMonth(),   $scope.endDate.getDate(), parseInt($scope.endTime / 3600), $scope.endTime / 60 % 60)
@@ -99,26 +186,44 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 		
 	$scope.controller = new TodoView model: $scope.model
 	
-	# ionic-datepicker
-	currDate = new Date	
-	$scope.startDate = new Date($filter('date')(currDate, 'MMM dd yyyy UTC'))
-	$scope.endDate = new Date($filter('date')(currDate, 'MMM dd yyyy UTC'))
-	#$scope.step = 30
+	# ionic-datepicker 0.9
+	currDate = new Date
+	$scope.datepickerObjectStart = {
+		titleLabel: 'start date',
+		inputDate: new Date,
+		callback: (val) ->
+			$scope.datePickerStartCallback(val)
+	}
+	
+	$scope.datePickerStartCallback = (val) ->
+		if typeof val == 'undefined'
+			$scope.datepickerObjectStart.inputDate = new Date($filter('date')(currDate, 'MMM dd yyyy UTC'))
+		else
+			$scope.datepickerObjectStart.inputDate = val
+			$scope.datepickerObjectEnd.from = new Date(val)				
+			if $scope.datepickerObjectEnd.inputDate < val
+				$scope.datepickerObjectEnd.inputDate = val
+		return
+		
+	$scope.datepickerObjectEnd = {
+		titleLabel: 'end date',
+		inputDate: new Date,
+		callback: (val) ->
+			$scope.datePickerEndCallback(val)
+	}	
+	$scope.datePickerEndCallback = (val) ->
+		if typeof val == 'undefined'
+			$scope.datepickerObjectEnd.inputDate = new Date($filter('date')(currDate, 'MMM dd yyyy UTC'))
+		else
+			$scope.datepickerObjectEnd.inputDate = val
+			$scope.datepickerObjectStart.to = new Date(val)	
+			if $scope.datepickerObjectStart.inputDate > val
+				$scope.datepickerObjectStart.inputDate = val
+		return
+	
 	$scope.startTime = 0
 	$scope.endTime = 0	
-	$scope.dateStartPickerCallback = (val) ->
-		if typeof val == 'undefined'
-			$scope.startDate = new Date($filter('date')(currDate, 'MMM dd yyyy UTC'))
-		else
-			$scope.startDate = val	
-		return	
-	$scope.dateEndPickerCallback = (val) ->
-		if typeof val == 'undefined'
-			$scope.endDate = new Date($filter('date')(currDate, 'MMM dd yyyy UTC'))
-		else 	
-			$scope.endDate = val
-		return	
-
+	
 	# ionic-timepicker
 	$scope.slots = [{epochTime: 0, format: 12, step: 30},{epochTime: 0, format: 12, step: 30}]
 	$scope.timeStartPickerCallback = (val) ->
@@ -283,6 +388,10 @@ UpcomingListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicM
 		read: (selectedModel) ->
 			$state.go 'app.readTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.mytodo' }, { reload: true }
 
+		edit: (selectedModel) ->
+			$state.go 'app.editTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.mytodo' }, { reload: true }
+
+
 		$scope.formatDate = (inStr, format) ->
 			inStr = new Date(parseInt(inStr))
 			return $filter("date")(inStr, format)
@@ -346,6 +455,7 @@ angular.module('starter.controller').controller 'AppCtrl', ['$rootScope', '$scop
 angular.module('starter.controller').controller 'MenuCtrl', ['$scope', MenuCtrl]
 
 angular.module('starter.controller').controller 'TodoReadCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', '$filter', TodoReadCtrl]
+angular.module('starter.controller').controller 'TodoEditCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', '$filter', TodoEditCtrl]
 angular.module('starter.controller').controller 'TodoCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', '$filter', TodoCtrl]
 
 angular.module('starter.controller').controller 'TodoCalCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', '$ionicHistory', 'model', TodoCalCtrl]

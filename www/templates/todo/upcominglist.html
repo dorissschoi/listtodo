@@ -17,7 +17,7 @@
 		<div class="col-80 nowrap ">
 			<div	ng-repeat="model in lTasks | orderBy:['oStTime','task']"
 					>
-				<ion-item class="noborder" on-tap="$event.stopPropagation(); controller.read(model);">
+				<ion-item class="noborder" >
 					<span class="timelist" >
 					{{model.oStTime | date:'HH:mm'}}-{{model.oEnTime| date:'HH:mm'}}	
 					</span>
@@ -29,7 +29,7 @@
 					<span ng-if="model.location">, {{ model.location }}
 					</span>
 					<ion-option-button class="button button-positive icon-left ion-edit" 
-					on-tap="$event.stopPropagation(); controller.read(model)">Edit</ion-option-button>
+					on-tap="$event.stopPropagation(); controller.edit(model)">Edit</ion-option-button>
 						
 					<ion-option-button class="button button-assertive icon-left ion-trash-a" 
 					on-tap="$event.stopPropagation(); controller.remove(model);">

@@ -23,12 +23,10 @@
 			
 			<div class="row">
 				<div class="col col-50"><span class="input-label">Start date</span> 
-					<ionic-datepicker idate="startDate" 
-						disablepreviousdates="false"  
-						callback="dateStartPickerCallback">
-					    <button class="button button-block button-positive"> 
-					    {{ startDate | date:'dd - MMMM - yyyy' }} </button>
-					</ionic-datepicker>	
+					<ionic-datepicker input-obj="datepickerObjectStart">
+		  			<button class="button button-block button-positive"> 
+		  			{{datepickerObjectStart.inputDate | date:'dd - MMMM - yyyy'}}</button>
+					</ionic-datepicker>
 				</div>
 				<div class="col"><span class="input-label">Start time</span>
 					<ionic-timepicker 
@@ -43,12 +41,10 @@
 			</div>   
 			<div class="row">
 				<div class="col col-50"><span class="input-label">End date</span>
-					<ionic-datepicker idate="endDate" 
-						disablepreviousdates="false"  
-						callback="dateEndPickerCallback">
-					    <button class="button button-block button-positive"> 
-					    {{ endDate | date:'dd - MMMM - yyyy' }} </button>
-					</ionic-datepicker>			
+					<ionic-datepicker input-obj="datepickerObjectEnd">
+		  			<button class="button button-block button-positive"> 
+		  			{{datepickerObjectEnd.inputDate | date:'dd - MMMM - yyyy'}}</button>
+					</ionic-datepicker>		
 				</div>
 				<div class="col"><span class="input-label">End time</span>
 					<ionic-timepicker 

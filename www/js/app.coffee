@@ -64,6 +64,15 @@ module.config ($stateProvider, $urlRouterProvider) ->
 			'menuContent':
 				templateUrl: "templates/todo/read.html"
 				controller: 'TodoReadCtrl'
+				
+	$stateProvider.state 'app.editTodo',
+		url: "/todo/edit"
+		params: SelectedTodo: null, myTodoCol: null, backpage: null
+		cache: false
+		views:
+			'menuContent':
+				templateUrl: "templates/todo/edit.html"
+				controller: 'TodoEditCtrl'				
 								
 	$stateProvider.state 'app.calTodo',
 		url: "/todo/cal"
