@@ -28,16 +28,16 @@ module.config ($stateProvider, $urlRouterProvider) ->
 				templateUrl: "templates/search.html"
 	
     
-	# My todo list
-	$stateProvider.state 'app.mytodo',
-		url: "/todo/mytodo"
+    # My todo list page
+	$stateProvider.state 'app.mytodopage',
+		url: "/todo/mytodopage"
 		cache: false
 		views:
 			'menuContent':
-				templateUrl: "templates/todo/mylist.html"
-				controller: 'MyTodoListCtrl'
-		onEnter: ($state, $rootScope) ->
-				$rootScope.$broadcast 'todo:mylistChanged'				    
+				templateUrl: "templates/todo/mylistpage.html"
+				controller: 'MyTodoListPageCtrl'
+		#onEnter: ($state, $rootScope) ->
+		#		$rootScope.$broadcast 'todo:mylistpageChanged'	
     		
 	# My upcoming todo list
 	$stateProvider.state 'app.upcomingList',
@@ -74,29 +74,10 @@ module.config ($stateProvider, $urlRouterProvider) ->
 				templateUrl: "templates/todo/edit.html"
 				controller: 'TodoEditCtrl'				
 								
-	$stateProvider.state 'app.calTodo',
-		url: "/todo/cal"
-		params: SelectedTodoView: 'month'
-		cache: false
-		views:
-			'menuContent':
-				templateUrl: "templates/todo/cal.html"
-				controller: 'TodoCalCtrl'
-		onEnter: ($state, $rootScope) ->
-				$rootScope.$broadcast 'todo:mylistChanged'			
-
-	$stateProvider.state 'app.weekTodo',
-		url: "/todo/cal"
-		params: SelectedTodoView: 'week'
-		cache: false
-		views:
-			'menuContent':
-				templateUrl: "templates/todo/cal.html"
-				controller: 'TodoCalCtrl'
-		onEnter: ($state, $rootScope) ->
-				$rootScope.$broadcast 'todo:mylistChanged'			
 	
 						
 														
 	$urlRouterProvider.otherwise('/todo/upcomingList')
+	#$urlRouterProvider.otherwise('/todo/mytodopage')
+	
 	

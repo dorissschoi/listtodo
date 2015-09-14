@@ -10,13 +10,15 @@ ensurePermission = middleware.ensurePermission
 bearer = middleware.rest.user
  
 @include = ->
+
+
+	@get '/api/mytodopage', bearer, ->
+		controller.Todo.mylistpage(@request, @response)
+
 	
 	@get '/api/myupcomingtodo', bearer, ->
 		controller.Todo.upcominglist(@request, @response)
 		
-	@get '/api/mytodo', bearer, ->
-		controller.Todo.mylist(@request, @response)
-				
 	@post '/api/todo', bearer,  ->
 		controller.Todo.create(@request, @response)
 		 

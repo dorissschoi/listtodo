@@ -246,13 +246,8 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 	class Todo extends Model
 		$idAttribute: '_id'
 		
-		#$urlRoot: "#{env.serverUrl()}/api/todo"
-		$urlRoot: "http://localhost:3000/api/todo/"
+		$urlRoot: "#{env.serverUrl()}/api/todo/"
 		
-		changeFormat: (dateIn, timeIn) ->
-			output = new Date(dateIn.getFullYear(), dateIn.getMonth(), dateIn.getDate(), parseInt(timeIn / 3600), timeIn / 60 % 60)	
-			return output
-
 		$save: (values, opts) ->
 			if @$hasChanged()
 				super(values, opts)
@@ -260,12 +255,29 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 				return new Promise (fulfill, reject) ->
 					fulfill @		
 		
-	class TodoList extends Collection
+	class MyTodoListPage extends PageableCollection
 		$idAttribute: '_id'
 	
-		$urlRoot: "http://localhost:3000/api/todo"
-		#$urlRoot: "#{env.serverUrl()}/api/todo"
+		$urlRoot: "#{env.serverUrl()}/api/mytodopage"
 		
+		$parseModel: (res, opts) ->
+			res.dateStart = new Date(Date.parse(res.dateStart))
+			res.dateEnd = new Date(Date.parse(res.dateEnd))
+			return new Todo res
+		
+		$parse: (res, opts) ->
+			_.each res.results, (value, key) =>
+				#res.results[key] = new Todo res.results[key]
+				res.results[key] = @$parseModel(res.results[key], opts)
+			return res
+
+
+	# UpcomingList
+	class UpcomingList extends PageableCollection
+		$idAttribute: '_id'
+	
+		$urlRoot: "#{env.serverUrl()}/api/myupcomingtodo"
+			
 		$parseModel: (res, opts) ->
 			res.dateStart = new Date(Date.parse(res.dateStart))
 			res.dateEnd = new Date(Date.parse(res.dateEnd))
@@ -273,23 +285,17 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 			
 		$parse: (res, opts) ->
 			_.each res.results, (value, key) =>
+				#res.results[key] = new Todo res.results[key]
 				res.results[key] = @$parseModel(res.results[key], opts)
-			#return res.results
-			return @$parseModel(res, opts)
-
-	# MyTodoList
-	class MyTodoList extends TodoList
-		$urlRoot: "http://localhost:3000/api/mytodo"
-
-	# UpcomingList
-	class UpcomingList extends TodoList
-		$urlRoot: "http://localhost:3000/api/myupcomingtodo"
-			
+			return res
+			#return @$parseModel(res, opts)
+	
+				
 	class TodoListCol extends Collection
 		$idAttribute: '_id'
 		
-		$urlRoot: "http://localhost:3000/api/todo"
-		#$urlRoot: "http://localhost:3000/file/api/todo/"
+		$urlRoot: "#{env.serverUrl()}/api/todo"
+		
 				
 		$parseModel: (res, opts) ->
 			res.startsAt = new Date(Date.parse(res.dateStart))
@@ -319,8 +325,7 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 	UserGrps:	UserGrps
 	FileGrps:	FileGrps
 	Todo:		Todo
-	TodoList:		TodoList
-	MyTodoList:		MyTodoList
+	MyTodoListPage:	MyTodoListPage
 	UpcomingList:	UpcomingList
 	TodoListCol: 	TodoListCol
 				

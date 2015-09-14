@@ -41,7 +41,9 @@
 	  </div>
 	</div>
 </ion-list> 				
-
+<ion-infinite-scroll
+	 ng-if="collection.state.page < collection.state.total_page" on-infinite="loadMore()">
+		</ion-infinite-scroll>
 
 				
 </ion-content>

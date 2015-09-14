@@ -25,6 +25,7 @@
     "angular-touch": "~1.3.15",
     "angular-strap": "~2.2.3",
     "bootstrap": "3.1.1",
+    "PageableAR": "*",
     "ionic-datepicker": "~0.9.0",
     "ionic-timepicker": "~0.2.1",
     "angular-bootstrap-calendar": "~0.14.6"

@@ -241,65 +241,13 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 	$scope.controllername = 'TodoCtrl'
 
 
-
-TodoCalCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, $ionicHistory, model) ->
-	class TodoCalView
-		constructor: (opts = {}) ->
-			_.each @events, (handler, event) =>
-				$scope.$on event, @[handler]
-			@collection = opts.collection
-		
-		# refresh new add task
-		$rootScope.$on 'todo:mylistCalChanged', ->
-			$scope.collection = new model.MyTodoList()
-			$scope.collection.$fetch()
-			$ionicHistory.nextViewOptions({historyRoot: true})
-			$ionicHistory.clearCache()
-			
-	$scope.collection = new model.MyTodoList()
-	$scope.collection.$fetch().then =>
-		$scope.controller = new TodoCalView collection: $scope.collection
-		angular.forEach $scope.collection.models, (element) ->
-        	#convert data to suit the calendar format
-			$scope.events.push
-				title: element.task,
-				type: 'info',
-				startsAt: element.dateStart,
-				endsAt: element.dateEnd
-				editable: false,
-				deletable: false,
-				draggable: false,
-				resizable: false,
-				id: element._id,
-				dateStart: element.dateStart,
-				dateEnd: element.dateEnd,
-				task: element.task
-			return
-		$scope.$apply()
-
-	#Start Angular Calendar
-	#These variables MUST be set as a minimum for the calendar to work
-	if !_.isUndefined($stateParams.SelectedTodoView)
-		$scope.calendarView = $stateParams.SelectedTodoView
-	else	
-		$scope.calendarView = 'month'
-	$scope.calendarDay = new Date()
-
-	# click to read todo
-	$scope.eventClicked = (event) ->
-		if $scope.calendarView == 'month'
-			$rootScope.URL = 'app.calTodo'
-		else if $scope.calendarView == 'week'
-			$rootScope.URL = 'app.weekTodo'
-		else if $scope.calendarView == 'day'
-			$rootScope.URL = 'app.dayTodo'
-		else if $scope.calendarView == 'year'
-			$rootScope.URL = 'app.yearTodo'			
-		$state.go 'app.readTodo', { SelectedTodo: event , myTodoCol: $scope.collection.models}, {reload: true}
 		
 
-MyTodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, $ionicHistory, model) ->
-	class MyTodoListView
+
+
+
+MyTodoListPageCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, $ionicHistory, model) ->
+	class MyTodoListPageView
 		constructor: (opts = {}) ->
 			_.each @events, (handler, event) =>
 				$scope.$on event, @[handler]
@@ -308,19 +256,17 @@ MyTodoListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicMod
 		remove: (todo) ->
 			@model.remove(todo)
 	
-		# refresh new add task
-		$rootScope.$on 'todo:mylistChanged', ->
-			$scope.collection = new model.MyTodoList()
-			$scope.collection.$fetch().then =>
-				$scope.controller = new MyTodoListView collection: $scope.collection
-			$ionicHistory.nextViewOptions({historyRoot: true})
-			$ionicHistory.clearCache()			
-	
-	$rootScope.URL = 'app.upcomingList'						
-	$scope.collection = new model.MyTodoList()
-	$scope.collection.$fetch()
-	$scope.controller = new MyTodoListView collection: $scope.collection
-
+	$scope.loadMore = ->
+		$scope.collection.$fetch()
+			.then ->
+				$scope.$broadcast('scroll.infiniteScrollComplete')
+			.catch alert
+					
+	$scope.collection = new model.MyTodoListPage()
+	$scope.collection.$fetch().then ->
+		$scope.$apply ->	
+			$scope.controller = new MyTodoListPageView collection: $scope.collection
+		
 
 UpcomingListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, $ionicHistory, $filter, model) ->
 	class UpcomingListView
@@ -329,58 +275,6 @@ UpcomingListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicM
 				$scope.$on event, @[handler]
 			@collection = opts.collection
 
-		$rootScope.$on 'todo:getListView', ->
-			#start
-			$scope.collection = new model.UpcomingList()
-			$scope.collection.$fetch().then ->
-				$scope.$apply ->
-					#expand day range task
-					$scope.events = []
-					oneDay = 24*60*60*1000
-					angular.forEach $scope.collection.models, (element) ->
-						sdate = new Date(element.dateStart)
-						sdate = new Date(sdate.setHours(0,0,0,0))
-						edate = new Date(element.dateEnd)
-						edate = new Date(edate.setHours(0,0,0,0))
-								
-						diffDays = Math.round(Math.abs((sdate.getTime() - edate.getTime())/(oneDay)))
-						tomorrow = new Date(element.dateStart)
-						tomorrow = new Date(tomorrow.setHours(0,0,0,0))
-						i=0
-						while i <= diffDays
-							@newmodel = new model.Todo element
-							@newmodel.oStDate = tomorrow
-							if i == 0
-								@newmodel.oStTime = element.dateStart
-								@newmodel.oStDate = sdate
-							else
-								tomorrow = new Date(tomorrow.setDate(tomorrow.getDate()+1))
-								@newmodel.oStTime = tomorrow
-									
-							if diffDays == i	
-								@newmodel.oEnTime = element.dateEnd
-							
-							if i < diffDays 
-								dayEnd = new Date(@newmodel.oStDate)
-								dayEnd = new Date(dayEnd.setHours(23,59,0,0))
-								@newmodel.oEnTime = dayEnd 
-									
-							$scope.events.push @newmodel
-							i++
-							
-					#grouping
-					$scope.eventsGP = _.groupBy($scope.events,'oStDate')
-					
-					#new groupby
-					$scope.groupedByDate = _.groupBy($scope.events, (item) ->
-						item.oStDate.setHours(0,0,0,0)
-					)	
-						#item.getFullYear() + item.getMonth() + item.getDate() + "-" + item 
-											
-					$scope.collection.todos = $scope.groupedByDate
-					$scope.controller = new UpcomingListView collection: $scope.collection
-			#end		
-		
 		remove: (todo) ->
 			@collection.remove(todo)
 			$rootScope.$broadcast 'todo:getListView'
@@ -391,13 +285,79 @@ UpcomingListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicM
 		edit: (selectedModel) ->
 			$state.go 'app.editTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.mytodo' }, { reload: true }
 
-
 		$scope.formatDate = (inStr, format) ->
 			inStr = new Date(parseInt(inStr))
 			return $filter("date")(inStr, format)
-	
+
+	$rootScope.$on 'todo:getUpcomingListView', ->
+		#start
+		$scope.collection = new model.UpcomingList()
+		$scope.collection.$fetch().then ->
+			$scope.$apply ->
+				$scope.reorder()
+		#end		
 		
-	$rootScope.$broadcast 'todo:getListView'
+	$rootScope.$on 'todo:refreshView', ->
+		#start
+		$scope.reorder()
+		#end
+		
+	$scope.reorder = ->
+		#expand day range task
+		$scope.events = []
+		oneDay = 24*60*60*1000
+		angular.forEach $scope.collection.models, (element) ->
+			sdate = new Date(element.dateStart)
+			sdate = new Date(sdate.setHours(0,0,0,0))
+			edate = new Date(element.dateEnd)
+			edate = new Date(edate.setHours(0,0,0,0))
+								
+			diffDays = Math.round(Math.abs((sdate.getTime() - edate.getTime())/(oneDay)))
+			tomorrow = new Date(element.dateStart)
+			tomorrow = new Date(tomorrow.setHours(0,0,0,0))
+			i=0
+			while i <= diffDays
+				@newmodel = new model.Todo element
+				@newmodel.oStDate = tomorrow
+				if i == 0
+					@newmodel.oStTime = element.dateStart
+					@newmodel.oStDate = sdate
+				else
+					tomorrow = new Date(tomorrow.setDate(tomorrow.getDate()+1))
+					@newmodel.oStTime = tomorrow
+									
+				if diffDays == i	
+					@newmodel.oEnTime = element.dateEnd
+							
+				if i < diffDays 
+					dayEnd = new Date(@newmodel.oStDate)
+					dayEnd = new Date(dayEnd.setHours(23,59,0,0))
+					@newmodel.oEnTime = dayEnd 
+									
+				$scope.events.push @newmodel
+				i++
+							
+		#grouping
+		$scope.eventsGP = _.groupBy($scope.events,'oStDate')
+					
+		#new groupby
+		$scope.groupedByDate = _.groupBy($scope.events, (item) ->
+			item.oStDate.setHours(0,0,0,0)
+		)	
+											
+		$scope.collection.todos = $scope.groupedByDate
+		
+		$scope.controller = new UpcomingListView collection: $scope.collection	
+			
+	$scope.loadMore = ->
+		$scope.collection.$fetch()
+			.then ->
+				$scope.$broadcast('scroll.infiniteScrollComplete')
+				$scope.$apply ->
+					$rootScope.$broadcast 'todo:refreshView'
+			.catch alert
+					
+	$rootScope.$broadcast 'todo:getUpcomingListView'
 	
 								
 TodosFilter = ->
@@ -458,9 +418,9 @@ angular.module('starter.controller').controller 'TodoReadCtrl', ['$rootScope', '
 angular.module('starter.controller').controller 'TodoEditCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', '$filter', TodoEditCtrl]
 angular.module('starter.controller').controller 'TodoCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', '$filter', TodoCtrl]
 
-angular.module('starter.controller').controller 'TodoCalCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', '$ionicHistory', 'model', TodoCalCtrl]
 
-angular.module('starter.controller').controller 'MyTodoListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', '$ionicHistory', 'model', MyTodoListCtrl]
+angular.module('starter.controller').controller 'MyTodoListPageCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', '$ionicHistory', 'model', MyTodoListPageCtrl]
+
 angular.module('starter.controller').controller 'UpcomingListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', '$ionicHistory', '$filter', 'model', UpcomingListCtrl]
 
 angular.module('starter.controller').filter 'todosFilter', TodosFilter

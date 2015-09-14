@@ -1,7 +1,7 @@
 <ion-header-bar class="item-input-inset">
     <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
     </button>
-    <h1 class='title'>My Todo</h1>
+    <h1 class='title'>My Todo Page</h1>
     
     <button class="button button-clear button-positive" ui-sref="app.createTodo">New</button>  
 </ion-header-bar>
@@ -12,10 +12,11 @@
 	</label>
 </div>
 <ion-content class='has-subheader'>
+
 	<ion-list>
 		<ion-item 
 			ng-repeat="model in controller.collection.models  | todosFilter:search"
-			ui-sref="app.readTodo({ SelectedTodo: model, myTodoCol: null, backpage: 'app.mytodo'})"
+			ui-sref="app.editTodo({ SelectedTodo: model, myTodoCol: null, backpage: 'app.mytodo'})"
 			
 			>
 				<div class='row'>
@@ -36,5 +37,8 @@
 				<ion-option-button class="button button-assertive icon-left ion-trash-a" on-tap="$event.stopPropagation(); $parent.controller.collection.remove(model);">Delete</ion-option-button>
 		</ion-item>
 	</ion-list> 
-
+	
+	<ion-infinite-scroll
+	 ng-if="collection.state.page < collection.state.total_page" on-infinite="loadMore()">
+		</ion-infinite-scroll>
 </ion-content>
