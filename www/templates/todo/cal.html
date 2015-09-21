@@ -1,33 +1,97 @@
-<div >
 <ion-header-bar class="item-input-inset">
     <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
     </button>
+    <h1 class='title'>{{fmDate | date: 'EEE d MMM yyyy'}}</h1>
+    
+    <button class="button button-clear button-positive" ui-sref="app.createTodo">New</button>  
 </ion-header-bar>
 
-<ion-content ng-controller='TodoCalCtrl'>
+<ion-content >
 
-	<h2 class="text-center">{{ calendarTitle }}</h2>
+<div class="wbkt wk-scrolltimedevents" >
+<div class="tg-mainwrapper" style="margin-top:0px;">
 
-	<div class="btn-group">
-		<button class="btn btn-primary" mwl-date-modifier date="calendarDay" decrement="calendarView">Previous</button>
-		<button class="btn btn-default" mwl-date-modifier date="calendarDay" set-to-today>Today</button>
-		<button class="btn btn-primary" mwl-date-modifier date="calendarDay" increment="calendarView">Next</button>
-	</div>
- 
-	<mwl-calendar id="test"
-    view="calendarView"
-    current-day="calendarDay"
-    events="events"
-    view-title="calendarTitle"
-    on-event-click="eventClicked(calendarEvent)"
-    on-event-times-changed="calendarEvent.startsAt = calendarNewEventStart; calendarEvent.endsAt = calendarNewEventEnd"
-    edit-event-html="'<i class=\'glyphicon glyphicon-pencil\'></i>'"
-    delete-event-html="'<i class=\'glyphicon glyphicon-remove\'></i>'"
-    on-edit-event-click="eventEdited(calendarEvent)"
-    on-delete-event-click="eventDeleted(calendarEvent)"
-    auto-open="true">
-	</mwl-calendar>			
+<table class="tg-timedevents" cellpadding="0" cellspacing="0" style="height:1010px">
+<tbody>
+<tr height="1">
+  <td style="width:40px;"></td>
+  <td colspan="1'>
+    <div class="tg-spanningwrapper">
+     <div class="tg-hourmarkers">
+ 	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+	   <div class="tg-markercell"><div class="tg-dualmarker"></div></div>
+     </div>    
+    </div>
+  </td>
+</tr>
+<tr>
+	<td class="tg-times-pri">
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">00:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">01:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">02:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">03:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">04:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">05:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">06:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">07:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">08:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">09:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">10:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">11:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">12:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">13:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">14:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">15:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">16:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">17:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">18:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">19:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">20:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">21:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">22:00</div></div>
+		<div style="height:42px;"><div class="tg-time-pri" style="height:41px;">23:00</div></div>
+	</td>
+	<td class="tg-col-today">
+		<div class="tg-today" style="height:1008px;margin-bottom:-1008px;">&nbsp;</div>
+		<div class="tg-col-eventwrapper" style="height:1008px;margin-bottom:-1008px;">
+		
+		  <div class="tg-gutter">
 
-
-</ion-content>
+			
+			<div ng-repeat="todo in controller.collection.todos">
+				<div class="chip {{todo.style}}" style="top:{{todo.top}}px;left:{{todo.left}};width:{{todo.width}}%" >
+					<div class="cbrd" style="height:{{todo.height}}px;">{{todo.task}}</div>
+				</div>
+			</div>
+			
+		  </div>
+		</div>
+	</td>	
+	</tr>
+</tbody>
+</table>
+</div>				
 </div>
+</ion-content>

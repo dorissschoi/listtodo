@@ -16,65 +16,6 @@ MenuCtrl = ($scope) ->
 	$scope.env = env
 	$scope.navigator = navigator
 					
-TodoReadCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model, $filter) ->
-	class TodoReadView  			
-
-		constructor: (opts = {}) ->
-			_.each @events, (handler, event) =>
-				$scope.$on event, @[handler]
-			
-			# ionic-datepicker
-			$scope.newdateStartPickerCallback = (val) ->
-				if typeof val != 'undefined'
-					$scope.model.newdateStart = val	
-				return	
-			$scope.newdateEndPickerCallback = (val) ->
-				if typeof val != 'undefined'
-					$scope.model.newdateEnd = val
-				return	
-
-			# ionic-timepicker
-			$scope.slots = [{epochTime: 0, format: 12, step: 30},{epochTime: 0, format: 12, step: 30}]
-			$scope.newtimeStartPickerCallback = (val) ->
-				if typeof val != 'undefined'
-					$scope.model.newtimeStart = val
-				return	
-			$scope.newtimeEndPickerCallback = (val) ->
-				if typeof val != 'undefined'
-					$scope.model.newtimeEnd = val
-				return			
-
-		update: ->
-			@model = $scope.model		
-			@model.task = $scope.model.newtask
-			@model.location = $scope.model.newlocation
-			output = new Date($scope.model.newdateStart.getFullYear(),$scope.model.newdateStart.getMonth(), $scope.model.newdateStart.getDate(), parseInt($scope.model.newtimeStart / 3600), $scope.model.newtimeStart / 60 % 60)
-			@model.dateStart = output
-			output = new Date($scope.model.newdateEnd.getFullYear(),$scope.model.newdateEnd.getMonth(), $scope.model.newdateEnd.getDate(), parseInt($scope.model.newtimeEnd / 3600), $scope.model.newtimeEnd / 60 % 60)
-			@model.dateEnd = output 
-			@model.$save().then =>
-				$state.go 'app.upcomingList', {}, { reload: true }
-				
-		backpage: ->
-			if _.isNull $stateParams.backpage
-				$state.go $rootScope.URL, {}, { reload: true }
-			else	
-				$state.go $stateParams.backpage, {}, { reload: true }
-			
-	$scope.collection = $stateParams.myTodoCol
-	$scope.model = $stateParams.SelectedTodo
-	$scope.model.newtask = $scope.model.task
-	$scope.model.newlocation = $scope.model.location
-	newdate = new Date($filter('date')($scope.model.dateStart, 'MMM dd yyyy UTC'))
-	$scope.model.newdateStart = newdate
-	newdate = new Date($filter('date')($scope.model.dateEnd, 'MMM dd yyyy UTC'))
-	$scope.model.newdateEnd = newdate
-	$scope.model.newtimeStart = $scope.model.dateStart.getHours()*60*60 + $scope.model.dateStart.getMinutes()*60
-	$scope.model.newtimeEnd = $scope.model.dateEnd.getHours()*60*60 + $scope.model.dateEnd.getMinutes()*60
-	$scope.controller = new TodoReadView model: $scope.model
-						
-
-
 TodoEditCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model, $filter) ->
 	class TodoEditView  			
 
@@ -132,7 +73,7 @@ TodoEditCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 			$scope.datepickerObjectStart.inputDate = new Date($filter('date')(currDate, 'MMM dd yyyy UTC'))
 		else
 			$scope.datepickerObjectStart.inputDate = val
-			$scope.datepickerObjectEnd.from = new Date(val)				
+			#$scope.datepickerObjectEnd.from = new Date(val)				
 			if $scope.datepickerObjectEnd.inputDate < val
 				$scope.datepickerObjectEnd.inputDate = val
 		return
@@ -151,7 +92,7 @@ TodoEditCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 			$scope.datepickerObjectEnd.inputDate = new Date($filter('date')(currDate, 'MMM dd yyyy UTC'))
 		else
 			$scope.datepickerObjectEnd.inputDate = val
-			$scope.datepickerObjectStart.to = new Date(val)	
+			#$scope.datepickerObjectStart.to = new Date(val)	
 			if $scope.datepickerObjectStart.inputDate > val
 				$scope.datepickerObjectStart.inputDate = val
 		return
@@ -200,7 +141,7 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 			$scope.datepickerObjectStart.inputDate = new Date($filter('date')(currDate, 'MMM dd yyyy UTC'))
 		else
 			$scope.datepickerObjectStart.inputDate = val
-			$scope.datepickerObjectEnd.from = new Date(val)				
+			#$scope.datepickerObjectEnd.from = new Date(val)				
 			if $scope.datepickerObjectEnd.inputDate < val
 				$scope.datepickerObjectEnd.inputDate = val
 		return
@@ -216,7 +157,7 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 			$scope.datepickerObjectEnd.inputDate = new Date($filter('date')(currDate, 'MMM dd yyyy UTC'))
 		else
 			$scope.datepickerObjectEnd.inputDate = val
-			$scope.datepickerObjectStart.to = new Date(val)	
+			#$scope.datepickerObjectStart.to = new Date(val)	
 			if $scope.datepickerObjectStart.inputDate > val
 				$scope.datepickerObjectStart.inputDate = val
 		return
@@ -243,9 +184,6 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 
 		
 
-
-
-
 MyTodoListPageCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, $ionicHistory, model) ->
 	class MyTodoListPageView
 		constructor: (opts = {}) ->
@@ -262,7 +200,7 @@ MyTodoListPageCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ioni
 				$scope.$broadcast('scroll.infiniteScrollComplete')
 			.catch alert
 					
-	$scope.collection = new model.MyTodoListPage()
+	$scope.collection = new model.MyTodoList()
 	$scope.collection.$fetch().then ->
 		$scope.$apply ->	
 			$scope.controller = new MyTodoListPageView collection: $scope.collection
@@ -346,7 +284,6 @@ UpcomingListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicM
 		)	
 											
 		$scope.collection.todos = $scope.groupedByDate
-		
 		$scope.controller = new UpcomingListView collection: $scope.collection	
 			
 	$scope.loadMore = ->
@@ -358,7 +295,105 @@ UpcomingListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicM
 			.catch alert
 					
 	$rootScope.$broadcast 'todo:getUpcomingListView'
+
+CalCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, $ionicHistory, $filter, model) ->
+	class CalView
+		constructor: (opts = {}) ->
+			_.each @events, (handler, event) =>
+				$scope.$on event, @[handler]
+			@collection = opts.collection
+
+		remove: (todo) ->
+			@collection.remove(todo)
+			$rootScope.$broadcast 'todo:getListView'
+			
+		read: (selectedModel) ->
+			$state.go 'app.readTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.mytodo' }, { reload: true }
+
+		edit: (selectedModel) ->
+			$state.go 'app.editTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.mytodo' }, { reload: true }
+
+		$scope.formatDate = (inStr, format) ->
+			inStr = new Date(parseInt(inStr))
+			return $filter("date")(inStr, format)
+
+	$rootScope.$on 'todo:getCalView', ->
+		#start
+		$scope.collection = new model.TodoRangeList()
+		$scope.collection.$fetch({params: {fmDate: $scope.fmDate, toDate: $scope.toDate}}).then ->
+			$scope.$apply ->
+				$scope.reorder()
+		#end		
 	
+	
+	$scope.reorder = ->
+		#expand day range task
+		$scope.events = []
+		angular.forEach $scope.collection.models, (element) ->
+			@newmodel = new model.Todo element
+			#adjust fmDate, toDate
+			if element.dateStart < $scope.fmDate
+				@newmodel.dateStart = $scope.fmDate
+			if element.dateEnd > $scope.toDate
+				@newmodel.dateEnd = $scope.toDate
+			
+			#top: hour * 42 + per 30 mins * 21 
+			@newmodel.top = @newmodel.dateStart.getHours()*42 + @newmodel.dateStart.getMinutes() *.7
+			
+			#left: default -1px
+			@newmodel.left = "-1px"
+			
+			#width: default 100
+			@newmodel.width = 100
+			
+			#height: per 30 min * 21 
+			diff = @newmodel.dateEnd - @newmodel.dateStart
+			if @newmodel.dateEnd.getMinutes() == 59
+				@newmodel.height = (Math.floor(diff/1000/60) / 30 +1) * 21
+			else	
+				@newmodel.height = (Math.floor(diff/1000/60) / 30) * 21
+				
+			$scope.events.push @newmodel
+
+		
+		#find intersect, adjust left/height/width
+		#(StartA < EndB)  and  (EndA > StartB)
+		$scope.gpArray = []
+		a = $scope.events
+		i = 0
+		tot = a.length  
+		while i < tot
+		  console.log a[i]
+		  j = 0 
+		  jtot = a.length
+		  while j < jtot
+		    if a[i]._id != a[j]._id
+		      if ((a[i].dateStart < a[j].dateEnd) and (a[i].dateEnd > a[j].dateStart)) 
+		        $scope.gpArray.push i
+		        $scope.gpArray.push j
+		    $scope.gpArray = _.uniq($scope.gpArray)
+		    j++
+		  #adjust
+		  k = 0
+		  ktot = $scope.gpArray.length
+		  while k < ktot
+		    a[$scope.gpArray[k]].width = (100 / ktot)
+		    if k > 0 
+		      a[$scope.gpArray[k]].left = (100/ ktot *k)+"%"
+		      a[$scope.gpArray[k]].style = "chip-border"
+		    k++  
+		  i++
+		
+					
+		$scope.collection.todos = $scope.events
+		$scope.controller = new CalView collection: $scope.collection	
+			
+	#start here
+	$scope.fmDate = new Date()
+	$scope.fmDate = new Date($scope.fmDate.setHours(0,0,0,0))
+	$scope.toDate = new Date()
+	$scope.toDate = new Date($scope.toDate.setHours(23,59,0,0))
+	$rootScope.$broadcast 'todo:getCalView'	
 								
 TodosFilter = ->
 	(todos, search) ->
@@ -414,14 +449,14 @@ angular.module('starter.controller', ['ionic', 'ngCordova', 'http-auth-intercept
 angular.module('starter.controller').controller 'AppCtrl', ['$rootScope', '$scope', '$http', 'platform', 'authService', 'model', AppCtrl]
 angular.module('starter.controller').controller 'MenuCtrl', ['$scope', MenuCtrl]
 
-angular.module('starter.controller').controller 'TodoReadCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', '$filter', TodoReadCtrl]
 angular.module('starter.controller').controller 'TodoEditCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', '$filter', TodoEditCtrl]
 angular.module('starter.controller').controller 'TodoCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', '$filter', TodoCtrl]
 
-
 angular.module('starter.controller').controller 'MyTodoListPageCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', '$ionicHistory', 'model', MyTodoListPageCtrl]
-
 angular.module('starter.controller').controller 'UpcomingListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', '$ionicHistory', '$filter', 'model', UpcomingListCtrl]
+
+angular.module('starter.controller').controller 'CalCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', '$ionicHistory', '$filter', 'model', CalCtrl]
+
 
 angular.module('starter.controller').filter 'todosFilter', TodosFilter
 

@@ -53,8 +53,34 @@ class Todo
 				res.json {count: count, results: todos}
 
 
-			
 	@list: (req, res) ->
+		page = if req.query.page then req.query.page else 1
+		limit = if req.query.per_page then req.query.per_page else env.pageSize
+		opts = 
+			skip:	(page - 1) * limit
+			limit:	limit
+
+		order_by = lib.order_by model.Todo.ordering()
+		if req.query.order_by and lib.field(req.query.order_by) in model.Todo.ordering_fields() 
+			order_by = lib.order_by req.query.order_by
+
+		cond = { createdBy: req.user } 
+		
+		if req.query.fmDate and req.query.toDate
+			date1 = new Date(req.query.fmDate)
+			date2 = new Date(req.query.toDate)
+			p1 = new lib.Period(date1, date2)
+			cond = _.extend cond, p1.intersect("dateStart", "dateEnd")
+			
+		model.Todo.find(cond).populate('resource createdBy').sort(order_by).exec (err, todos) ->				
+			if err
+				return error res, err
+			model.Todo.count {}, (err, count) ->
+				if err
+					return error res, err
+				res.json {count: count, results: todos}
+							
+	@listold: (req, res) ->
 		page = if req.query.page then req.query.page else 1
 		limit = if req.query.per_page then req.query.per_page else env.pageSize
 		opts = 

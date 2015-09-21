@@ -129,3 +129,117 @@ span.input-label {
 	width: 100%;
 	margin: 20px
 }
+
+/*self calendar*/
+.wbkt.wk-scrolltimedevents {
+    border-top: none;
+    border-bottom: none;
+}
+.wk-scrolltimedevents {
+    font-size: 12px;
+}
+.wk-scrolltimedevents {
+    direction: ltr;
+}
+.wk-scrolltimedevents {
+    position: relative;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border-top: 1px solid #ddd;
+    border-left: 0 none;
+    border-bottom: 1px solid #ddd;
+    padding: 0;
+    font-size: 11px;
+    line-height: normal;
+}
+.tg-mainwrapper {
+    position: relative;
+}
+.wbkt .tg-timedevents {
+    border-right: 1px solid #ddd;
+}
+.tg-timedevents {
+    margin-top: -2px;
+}
+.tg-timedevents {
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    margin-top: -1px;
+    table-layout: fixed;
+    width: 100%;
+}
+.tg-spanningwrapper {
+    position: relative;
+    margin: 1px 0 0 1px;
+}
+.tg-hourmarkers {
+    position: absolute;
+    width: 100%;
+}
+.tg-markercell {
+    height: 42px;
+}
+.tg-dualmarker {
+    height: 20px;
+    margin-bottom: 20px;
+}
+.tg-dualmarker, .tg-dualmarker60 {
+    border-bottom: 1px dotted #ddd;
+    border-top: 1px solid #ddd;
+    font-size: 1px;
+}
+
+.tg-time-pri, .tg-time-sec {
+    border-bottom: 1px solid #ddd;
+    padding-right: 2px;
+}
+.tg-times-pri, .tg-times-sec {
+    border-left: 1px solid #ddd;
+}
+.tg-times-pri, .tg-times-sec {
+    background-color: #fff;
+    color: #555;
+    padding: 1px 0 0;
+    text-align: right;
+    vertical-align: top;
+}
+.tg-gutter {
+    position: relative;
+    height: 0;
+    margin-right: 10px;
+}
+.tg-col-eventwrapper {
+    position: relative;
+    cursor: default;
+}
+.tg-col-today {
+    border-left: 1px solid #ddd;
+    vertical-align: top;
+}
+.chip {
+    position: absolute;
+    cursor: default;
+    color: #222;
+    -moz-user-select: none;
+}
+
+.cbrd {
+	padding: 2px 0 1px;
+    border-color: #A9ABFE;
+    background-color: #E3E3FF;
+    color: #777777;
+    margin: 0;
+    padding: 0 0 1px;
+    border-left: 1px solid;
+    border-right: 1px solid;
+    overflow: hidden;
+    border: 1px solid;
+}
+
+.chip-border {
+    border-bottom: 2px solid;
+    border-left: 2px solid;
+    border-top: 2px solid;
+    margin: -2px 0 -2px -2px;
+	border-color: #f1f1f1;
+}

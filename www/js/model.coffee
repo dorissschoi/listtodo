@@ -255,7 +255,7 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 				return new Promise (fulfill, reject) ->
 					fulfill @		
 		
-	class MyTodoListPage extends PageableCollection
+	class MyTodoList extends PageableCollection
 		$idAttribute: '_id'
 	
 		$urlRoot: "#{env.serverUrl()}/api/mytodopage"
@@ -285,36 +285,26 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 			
 		$parse: (res, opts) ->
 			_.each res.results, (value, key) =>
-				#res.results[key] = new Todo res.results[key]
 				res.results[key] = @$parseModel(res.results[key], opts)
 			return res
-			#return @$parseModel(res, opts)
-	
-				
-	class TodoListCol extends Collection
+			
+
+	class TodoRangeList extends Collection
 		$idAttribute: '_id'
-		
+	
 		$urlRoot: "#{env.serverUrl()}/api/todo"
 		
-				
 		$parseModel: (res, opts) ->
-			res.startsAt = new Date(Date.parse(res.dateStart))
-			res.endsAt = new Date(Date.parse(res.dateEnd))
-			res.title = res.task
-			res.type = 'info'
-			res.draggable= 'true'
-			res.resizable= 'true'
-			result = _.pick res, 'startsAt', 'endsAt', 'title', 'draggable', 'resizable', 'type'
-			
-			return new Todo result
+			res.dateStart = new Date(Date.parse(res.dateStart))
+			res.dateEnd = new Date(Date.parse(res.dateEnd))
+			return new Todo res
 			
 		$parse: (res, opts) ->
 			_.each res.results, (value, key) =>
 				res.results[key] = @$parseModel(res.results[key], opts)
-			#return res.results
-			return @$parseModel(res, opts)		
-
-
+			#return res.results	
+			return @$parseModel(res, opts)	
+				
 		
 	Model:		Model
 	Collection:	Collection
@@ -325,9 +315,9 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 	UserGrps:	UserGrps
 	FileGrps:	FileGrps
 	Todo:		Todo
-	MyTodoListPage:	MyTodoListPage
+	MyTodoList:	MyTodoList
 	UpcomingList:	UpcomingList
-	TodoListCol: 	TodoListCol
+	TodoRangeList: 	TodoRangeList
 				
 config = ->
 	return

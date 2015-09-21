@@ -36,8 +36,6 @@ module.config ($stateProvider, $urlRouterProvider) ->
 			'menuContent':
 				templateUrl: "templates/todo/mylistpage.html"
 				controller: 'MyTodoListPageCtrl'
-		#onEnter: ($state, $rootScope) ->
-		#		$rootScope.$broadcast 'todo:mylistpageChanged'	
     		
 	# My upcoming todo list
 	$stateProvider.state 'app.upcomingList',
@@ -47,7 +45,16 @@ module.config ($stateProvider, $urlRouterProvider) ->
 			'menuContent':
 				templateUrl: "templates/todo/upcominglist.html"
 				controller: 'UpcomingListCtrl'
-    		
+
+	# My todo day
+	$stateProvider.state 'app.cal',
+		url: "/todo/cal"
+		cache: false
+		views:
+			'menuContent':
+				templateUrl: "templates/todo/cal.html"
+				controller: 'CalCtrl'
+				    		
 	$stateProvider.state 'app.createTodo',
 		url: "/todo/create"
 		cache: false
@@ -76,8 +83,8 @@ module.config ($stateProvider, $urlRouterProvider) ->
 								
 	
 						
-														
-	$urlRouterProvider.otherwise('/todo/upcomingList')
+	$urlRouterProvider.otherwise('/todo/cal')														
+	#$urlRouterProvider.otherwise('/todo/upcomingList')
 	#$urlRouterProvider.otherwise('/todo/mytodopage')
 	
 	
