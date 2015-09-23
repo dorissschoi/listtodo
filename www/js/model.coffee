@@ -302,8 +302,9 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 		$parse: (res, opts) ->
 			_.each res.results, (value, key) =>
 				res.results[key] = @$parseModel(res.results[key], opts)
+			return res	
 			#return res.results	
-			return @$parseModel(res, opts)	
+			#return @$parseModel(res, opts)	
 				
 		
 	Model:		Model

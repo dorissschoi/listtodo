@@ -80,7 +80,7 @@
 		  <div class="tg-gutter">
 
 			
-			<div ng-repeat="todo in controller.collection.todos">
+			<div ng-repeat="todo in controller.collection.todos  | orderBy:['left']">
 				<div class="chip {{todo.style}}" style="top:{{todo.top}}px;left:{{todo.left}};width:{{todo.width}}%" >
 					<div class="cbrd" style="height:{{todo.height}}px;">{{todo.task}}</div>
 				</div>

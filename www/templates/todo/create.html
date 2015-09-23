@@ -29,14 +29,13 @@
 					</ionic-datepicker>
 				</div>
 				<div class="col"><span class="input-label">Start time</span>
-					<ionic-timepicker 
-						etime="slots[0].epochTime" 
-						format="slots[0].format" 
-						step="slots[0].step" callback="timeStartPickerCallback">    
-						<button class="button button-block button-positive">  
-						<standard-time-meridian etime='slots[0].epochTime'></standard-time-meridian>
-						</button>
+					
+					<ionic-timepicker input-obj="timePickerStartObject">
+					  <button class="button button-block button-positive overflowShow">
+    					<standard-time-meridian etime='timePickerStartObject.inputEpochTime'></standard-time-meridian>
+					  </button>
 					</ionic-timepicker>
+					
 				</div>      
 			</div>   
 			<div class="row">
@@ -47,14 +46,13 @@
 					</ionic-datepicker>		
 				</div>
 				<div class="col"><span class="input-label">End time</span>
-					<ionic-timepicker 
-						etime="slots[1].epochTime" 
-						format="slots[1].format" 
-						step="slots[1].step" callback="timeEndPickerCallback">    
-						<button class="button button-block button-positive">  
-						<standard-time-meridian etime='slots[1].epochTime'></standard-time-meridian> 
-						</button>
+
+					<ionic-timepicker input-obj="timePickerEndObject">
+					  <button class="button button-block button-positive overflowShow">
+    					<standard-time-meridian etime='timePickerEndObject.inputEpochTime'></standard-time-meridian>
+					  </button>
 					</ionic-timepicker>
+
 				</div>
 			</div>
 			

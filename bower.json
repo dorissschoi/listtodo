@@ -27,7 +27,7 @@
     "bootstrap": "3.1.1",
     "PageableAR": "*",
     "ionic-datepicker": "~0.9.0",
-    "ionic-timepicker": "~0.2.1",
+    "ionic-timepicker": "~0.3.0",
     "angular-bootstrap-calendar": "~0.14.6"
   }
 }

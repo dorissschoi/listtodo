@@ -23,23 +23,14 @@ TodoEditCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 			_.each @events, (handler, event) =>
 				$scope.$on event, @[handler]
 			
-			# ionic-timepicker
-			$scope.slots = [{epochTime: 0, format: 12, step: 30},{epochTime: 0, format: 12, step: 30}]
-			$scope.newtimeStartPickerCallback = (val) ->
-				if typeof val != 'undefined'
-					$scope.model.newtimeStart = val
-				return	
-			$scope.newtimeEndPickerCallback = (val) ->
-				if typeof val != 'undefined'
-					$scope.model.newtimeEnd = val
-				return			
-
 		update: ->
 			@model = $scope.model		
 			@model.task = $scope.model.newtask
 			@model.location = $scope.model.newlocation
 			$scope.model.newdateStart = $scope.datepickerObjectStart.inputDate
 			$scope.model.newdateEnd = $scope.datepickerObjectEnd.inputDate
+			$scope.model.newtimeStart = $scope.timePickerStartObject.inputEpochTime
+			$scope.model.newtimeEnd = $scope.timePickerEndObject.inputEpochTime
 			output = new Date($scope.model.newdateStart.getFullYear(),$scope.model.newdateStart.getMonth(), $scope.model.newdateStart.getDate(), parseInt($scope.model.newtimeStart / 3600), $scope.model.newtimeStart / 60 % 60)
 			@model.dateStart = output
 			output = new Date($scope.model.newdateEnd.getFullYear(),$scope.model.newdateEnd.getMonth(), $scope.model.newdateEnd.getDate(), parseInt($scope.model.newtimeEnd / 3600), $scope.model.newtimeEnd / 60 % 60)
@@ -58,7 +49,6 @@ TodoEditCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 	$scope.model.newtask = $scope.model.task
 	$scope.model.newlocation = $scope.model.location
 	newdate = new Date($filter('date')($scope.model.dateStart, 'MMM dd yyyy UTC'))
-	#$scope.model.newdateStart = newdate
 	
 	# ionic-datepicker 0.9
 	currDate = new Date
@@ -73,13 +63,11 @@ TodoEditCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 			$scope.datepickerObjectStart.inputDate = new Date($filter('date')(currDate, 'MMM dd yyyy UTC'))
 		else
 			$scope.datepickerObjectStart.inputDate = val
-			#$scope.datepickerObjectEnd.from = new Date(val)				
 			if $scope.datepickerObjectEnd.inputDate < val
 				$scope.datepickerObjectEnd.inputDate = val
 		return
 		
 	newdate = new Date($filter('date')($scope.model.dateEnd, 'MMM dd yyyy UTC'))
-	#$scope.model.newdateEnd = newdate
 		
 	$scope.datepickerObjectEnd = {
 		titleLabel: 'end date',
@@ -92,13 +80,53 @@ TodoEditCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 			$scope.datepickerObjectEnd.inputDate = new Date($filter('date')(currDate, 'MMM dd yyyy UTC'))
 		else
 			$scope.datepickerObjectEnd.inputDate = val
-			#$scope.datepickerObjectStart.to = new Date(val)	
 			if $scope.datepickerObjectStart.inputDate > val
 				$scope.datepickerObjectStart.inputDate = val
 		return
-			
-	$scope.model.newtimeStart = $scope.model.dateStart.getHours()*60*60 + $scope.model.dateStart.getMinutes()*60
-	$scope.model.newtimeEnd = $scope.model.dateEnd.getHours()*60*60 + $scope.model.dateEnd.getMinutes()*60
+
+	# ionic-timepicker 0.3
+	$scope.timePickerStartObject = {
+		inputEpochTime: $scope.model.dateStart.getHours()*60*60 + $scope.model.dateStart.getMinutes()*60,  
+		step: 30,  
+		format: 12,  
+		titleLabel: 'start time',  
+		callback: (val) ->   
+			$scope.timePickernewStartCallback(val)
+	}
+	
+	$scope.timePickernewStartCallback = (val) ->
+		if typeof val != 'undefined'
+			$scope.timePickerStartObject.inputEpochTime = val
+			adate = $scope.datepickerObjectStart.inputDate
+			adate.setHours(0,0,0,0)
+			bdate = $scope.datepickerObjectEnd.inputDate
+			bdate.setHours(0,0,0,0)
+			if (adate - bdate) == 0
+				if $scope.timePickerEndObject.inputEpochTime < val
+					$scope.timePickerEndObject.inputEpochTime = val
+		return
+	
+	$scope.timePickerEndObject = {
+		inputEpochTime: $scope.model.dateEnd.getHours()*60*60 + $scope.model.dateEnd.getMinutes()*60,  
+		step: 30,  
+		format: 12,  
+		titleLabel: 'end time',  
+		callback: (val) ->   
+			$scope.timePickernewEndCallback(val)
+	}	
+	
+	$scope.timePickernewEndCallback = (val) ->
+		if typeof val != 'undefined'
+			$scope.timePickerEndObject.inputEpochTime = val
+			adate = $scope.datepickerObjectStart.inputDate
+			adate.setHours(0,0,0,0)
+			bdate = $scope.datepickerObjectEnd.inputDate
+			bdate.setHours(0,0,0,0)
+			if (adate - bdate) == 0
+				if $scope.timePickerStartObject.inputEpochTime > val
+					$scope.timePickerStartObject.inputEpochTime = val
+		return			
+		
 	$scope.controller = new TodoEditView model: $scope.model
 	
 TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model, $filter) ->
@@ -116,6 +144,8 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 			@model.location = $scope.todo.location
 			$scope.endDate = $scope.datepickerObjectEnd.inputDate
 			$scope.startDate = $scope.datepickerObjectStart.inputDate
+			$scope.startTime = $scope.timePickerStartObject.inputEpochTime
+			$scope.endTime = $scope.timePickerEndObject.inputEpochTime
 			output = new Date($scope.startDate.getFullYear(),$scope.startDate.getMonth(), $scope.startDate.getDate(), parseInt($scope.startTime / 3600), $scope.startTime / 60 % 60)
 			@model.dateStart = output
 			output = new Date($scope.endDate.getFullYear(),  $scope.endDate.getMonth(),   $scope.endDate.getDate(), parseInt($scope.endTime / 3600), $scope.endTime / 60 % 60)
@@ -141,7 +171,6 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 			$scope.datepickerObjectStart.inputDate = new Date($filter('date')(currDate, 'MMM dd yyyy UTC'))
 		else
 			$scope.datepickerObjectStart.inputDate = val
-			#$scope.datepickerObjectEnd.from = new Date(val)				
 			if $scope.datepickerObjectEnd.inputDate < val
 				$scope.datepickerObjectEnd.inputDate = val
 		return
@@ -157,33 +186,60 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 			$scope.datepickerObjectEnd.inputDate = new Date($filter('date')(currDate, 'MMM dd yyyy UTC'))
 		else
 			$scope.datepickerObjectEnd.inputDate = val
-			#$scope.datepickerObjectStart.to = new Date(val)	
 			if $scope.datepickerObjectStart.inputDate > val
 				$scope.datepickerObjectStart.inputDate = val
 		return
 	
-	$scope.startTime = 0
-	$scope.endTime = 0	
+	# ionic-timepicker 0.3
+	$scope.timePickerStartObject = {
+		inputEpochTime: ((new Date()).getHours() * 60 * 60),  
+		step: 30,  
+		format: 12,  
+		titleLabel: 'start time',  
+		callback: (val) ->   
+			$scope.timePickerStartCallback(val)
+	}
 	
-	# ionic-timepicker
-	$scope.slots = [{epochTime: 0, format: 12, step: 30},{epochTime: 0, format: 12, step: 30}]
-	$scope.timeStartPickerCallback = (val) ->
+	$scope.timePickerStartCallback = (val) ->
 		if typeof val == 'undefined'
-			$scope.startTime = 0
+			$scope.timePickerStartObject.inputEpochTime = 0
 		else 	
-			$scope.startTime = val
-		return	
-	$scope.timeEndPickerCallback = (val) ->
+			$scope.timePickerStartObject.inputEpochTime = val
+			adate = $scope.datepickerObjectStart.inputDate
+			adate.setHours(0,0,0,0)
+			bdate = $scope.datepickerObjectEnd.inputDate
+			bdate.setHours(0,0,0,0)
+			if (adate - bdate) == 0
+				if $scope.timePickerEndObject.inputEpochTime < val
+					$scope.timePickerEndObject.inputEpochTime = val
+		return
+	
+	$scope.timePickerEndObject = {
+		inputEpochTime: ((new Date()).getHours() * 60 * 60),  
+		step: 30,  
+		format: 12,  
+		titleLabel: 'end time',  
+		callback: (val) ->   
+			$scope.timePickerEndCallback(val)
+	}	
+	
+	$scope.timePickerEndCallback = (val) ->
 		if typeof val == 'undefined'
-			$scope.endTime = 0
+			$scope.timePickerEndObject.inputEpochTime = 0
 		else 	
-			$scope.endTime = val
-		return	
+			$scope.timePickerEndObject.inputEpochTime = val
+			adate = $scope.datepickerObjectStart.inputDate
+			adate.setHours(0,0,0,0)
+			bdate = $scope.datepickerObjectEnd.inputDate
+			bdate.setHours(0,0,0,0)
+			if (adate - bdate) == 0
+				if $scope.timePickerStartObject.inputEpochTime > val
+					$scope.timePickerStartObject.inputEpochTime = val
+		return
+
 	$scope.controllername = 'TodoCtrl'
-
-
-		
-
+				
+			
 MyTodoListPageCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, $ionicHistory, model) ->
 	class MyTodoListPageView
 		constructor: (opts = {}) ->
@@ -337,6 +393,10 @@ CalCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, $io
 			if element.dateEnd > $scope.toDate
 				@newmodel.dateEnd = $scope.toDate
 			
+			#day30MinHeight = 21px
+			MHeight = 21
+			HHeight = 2 * MHeight
+			
 			#top: hour * 42 + per 30 mins * 21 
 			@newmodel.top = @newmodel.dateStart.getHours()*42 + @newmodel.dateStart.getMinutes() *.7
 			
@@ -348,43 +408,79 @@ CalCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, $io
 			
 			#height: per 30 min * 21 
 			diff = @newmodel.dateEnd - @newmodel.dateStart
-			if @newmodel.dateEnd.getMinutes() == 59
+			#half hour task
+			if diff == 0
+				@newmodel.height = 21
+			else if @newmodel.dateEnd.getMinutes() == 59
 				@newmodel.height = (Math.floor(diff/1000/60) / 30 +1) * 21
 			else	
 				@newmodel.height = (Math.floor(diff/1000/60) / 30) * 21
-				
+			
 			$scope.events.push @newmodel
-
 		
 		#find intersect, adjust left/height/width
 		#(StartA < EndB)  and  (EndA > StartB)
-		$scope.gpArray = []
+		
 		a = $scope.events
 		i = 0
 		tot = a.length  
 		while i < tot
 		  console.log a[i]
-		  j = 0 
-		  jtot = a.length
-		  while j < jtot
+		  j = i 
+		  gpArray = []
+		  while j < tot
 		    if a[i]._id != a[j]._id
 		      if ((a[i].dateStart < a[j].dateEnd) and (a[i].dateEnd > a[j].dateStart)) 
-		        $scope.gpArray.push i
-		        $scope.gpArray.push j
-		    $scope.gpArray = _.uniq($scope.gpArray)
+		        gpArray.push i
+		        gpArray.push j
+		    gpArray = _.uniq(gpArray)
 		    j++
-		  #adjust
+		    
+		  #remove previous gp  
 		  k = 0
-		  ktot = $scope.gpArray.length
+		  ktot = gpArray.length
+		  newArray = []
 		  while k < ktot
-		    a[$scope.gpArray[k]].width = (100 / ktot)
-		    if k > 0 
-		      a[$scope.gpArray[k]].left = (100/ ktot *k)+"%"
-		      a[$scope.gpArray[k]].style = "chip-border"
+		    if a[gpArray[k]].width == 100
+		        newArray.push gpArray[k]
+		    k++
+		  gpArray = newArray
+		  
+		  #chk intersect again
+		  k = 0
+		  ktot = parseInt(gpArray.length-1)
+		  newArray = []
+		  if ktot > 0
+		    while k < ktot 
+		      if ((a[gpArray[k]].dateStart < a[gpArray[k+1]].dateEnd) and (a[gpArray[k]].dateEnd > a[gpArray[k+1]].dateStart)) 
+		        newArray.push gpArray[k]
+		        newArray.push gpArray[k+1]
+		      newArray = _.uniq(newArray)
+		      k++
+		  gpArray = newArray
+		      
+		  #adjust width
+		  k = 0
+		  ktot = gpArray.length
+		  while k < ktot
+		    if k == parseInt(ktot-1)
+		      a[gpArray[k]].width = (100 / ktot)
+		    else
+		      a[gpArray[k]].width = (100 / ktot) * 1.7  
 		    k++  
+		  #adjust left
+		  k = 0
+		  first = false
+		  while k < ktot
+		    if first
+		      a[gpArray[k]].left = (100/ ktot *k)+"%"
+		      a[gpArray[k]].style = "chip-border"
+		    if a[gpArray[k]].left == "-1px"
+		      first = true
+		    k++
+		     
 		  i++
-		
-					
+		  			
 		$scope.collection.todos = $scope.events
 		$scope.controller = new CalView collection: $scope.collection	
 			
