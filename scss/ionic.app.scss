@@ -136,9 +136,6 @@ span.input-label {
     border-bottom: none;
 }
 .wk-scrolltimedevents {
-    font-size: 12px;
-}
-.wk-scrolltimedevents {
     direction: ltr;
 }
 .wk-scrolltimedevents {
@@ -149,7 +146,7 @@ span.input-label {
     border-left: 0 none;
     border-bottom: 1px solid #ddd;
     padding: 0;
-    font-size: 11px;
+    font-size: 17px;
     line-height: normal;
 }
 .tg-mainwrapper {
@@ -177,11 +174,11 @@ span.input-label {
     width: 100%;
 }
 .tg-markercell {
-    height: 42px;
+    height: 84px;
 }
 .tg-dualmarker {
-    height: 20px;
-    margin-bottom: 20px;
+    height: 42px;
+    margin-bottom: 42px;
 }
 .tg-dualmarker, .tg-dualmarker60 {
     border-bottom: 1px dotted #ddd;
@@ -206,7 +203,6 @@ span.input-label {
 .tg-gutter {
     position: relative;
     height: 0;
-    margin-right: 10px;
 }
 .tg-col-eventwrapper {
     position: relative;
@@ -242,4 +238,75 @@ span.input-label {
     border-top: 2px solid;
     margin: -2px 0 -2px -2px;
 	border-color: #f1f1f1;
+}
+
+/*week view*/
+#gridcontainer {
+    
+    height: 300px;
+    background: #fff;
+    position: relative;
+}
+.wk-weektop {
+    table-layout: fixed;
+    width: 100%;
+    background-color: #fff;
+    overflow: hidden;
+    font-size: 11px;
+    line-height: 14px;
+}
+.wk-today {
+    background: #f1f1f1;
+    border-left: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    background-color: #fff;
+    color: #222;
+    font-weight: bold;
+}
+.wk-dayname {
+    border-top: 1px solid #fff;
+    font-size: 17px;
+    padding: 4px;
+    font-weight: normal;
+    color: #555;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.wbkt.wk-scrolltimedevents {
+    border-top: none;
+    border-bottom: none;
+}
+.wk-scrolltimedevents {
+    position: relative;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border-top: 1px solid #ddd;
+    border-left: 0 none;
+    border-bottom: 1px solid #ddd;
+    padding: 0;
+    font-size: 17px;
+    line-height: normal;
+}
+.tg-mainwrapper {
+    position: relative;
+}
+.wbkt .tg-timedevents {
+    border-right: 1px solid #ddd;
+}
+.tg-timedevents {
+    margin-top: -2px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    margin-top: -1px;
+    table-layout: fixed;
+    width: 100%;
+}
+.tg-col-today {
+    border-left: 1px solid #ddd;
+    vertical-align: top;
+}
+.tg-col {
+    border-left: 1px solid #ddd;
+    vertical-align: top;
 }

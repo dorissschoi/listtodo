@@ -2,7 +2,8 @@
   <form name="myForm" class="my-form">
   <ion-header-bar>
 
-    	<button class="button ion-close-round" ui-sref="app.upcomingList"></button>
+    	<button class="button ion-close-round" ng-click="button=true;controller.backpage();"
+    	></button>
     	<h1 class="title">Edit</h1>
     	<button class="button button-clear button-positive" 
     	ng-click="button=true;controller.update();"

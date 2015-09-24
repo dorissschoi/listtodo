@@ -16,7 +16,7 @@ MenuCtrl = ($scope) ->
 	$scope.env = env
 	$scope.navigator = navigator
 					
-TodoEditCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model, $filter) ->
+TodoEditCtrl = ($rootScope, $scope, $state, $stateParams, $location, model, $filter) ->
 	class TodoEditView  			
 
 		constructor: (opts = {}) ->
@@ -129,7 +129,7 @@ TodoEditCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal
 		
 	$scope.controller = new TodoEditView model: $scope.model
 	
-TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, model, $filter) ->
+TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, model, $filter) ->
 	class TodoView  			
 
 		constructor: (opts = {}) ->
@@ -240,7 +240,7 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, mo
 	$scope.controllername = 'TodoCtrl'
 				
 			
-MyTodoListPageCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, $ionicHistory, model) ->
+MyTodoListPageCtrl = ($rootScope, $scope, $state, $stateParams, $location, model) ->
 	class MyTodoListPageView
 		constructor: (opts = {}) ->
 			_.each @events, (handler, event) =>
@@ -262,7 +262,7 @@ MyTodoListPageCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ioni
 			$scope.controller = new MyTodoListPageView collection: $scope.collection
 		
 
-UpcomingListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, $ionicHistory, $filter, model) ->
+UpcomingListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, model) ->
 	class UpcomingListView
 		constructor: (opts = {}) ->
 			_.each @events, (handler, event) =>
@@ -271,13 +271,13 @@ UpcomingListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicM
 
 		remove: (todo) ->
 			@collection.remove(todo)
-			$rootScope.$broadcast 'todo:getListView'
+			$rootScope.$broadcast 'todo:getUpcomingListView'
 			
 		read: (selectedModel) ->
-			$state.go 'app.readTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.mytodo' }, { reload: true }
+			$state.go 'app.readTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.upcomingList' }, { reload: true }
 
 		edit: (selectedModel) ->
-			$state.go 'app.editTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.mytodo' }, { reload: true }
+			$state.go 'app.editTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.upcomingList' }, { reload: true }
 
 		$scope.formatDate = (inStr, format) ->
 			inStr = new Date(parseInt(inStr))
@@ -352,8 +352,8 @@ UpcomingListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicM
 					
 	$rootScope.$broadcast 'todo:getUpcomingListView'
 
-CalCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, $ionicHistory, $filter, model) ->
-	class CalView
+TodayCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, model) ->
+	class TodayView
 		constructor: (opts = {}) ->
 			_.each @events, (handler, event) =>
 				$scope.$on event, @[handler]
@@ -369,11 +369,7 @@ CalCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, $io
 		edit: (selectedModel) ->
 			$state.go 'app.editTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.mytodo' }, { reload: true }
 
-		$scope.formatDate = (inStr, format) ->
-			inStr = new Date(parseInt(inStr))
-			return $filter("date")(inStr, format)
-
-	$rootScope.$on 'todo:getCalView', ->
+	$rootScope.$on 'todo:getTodayView', ->
 		#start
 		$scope.collection = new model.TodoRangeList()
 		$scope.collection.$fetch({params: {fmDate: $scope.fmDate, toDate: $scope.toDate}}).then ->
@@ -381,10 +377,12 @@ CalCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, $io
 				$scope.reorder()
 		#end		
 	
-	
 	$scope.reorder = ->
 		#expand day range task
 		$scope.events = []
+		divLeft = 0
+		Etot = $scope.collection.models.length  
+		Ecnt = 1
 		angular.forEach $scope.collection.models, (element) ->
 			@newmodel = new model.Todo element
 			#adjust fmDate, toDate
@@ -393,104 +391,147 @@ CalCtrl = ($rootScope, $scope, $state, $stateParams, $location, $ionicModal, $io
 			if element.dateEnd > $scope.toDate
 				@newmodel.dateEnd = $scope.toDate
 			
-			#day30MinHeight = 21px
-			MHeight = 21
-			HHeight = 2 * MHeight
-			
-			#top: hour * 42 + per 30 mins * 21 
-			@newmodel.top = @newmodel.dateStart.getHours()*42 + @newmodel.dateStart.getMinutes() *.7
+			#top: hour * 84 + per 30 mins * 1.4 (42px)
+			@newmodel.top = @newmodel.dateStart.getHours()*84 + @newmodel.dateStart.getMinutes() *1.4
 			
 			#left: default -1px
-			@newmodel.left = "-1px"
+			@newmodel.left = divLeft
+			divLeft = (100 / Etot) * Ecnt
 			
-			#width: default 100
-			@newmodel.width = 100
+			#width: default 100 / nof events
+			@newmodel.width = 100 / Etot
 			
 			#height: per 30 min * 21 
 			diff = @newmodel.dateEnd - @newmodel.dateStart
 			#half hour task
 			if diff == 0
-				@newmodel.height = 21
+				@newmodel.height = 42
 			else if @newmodel.dateEnd.getMinutes() == 59
-				@newmodel.height = (Math.floor(diff/1000/60) / 30 +1) * 21
+				@newmodel.height = (Math.floor(diff/1000/60) / 30 +1) * 42
 			else	
-				@newmodel.height = (Math.floor(diff/1000/60) / 30) * 21
+				@newmodel.height = (Math.floor(diff/1000/60) / 30) * 42
 			
 			$scope.events.push @newmodel
+			Ecnt = Ecnt + 1
 		
-		#find intersect, adjust left/height/width
-		#(StartA < EndB)  and  (EndA > StartB)
-		
-		a = $scope.events
-		i = 0
-		tot = a.length  
-		while i < tot
-		  console.log a[i]
-		  j = i 
-		  gpArray = []
-		  while j < tot
-		    if a[i]._id != a[j]._id
-		      if ((a[i].dateStart < a[j].dateEnd) and (a[i].dateEnd > a[j].dateStart)) 
-		        gpArray.push i
-		        gpArray.push j
-		    gpArray = _.uniq(gpArray)
-		    j++
-		    
-		  #remove previous gp  
-		  k = 0
-		  ktot = gpArray.length
-		  newArray = []
-		  while k < ktot
-		    if a[gpArray[k]].width == 100
-		        newArray.push gpArray[k]
-		    k++
-		  gpArray = newArray
-		  
-		  #chk intersect again
-		  k = 0
-		  ktot = parseInt(gpArray.length-1)
-		  newArray = []
-		  if ktot > 0
-		    while k < ktot 
-		      if ((a[gpArray[k]].dateStart < a[gpArray[k+1]].dateEnd) and (a[gpArray[k]].dateEnd > a[gpArray[k+1]].dateStart)) 
-		        newArray.push gpArray[k]
-		        newArray.push gpArray[k+1]
-		      newArray = _.uniq(newArray)
-		      k++
-		  gpArray = newArray
-		      
-		  #adjust width
-		  k = 0
-		  ktot = gpArray.length
-		  while k < ktot
-		    if k == parseInt(ktot-1)
-		      a[gpArray[k]].width = (100 / ktot)
-		    else
-		      a[gpArray[k]].width = (100 / ktot) * 1.7  
-		    k++  
-		  #adjust left
-		  k = 0
-		  first = false
-		  while k < ktot
-		    if first
-		      a[gpArray[k]].left = (100/ ktot *k)+"%"
-		      a[gpArray[k]].style = "chip-border"
-		    if a[gpArray[k]].left == "-1px"
-		      first = true
-		    k++
-		     
-		  i++
-		  			
 		$scope.collection.todos = $scope.events
-		$scope.controller = new CalView collection: $scope.collection	
+		$scope.controller = new TodayView collection: $scope.collection	
 			
 	#start here
 	$scope.fmDate = new Date()
 	$scope.fmDate = new Date($scope.fmDate.setHours(0,0,0,0))
 	$scope.toDate = new Date()
 	$scope.toDate = new Date($scope.toDate.setHours(23,59,0,0))
-	$rootScope.$broadcast 'todo:getCalView'	
-								
+	$rootScope.$broadcast 'todo:getTodayView'	
+
+
+WeekCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, model) ->
+	class WeekView
+		constructor: (opts = {}) ->
+			_.each @events, (handler, event) =>
+				$scope.$on event, @[handler]
+			@collection = opts.collection
+
+		remove: (todo) ->
+			@collection.remove(todo)
+			$rootScope.$broadcast 'todo:getListView'
+			
+		read: (selectedModel) ->
+			$state.go 'app.readTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.mytodo' }, { reload: true }
+
+		edit: (selectedModel) ->
+			$state.go 'app.editTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.mytodo' }, { reload: true }
+
+	$rootScope.$on 'todo:getWeekView', ->
+		#start
+		$scope.collection = new model.TodoRangeList()
+		$scope.collection.$fetch({params: {fmDate: $scope.fmDate, toDate: $scope.toDate}}).then ->
+			$scope.$apply ->
+				#$scope.reorder()
+				$scope.wkreorder()
+		#end		
+	
+	
+	$scope.wkreorder = ->
+		#find todo day by day
+		i = 0
+		wktodo = []
+		$scope.wktodo = new Array()
+		while i < 7
+		  $scope.dayStart = $scope.week[i]
+		  $scope.dayStart = new Date($scope.dayStart.setHours(0,0,0,0))
+		  $scope.dayEnd = $scope.week[i]
+		  $scope.dayEnd = new Date($scope.dayEnd.setHours(23,59,0,0))
+		  #if in a day, (StartA < EndB)  and  (EndA > StartB)
+		  angular.forEach $scope.collection.models, (element) ->
+		    if ((element.dateStart < $scope.dayEnd) and (element.dateEnd > $scope.dayStart))
+		      wktodo.push element
+		  $scope.curr = i  
+		  $scope.wktodo[$scope.curr] = wktodo
+		  wktodo = [] 
+		  $scope.reorder() 
+		  i++
+		  
+	$scope.reorder = ->
+		#expand day range task
+		$scope.events = []
+		divLeft = 0
+		Etot = $scope.wktodo[$scope.curr].length   
+		Ecnt = 1
+		angular.forEach $scope.wktodo[$scope.curr], (element) ->
+			@newmodel = new model.Todo element
+			#adjust fmDate, toDate
+			if element.dateStart < $scope.dayStart
+				@newmodel.dateStart = $scope.dayStart
+			if element.dateEnd > $scope.dayEnd
+				@newmodel.dateEnd = $scope.dayEnd
+			
+			#top: hour * 84 + per 30 mins * 1.4 (42px)
+			@newmodel.top = @newmodel.dateStart.getHours()*84 + @newmodel.dateStart.getMinutes() *1.4
+			
+			#left: default -1px
+			@newmodel.left = divLeft
+			divLeft = (100 / Etot) * Ecnt
+			
+			#width: default 100 / nof events
+			@newmodel.width = 100 / Etot
+			
+			#height: per 30 min * 21 
+			diff = @newmodel.dateEnd - @newmodel.dateStart
+			#half hour task
+			if diff == 0
+				@newmodel.height = 42
+			else if @newmodel.dateEnd.getMinutes() == 59
+				@newmodel.height = (Math.floor(diff/1000/60) / 30 +1) * 42
+			else	
+				@newmodel.height = (Math.floor(diff/1000/60) / 30) * 42
+			
+			$scope.events.push @newmodel
+			Ecnt = Ecnt + 1
+		
+		$scope.collection.todos = $scope.events
+		$scope.weektodo[$scope.curr] = $scope.events
+		$scope.controller = new WeekView collection: $scope.collection	
+
+	getWeek = (fromDate) ->
+		sunday = new Date(fromDate.setDate(fromDate.getDate() - fromDate.getDay()))
+		result = [ new Date(sunday) ]
+		while sunday.setDate(sunday.getDate() + 1) and sunday.getDay() != 0
+		  result.push new Date(sunday)
+		result
+				
+	#start here
+	$scope.weektodo = new Array()
+	$scope.week = getWeek(new Date())
+	$scope.today = new Date()
+	$scope.curr = 0
+	$scope.fmDate = $scope.week[0]
+	$scope.fmDate = new Date($scope.fmDate.setHours(0,0,0,0))
+	$scope.toDate = $scope.week[6]
+	$scope.toDate = new Date($scope.toDate.setHours(23,59,0,0))
+	$rootScope.$broadcast 'todo:getWeekView'
+
+										
 TodosFilter = ->
 	(todos, search) ->
 	 	return _.filter todos, (todo) ->
@@ -545,14 +586,14 @@ angular.module('starter.controller', ['ionic', 'ngCordova', 'http-auth-intercept
 angular.module('starter.controller').controller 'AppCtrl', ['$rootScope', '$scope', '$http', 'platform', 'authService', 'model', AppCtrl]
 angular.module('starter.controller').controller 'MenuCtrl', ['$scope', MenuCtrl]
 
-angular.module('starter.controller').controller 'TodoEditCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', '$filter', TodoEditCtrl]
-angular.module('starter.controller').controller 'TodoCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', 'model', '$filter', TodoCtrl]
+angular.module('starter.controller').controller 'TodoEditCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', 'model', '$filter', TodoEditCtrl]
+angular.module('starter.controller').controller 'TodoCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', 'model', '$filter', TodoCtrl]
 
-angular.module('starter.controller').controller 'MyTodoListPageCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', '$ionicHistory', 'model', MyTodoListPageCtrl]
-angular.module('starter.controller').controller 'UpcomingListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', '$ionicHistory', '$filter', 'model', UpcomingListCtrl]
+angular.module('starter.controller').controller 'MyTodoListPageCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', 'model', MyTodoListPageCtrl]
+angular.module('starter.controller').controller 'UpcomingListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$filter', 'model', UpcomingListCtrl]
 
-angular.module('starter.controller').controller 'CalCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$ionicModal', '$ionicHistory', '$filter', 'model', CalCtrl]
-
+angular.module('starter.controller').controller 'WeekCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$filter', 'model', WeekCtrl]
+angular.module('starter.controller').controller 'TodayCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$filter', 'model', TodayCtrl]
 
 angular.module('starter.controller').filter 'todosFilter', TodosFilter
 
