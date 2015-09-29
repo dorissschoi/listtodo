@@ -90,10 +90,10 @@ module.config ($stateProvider, $urlRouterProvider) ->
 				templateUrl: "templates/todo/week.html"
 				controller: 'WeekCtrl'											
 	
-	#$urlRouterProvider.otherwise('/todo/week')	
+	$urlRouterProvider.otherwise('/todo/week')	
 	#$urlRouterProvider.otherwise('/todo/today')						
 	#$urlRouterProvider.otherwise('/todo/cal')														
-	$urlRouterProvider.otherwise('/todo/upcomingList')
+	#$urlRouterProvider.otherwise('/todo/upcomingList')
 	#$urlRouterProvider.otherwise('/todo/mytodopage')
 	
 	

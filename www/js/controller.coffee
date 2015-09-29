@@ -359,6 +359,28 @@ TodayCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, model
 				$scope.$on event, @[handler]
 			@collection = opts.collection
 
+		timeRuler: () ->
+			timeHeight = new Date()
+			return timeHeight.getHours()*84 + (timeHeight.getMinutes() / 60) * 84
+			
+		previousDay: ->
+			$scope.today = $scope.today.setDate($scope.today.getDate()-1)
+			$scope.today = new Date($scope.today)
+			$scope.fmDate = new Date($scope.today)
+			$scope.fmDate = new Date($scope.fmDate.setHours(0,0,0,0))
+			$scope.toDate = new Date($scope.today)
+			$scope.toDate = new Date($scope.toDate.setHours(23,59,0,0))
+			$rootScope.$broadcast 'todo:getTodayView'		
+		
+		nextDay: ->
+			$scope.today = $scope.today.setDate($scope.today.getDate()+1)
+			$scope.today = new Date($scope.today)
+			$scope.fmDate = new Date($scope.today)
+			$scope.fmDate = new Date($scope.fmDate.setHours(0,0,0,0))
+			$scope.toDate = new Date($scope.today)
+			$scope.toDate = new Date($scope.toDate.setHours(23,59,0,0))
+			$rootScope.$broadcast 'todo:getTodayView'	
+			
 		remove: (todo) ->
 			@collection.remove(todo)
 			$rootScope.$broadcast 'todo:getListView'
@@ -418,6 +440,7 @@ TodayCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, model
 		$scope.controller = new TodayView collection: $scope.collection	
 			
 	#start here
+	$scope.today = new Date()
 	$scope.fmDate = new Date()
 	$scope.fmDate = new Date($scope.fmDate.setHours(0,0,0,0))
 	$scope.toDate = new Date()
@@ -432,6 +455,37 @@ WeekCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, model)
 				$scope.$on event, @[handler]
 			@collection = opts.collection
 
+		previousWeek: ->
+			curr = new Date($scope.week[0])
+			curr = curr.setDate(curr.getDate() - 7)
+			$scope.week = $scope.getWeek(new Date(curr))
+			$scope.today = new Date()
+		
+			$scope.fmDate = $scope.week[0]
+			$scope.fmDate = new Date($scope.fmDate.setHours(0,0,0,0))
+			$scope.toDate = $scope.week[6]
+			$scope.toDate = new Date($scope.toDate.setHours(23,59,0,0))
+			$rootScope.$broadcast 'todo:getWeekView'
+
+		nextWeek: ->
+			curr = new Date($scope.week[0])
+			curr = curr.setDate(curr.getDate() + 7)
+			$scope.week = $scope.getWeek(new Date(curr))
+			$scope.today = new Date()
+		
+			$scope.fmDate = $scope.week[0]
+			$scope.fmDate = new Date($scope.fmDate.setHours(0,0,0,0))
+			$scope.toDate = $scope.week[6]
+			$scope.toDate = new Date($scope.toDate.setHours(23,59,0,0))
+			$rootScope.$broadcast 'todo:getWeekView'
+			
+		isToday: (d) ->
+			today = new Date
+			today.setHours(0,0,0,0)
+			iDate = new Date(d)
+			iDate.setHours(0,0,0,0)
+			return today.getTime() == iDate.getTime()
+			
 		remove: (todo) ->
 			@collection.remove(todo)
 			$rootScope.$broadcast 'todo:getListView'
@@ -464,7 +518,7 @@ WeekCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, model)
 		  $scope.dayEnd = new Date($scope.dayEnd.setHours(23,59,0,0))
 		  #if in a day, (StartA < EndB)  and  (EndA > StartB)
 		  angular.forEach $scope.collection.models, (element) ->
-		    if ((element.dateStart < $scope.dayEnd) and (element.dateEnd > $scope.dayStart))
+		    if ((element.dateStart <= $scope.dayEnd) and (element.dateEnd >= $scope.dayStart))
 		      wktodo.push element
 		  $scope.curr = i  
 		  $scope.wktodo[$scope.curr] = wktodo
@@ -513,7 +567,7 @@ WeekCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, model)
 		$scope.weektodo[$scope.curr] = $scope.events
 		$scope.controller = new WeekView collection: $scope.collection	
 
-	getWeek = (fromDate) ->
+	$scope.getWeek = (fromDate) ->
 		sunday = new Date(fromDate.setDate(fromDate.getDate() - fromDate.getDay()))
 		result = [ new Date(sunday) ]
 		while sunday.setDate(sunday.getDate() + 1) and sunday.getDay() != 0
@@ -522,7 +576,7 @@ WeekCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, model)
 				
 	#start here
 	$scope.weektodo = new Array()
-	$scope.week = getWeek(new Date())
+	$scope.week = $scope.getWeek(new Date())
 	$scope.today = new Date()
 	$scope.curr = 0
 	$scope.fmDate = $scope.week[0]

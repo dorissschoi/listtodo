@@ -255,24 +255,21 @@ span.input-label {
     font-size: 11px;
     line-height: 14px;
 }
-.wk-today {
-    background: #f1f1f1;
-    border-left: 1px solid #ddd;
-    border-top: 1px solid #ddd;
-    background-color: #fff;
-    color: #222;
-    font-weight: bold;
-}
+
 .wk-dayname {
     border-top: 1px solid #fff;
     font-size: 17px;
-    padding: 4px;
     font-weight: normal;
     color: #555;
     white-space: nowrap;
     text-align: center;
 }
-
+.wk-today {
+    background: #f1f1f1;
+    background-color: #EEEDF1;
+    color: #222;
+    font-weight: bold;
+}
 .wbkt.wk-scrolltimedevents {
     border-top: none;
     border-bottom: none;
@@ -309,4 +306,20 @@ span.input-label {
 .tg-col {
     border-left: 1px solid #ddd;
     vertical-align: top;
+}
+.tg-today {
+    background-color: #EEEDF1;
+}
+.tg-col-overlaywrapper {
+    position: relative;
+    height: 0;
+}
+.tg-nowmarker {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    top: 0;
+    height: 0;
+    border-top: 2px solid #ff7f6e;
+    overflow: hidden;
 }

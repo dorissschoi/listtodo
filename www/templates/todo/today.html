@@ -6,7 +6,22 @@
     <button class="button button-clear button-positive" ui-sref="app.createTodo">New</button>  
 </ion-header-bar>
 
-<ion-content >
+<ion-header-bar class="bar  bar-subheader bar-light">
+	<table class="wk-weektop wk-full-mode" cellpadding="0" cellspacing="0">
+	<tbody>
+	<tr class="wk-daynames">
+		<th scope="col" style="width:25px"><div class="wk-dayname" ><span >
+			<button class="button" on-tap="$event.stopPropagation(); controller.previousDay()"><</button>
+			</span></div></th>
+		<th scope="col" style="width:25px"><div class="wk-dayname" ><span >
+			<button class="button" on-tap="$event.stopPropagation(); controller.nextDay()">></button>
+			</span></div></th>
+	</tr>
+	</tbody>
+	</table>
+</ion-header-bar>
+
+<ion-content class="has-subheader">
 
 <div class="wbkt wk-scrolltimedevents" >
 <div class="tg-mainwrapper" style="margin-top:0px;">
@@ -89,6 +104,8 @@
 			
 		  </div>
 		</div>
+		<div id="tgOver0" class="tg-col-overlaywrapper">
+		<div class="tg-hourmarker tg-nowmarker" id="tgnowmarker" style="top: {{controller.timeRuler()}}px;"> </div></div>
 	</td>	
 	</tr>
 </tbody>
