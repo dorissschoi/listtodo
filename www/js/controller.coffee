@@ -27,6 +27,8 @@ TodoEditCtrl = ($rootScope, $scope, $state, $stateParams, $location, model, $fil
 			@model = $scope.model		
 			@model.task = $scope.model.newtask
 			@model.location = $scope.model.newlocation
+			@model.project = $scope.model.newproject
+			@model.notes = $scope.model.newnotes
 			$scope.model.newdateStart = $scope.datepickerObjectStart.inputDate
 			$scope.model.newdateEnd = $scope.datepickerObjectEnd.inputDate
 			$scope.model.newtimeStart = $scope.timePickerStartObject.inputEpochTime
@@ -48,6 +50,8 @@ TodoEditCtrl = ($rootScope, $scope, $state, $stateParams, $location, model, $fil
 	$scope.model = $stateParams.SelectedTodo
 	$scope.model.newtask = $scope.model.task
 	$scope.model.newlocation = $scope.model.location
+	$scope.model.newproject = $scope.model.project
+	$scope.model.newnotes = $scope.model.notes
 	newdate = new Date($filter('date')($scope.model.dateStart, 'MMM dd yyyy UTC'))
 	
 	# ionic-datepicker 0.9
@@ -142,6 +146,8 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, model, $filter)
 			@model = new model.Todo
 			@model.task = $scope.todo.task
 			@model.location = $scope.todo.location
+			@model.project = $scope.todo.project
+			@model.notes = $scope.todo.notes
 			$scope.endDate = $scope.datepickerObjectEnd.inputDate
 			$scope.startDate = $scope.datepickerObjectStart.inputDate
 			$scope.startTime = $scope.timePickerStartObject.inputEpochTime
@@ -152,7 +158,7 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, model, $filter)
 			@model.dateEnd = output
 			@model.$save().catch alert
 			$scope.todo.task = ''
-			#$rootScope.$broadcast 'todo:mylistCalChanged'
+			#$rootScope.$broadcast 'todo:getUpcomingListView'
 			$state.go 'app.upcomingList', {}, { reload: true, cache: false }
 		
 	$scope.controller = new TodoView model: $scope.model
@@ -352,6 +358,104 @@ UpcomingListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter
 					
 	$rootScope.$broadcast 'todo:getUpcomingListView'
 
+ProjectTodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, model) ->
+	class ProjectTodoView
+		constructor: (opts = {}) ->
+			_.each @events, (handler, event) =>
+				$scope.$on event, @[handler]
+			@collection = opts.collection
+
+		remove: (todo) ->
+			@collection.remove(todo)
+			$rootScope.$broadcast 'todo:getProjectTodoView'
+			
+		read: (selectedModel) ->
+			$state.go 'app.readTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.projectTodo' }, { reload: true }
+
+		edit: (selectedModel) ->
+			$state.go 'app.editTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.projectTodo' }, { reload: true }
+		
+		$scope.formatDate = (inStr, format) ->
+			inStr = new Date(parseInt(inStr))
+			return $filter("date")(inStr, format)
+
+	$rootScope.$on 'todo:getProjectTodoView', ->
+		#start
+		$scope.collection = new model.UpcomingList()
+		$scope.collection.$fetch({params: {order_by: 'project'}}).then ->
+			$scope.$apply ->
+				$scope.reorder()
+		#end		
+		
+	$rootScope.$on 'todo:refreshProjectTodoView', ->
+		#start
+		$scope.reorder()
+		#end
+		
+	$scope.reorder = ->
+		#expand day range task	
+		$scope.events = []
+		oneDay = 24*60*60*1000
+		angular.forEach $scope.collection.models, (element) ->
+			sdate = new Date(element.dateStart)
+			sdate = new Date(sdate.setHours(0,0,0,0))
+			edate = new Date(element.dateEnd)
+			edate = new Date(edate.setHours(0,0,0,0))
+								
+			diffDays = Math.round(Math.abs((sdate.getTime() - edate.getTime())/(oneDay)))
+			tomorrow = new Date(element.dateStart)
+			tomorrow = new Date(tomorrow.setHours(0,0,0,0))
+			i=0
+			while i <= diffDays
+				@newmodel = new model.Todo element
+				@newmodel.oStDate = tomorrow
+				if i == 0
+					@newmodel.oStTime = element.dateStart
+					@newmodel.oStDate = sdate
+				else
+					tomorrow = new Date(tomorrow.setDate(tomorrow.getDate()+1))
+					@newmodel.oStTime = tomorrow
+									
+				if diffDays == i	
+					@newmodel.oEnTime = element.dateEnd
+							
+				if i < diffDays 
+					dayEnd = new Date(@newmodel.oStDate)
+					dayEnd = new Date(dayEnd.setHours(23,59,0,0))
+					@newmodel.oEnTime = dayEnd 
+									
+				$scope.events.push @newmodel
+				i++
+							
+		#grouping
+		$scope.eventsGP = _.groupBy($scope.events,'oStDate')
+					
+		#new groupby
+		group1 = _.groupBy($scope.events, (item) ->
+			return item.project  
+		)
+		 
+		$scope.p = []
+		angular.forEach group1, (element) ->
+			group2 = _.groupBy(element, (item) ->
+				item.oStDate.setHours(0,0,0,0)
+			)
+			$scope.p.push {project : element[0].project, 	models : group2	}	
+			
+		
+		$scope.collection.todos = $scope.p
+		$scope.controller = new ProjectTodoView collection: $scope.collection	
+			
+	$scope.loadMore = ->
+		$scope.collection.$fetch()
+			.then ->
+				$scope.$broadcast('scroll.infiniteScrollComplete')
+				$scope.$apply ->
+					$rootScope.$broadcast 'todo:refreshProjectTodoView'
+			.catch alert
+					
+	$rootScope.$broadcast 'todo:getProjectTodoView'
+
 TodayCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, model) ->
 	class TodayView
 		constructor: (opts = {}) ->
@@ -383,13 +487,13 @@ TodayCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, model
 			
 		remove: (todo) ->
 			@collection.remove(todo)
-			$rootScope.$broadcast 'todo:getListView'
+			$rootScope.$broadcast 'todo:getTodayView'
 			
 		read: (selectedModel) ->
-			$state.go 'app.readTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.mytodo' }, { reload: true }
+			$state.go 'app.readTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.today' }, { reload: true }
 
 		edit: (selectedModel) ->
-			$state.go 'app.editTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.mytodo' }, { reload: true }
+			$state.go 'app.editTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.today' }, { reload: true }
 
 	$rootScope.$on 'todo:getTodayView', ->
 		#start
@@ -488,13 +592,13 @@ WeekCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, model)
 			
 		remove: (todo) ->
 			@collection.remove(todo)
-			$rootScope.$broadcast 'todo:getListView'
+			$rootScope.$broadcast 'todo:getWeekView'
 			
 		read: (selectedModel) ->
-			$state.go 'app.readTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.mytodo' }, { reload: true }
+			$state.go 'app.readTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.week' }, { reload: true }
 
 		edit: (selectedModel) ->
-			$state.go 'app.editTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.mytodo' }, { reload: true }
+			$state.go 'app.editTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.week' }, { reload: true }
 
 	$rootScope.$on 'todo:getWeekView', ->
 		#start
@@ -645,6 +749,7 @@ angular.module('starter.controller').controller 'TodoCtrl', ['$rootScope', '$sco
 
 angular.module('starter.controller').controller 'MyTodoListPageCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', 'model', MyTodoListPageCtrl]
 angular.module('starter.controller').controller 'UpcomingListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$filter', 'model', UpcomingListCtrl]
+angular.module('starter.controller').controller 'ProjectTodoCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$filter', 'model', ProjectTodoCtrl]
 
 angular.module('starter.controller').controller 'WeekCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$filter', 'model', WeekCtrl]
 angular.module('starter.controller').controller 'TodayCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$filter', 'model', TodayCtrl]

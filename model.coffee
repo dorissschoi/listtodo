@@ -195,6 +195,8 @@ File = mongoose.model 'File', FileSchema
 TodoSchema = new mongoose.Schema
 	task:		{ type: String, required: true }
 	location:	{ type: String }
+	project:	{ type: String }
+	notes:	{ type: String }
 	dateStart:	{ type: Date }
 	dateEnd:	{ type: Date }
 	createdBy:		{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }
@@ -204,7 +206,7 @@ TodoSchema.statics =
 	search_fields: ->
 		return ['task', 'dateStart', dateEnd]
 	ordering_fields: ->
-		return ['dateStart', 'task']
+		return ['project', 'dateStart', 'task']
 	ordering: ->
 		return 'dateStart'
 

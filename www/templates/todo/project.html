@@ -1,0 +1,54 @@
+<ion-header-bar class="item-input-inset">
+    <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+    </button>
+    <h1 class='title'>Upcoming Todo by Project</h1>
+    
+    <button class="button button-clear button-positive" ui-sref="app.createTodo">New</button>  
+</ion-header-bar>
+
+<ion-content >
+<ion-list>
+	<div class="test" ng-repeat="project in controller.collection.todos | orderBy:['project']"
+		>
+		<div class="font-bold">Project: {{project.project}}</div>
+		<div class="daterow" ng-repeat="(oStDate, lTasks) in project.models | orderBy:['oStDate']"
+				>
+					
+			  <div class='row datelist'>
+				<div class="col-20 nowrap font-bold datefield">	{{formatDate(oStDate, "EEE d MMM yyyy")}}</div>
+				<div class="col-80 nowrap ">
+					<div	ng-repeat="model in lTasks | orderBy:['oStTime','task']"
+							>
+						<ion-item class="noborder" >
+							<span class="timelist" >
+							{{model.oStTime | date:'HH:mm'}}-{{model.oEnTime| date:'HH:mm'}}	
+							</span>
+							
+							<span class="font-bold" >
+							{{model.task}}
+							</span>
+							
+							<span ng-if="model.location">, {{ model.location }}
+							</span>
+							<ion-option-button class="button button-positive icon-left ion-edit" 
+							on-tap="$event.stopPropagation(); controller.edit(model)">Edit</ion-option-button>
+								
+							<ion-option-button class="button button-assertive icon-left ion-trash-a" 
+							on-tap="$event.stopPropagation(); controller.remove(model);">
+							Delete
+							</ion-option-button>
+						</ion-item>
+					</div>	
+				</div>
+			  </div>
+			  
+			</div>	
+		</div>	
+</ion-list>
+				
+<ion-infinite-scroll
+	 ng-if="collection.state.page < collection.state.total_page" on-infinite="loadMore()">
+		</ion-infinite-scroll>
+
+				
+</ion-content>

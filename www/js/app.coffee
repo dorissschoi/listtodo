@@ -90,7 +90,17 @@ module.config ($stateProvider, $urlRouterProvider) ->
 				templateUrl: "templates/todo/week.html"
 				controller: 'WeekCtrl'											
 	
-	$urlRouterProvider.otherwise('/todo/week')	
+	# My todo group by project
+	$stateProvider.state 'app.projectTodo',
+		url: "/todo/project"
+		cache: false
+		views:
+			'menuContent':
+				templateUrl: "templates/todo/project.html"
+				controller: 'ProjectTodoCtrl'
+				
+	$urlRouterProvider.otherwise('/todo/project')
+	#$urlRouterProvider.otherwise('/todo/week')	
 	#$urlRouterProvider.otherwise('/todo/today')						
 	#$urlRouterProvider.otherwise('/todo/cal')														
 	#$urlRouterProvider.otherwise('/todo/upcomingList')
