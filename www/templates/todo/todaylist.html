@@ -1,0 +1,69 @@
+<ion-header-bar class="item-input-inset">
+    <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+    </button>
+    <h1 class='title'></h1>
+    
+    
+    <button class="button ion-plus-round button-clear" ui-sref="app.createTodo"></button>  
+</ion-header-bar>
+
+
+<ion-content >
+
+      <ion-list>
+      
+      	<div class="font17 font-bold item item-divider" > TODAY {{fmDate | date: 'EEE d MMM'}}</div>
+        <div ng-repeat="model in groupTod">
+          <ion-item class="item-stable"
+                    ng-click="toggleGroup(model)"
+                    ng-class="{active: isGroupShown(model)}">
+              <i class="icon" ng-class="isGroupShown(model) ? 'ion-edit' : ''"></i>
+            &nbsp;
+            Task: {{model.task}} Project: {{model.project}}
+            
+          </ion-item>
+          <div class="item-accordion" ng-show="isGroupShown(model)">
+            <button class="button ion-checkmark-round button-clear" on-tap="$event.stopPropagation(); controller.setComplete(model);"></button> 
+            <button class="button ion-edit button-clear" on-tap="$event.stopPropagation(); controller.edit(model);"></button> 
+            <button class="button ion-trash-a button-clear" on-tap="$event.stopPropagation(); controller.remove(model);"></button>
+          </div>
+        </div>
+        <div class="font17 font-bold item item-divider" > Tomorrow</div>
+        <div ng-repeat="model in groupTmr">
+          <ion-item class="item-stable"
+                    ng-click="toggleGroup(model)"
+                    ng-class="{active: isGroupShown(model)}">
+              <i class="icon" ng-class="isGroupShown(model) ? 'ion-edit' : ''"></i>
+            &nbsp;
+            Task: {{model.task}} Project: {{model.project}}
+            
+          </ion-item>
+          <div class="item-accordion" ng-show="isGroupShown(model)">
+            <button class="button ion-checkmark-round button-clear" on-tap="$event.stopPropagation(); controller.setComplete(model);"></button> 
+            <button class="button ion-edit button-clear" on-tap="$event.stopPropagation(); controller.edit(model);"></button> 
+            <button class="button ion-trash-a button-clear" on-tap="$event.stopPropagation(); controller.remove(model);"></button>
+          </div>
+        </div>
+        <div class="font17 font-bold item item-divider" > Upcoming</div>
+        <div ng-repeat="model in groupUpc">
+          <ion-item class="item-stable"
+                    ng-click="toggleGroup(model)"
+                    ng-class="{active: isGroupShown(model)}">
+              <i class="icon" ng-class="isGroupShown(model) ? 'ion-edit' : ''"></i>
+            &nbsp;
+            Task: {{model.task}} Project: {{model.project}}
+            
+          </ion-item>
+          <div class="item-accordion" ng-show="isGroupShown(model)">
+            <button class="button ion-checkmark-round button-clear" on-tap="$event.stopPropagation(); controller.setComplete(model);"></button> 
+            <button class="button ion-edit button-clear" on-tap="$event.stopPropagation(); controller.edit(model);"></button> 
+            <button class="button ion-trash-a button-clear" on-tap="$event.stopPropagation(); controller.remove(model);"></button>
+          </div>
+        </div>
+      </ion-list>
+
+		
+<ion-infinite-scroll
+	 ng-if="collection.state.page < collection.state.total_page" on-infinite="loadMore()">
+		</ion-infinite-scroll>			
+</ion-content>

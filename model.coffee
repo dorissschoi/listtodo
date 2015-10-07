@@ -197,6 +197,7 @@ TodoSchema = new mongoose.Schema
 	location:	{ type: String }
 	project:	{ type: String }
 	notes:	{ type: String }
+	completed:	{ type: Boolean, default: false }
 	dateStart:	{ type: Date }
 	dateEnd:	{ type: Date }
 	createdBy:		{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }

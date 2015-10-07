@@ -38,7 +38,7 @@ TodoEditCtrl = ($rootScope, $scope, $state, $stateParams, $location, model, $fil
 			output = new Date($scope.model.newdateEnd.getFullYear(),$scope.model.newdateEnd.getMonth(), $scope.model.newdateEnd.getDate(), parseInt($scope.model.newtimeEnd / 3600), $scope.model.newtimeEnd / 60 % 60)
 			@model.dateEnd = output 
 			@model.$save().then =>
-				$state.go 'app.upcomingList', {}, { reload: true }
+				$state.go 'app.todayList', {}, { reload: true }
 				
 		backpage: ->
 			if _.isNull $stateParams.backpage
@@ -159,7 +159,7 @@ TodoCtrl = ($rootScope, $scope, $state, $stateParams, $location, model, $filter)
 			@model.$save().catch alert
 			$scope.todo.task = ''
 			#$rootScope.$broadcast 'todo:getUpcomingListView'
-			$state.go 'app.upcomingList', {}, { reload: true, cache: false }
+			$state.go 'app.todayList', {}, { reload: true, cache: false }
 		
 	$scope.controller = new TodoView model: $scope.model
 	
@@ -689,6 +689,108 @@ WeekCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, model)
 	$scope.toDate = new Date($scope.toDate.setHours(23,59,0,0))
 	$rootScope.$broadcast 'todo:getWeekView'
 
+
+TodayListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, model) ->
+	class TodayListView
+		constructor: (opts = {}) ->
+			_.each @events, (handler, event) =>
+				$scope.$on event, @[handler]
+			@collection = opts.collection
+
+		remove: (todo) ->
+			@collection.remove(todo)
+			
+			$state.go($state.current, {}, { reload: true })	
+			
+			
+		read: (selectedModel) ->
+			$state.go 'app.readTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.todayList' }, { reload: true }
+
+		edit: (selectedModel) ->
+			$state.go 'app.editTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.todayList' }, { reload: true }
+
+		setComplete: (selectedModel) ->
+			@model = selectedModel
+			@model.completed = Boolean('true')
+			@model.$save().then =>
+				$scope.getTodayListView()
+	
+	
+	#intersect (StartA < EndB)  and  (EndA > StartB)
+	$scope.inside = (fromDT, toDT, element) ->
+		
+		#angular.forEach $scope.collection.models, (element) ->
+		#    if ((element.dateStart <= $scope.dayEnd) and (element.dateEnd >= $scope.dayStart))
+		if ((element.dateStart <= toDT) and (element.dateEnd >= fromDT))    
+		#if ((fromDT <= element.dateEnd) and (element.dateStart >= toDT))
+			return true
+		else
+			return false
+
+
+	$scope.isGroupShown = (item) ->
+		$scope.shownGroup == item
+
+	$scope.toggleGroup = (item) ->
+		if $scope.isGroupShown(item)
+			$scope.shownGroup = null
+		else
+			$scope.shownGroup = item
+		return
+	  				
+	$scope.getTodayListView = ->
+		#start
+		$scope.collection = new model.TodayList()
+		$scope.collection.$fetch({params: {fmDate: $scope.fmDate, toDate: $scope.weektoDate}}).then ->
+			$scope.$apply ->
+				$scope.reorder()
+		#end		
+
+	$scope.reorder = ->
+				$scope.collection.todos = $scope.collection.models
+				#Divide groups
+				
+				$scope.groupTod = []
+				$scope.groupTmr = []
+				$scope.groupUpc = []
+				$scope.groupOve = []
+					
+				angular.forEach $scope.collection.models, (element) ->
+					if $scope.inside($scope.fmDate, $scope.fmDateEn, element)
+						$scope.groupTod.push element
+					else if $scope.inside($scope.toDateSt, $scope.toDate, element) 	
+						$scope.groupTmr.push element
+					else if element.dateEnd < $scope.fmDate
+						$scope.groupOve.push element
+					else $scope.groupUpc.push element	
+				$scope.controller = new TodayListView collection: $scope.collection
+			
+	#start here
+	$scope.loadMore = ->
+		$scope.collection.$fetch({params: {fmDate: $scope.fmDate, toDate: $scope.weektoDate}})
+			.then ->
+				$scope.$broadcast('scroll.infiniteScrollComplete')
+				$scope.$apply ->
+					$scope.reorder()
+			.catch alert
+
+
+				
+	#$scope.today = new Date()
+	$scope.fmDate = new Date()
+	$scope.fmDate = new Date($scope.fmDate.setHours(0,0,0,0))
+	$scope.fmDateEn = new Date()
+	$scope.fmDateEn = new Date($scope.fmDateEn.setHours(23,59,0,0))
+	$scope.toDate = new Date()
+	$scope.toDate = new Date($scope.toDate.setDate($scope.toDate.getDate()+1))
+	$scope.toDate = new Date($scope.toDate.setHours(23,59,0,0))
+	$scope.toDateSt = new Date($scope.toDate)
+	$scope.toDateSt = new Date($scope.toDateSt.setHours(0,0,0,0))
+	$scope.weektoDate = new Date($scope.toDate)
+	$scope.weektoDate = new Date($scope.weektoDate.setDate($scope.weektoDate.getDate()+7))
+	$scope.weektoDate = new Date($scope.weektoDate.setHours(23,59,0,0))
+	$scope.getTodayListView()
+
 										
 TodosFilter = ->
 	(todos, search) ->
@@ -753,6 +855,8 @@ angular.module('starter.controller').controller 'ProjectTodoCtrl', ['$rootScope'
 
 angular.module('starter.controller').controller 'WeekCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$filter', 'model', WeekCtrl]
 angular.module('starter.controller').controller 'TodayCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$filter', 'model', TodayCtrl]
+
+angular.module('starter.controller').controller 'TodayListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$filter', 'model', TodayListCtrl]
 
 angular.module('starter.controller').filter 'todosFilter', TodosFilter
 

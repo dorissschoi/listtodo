@@ -13,7 +13,10 @@ bearer = middleware.rest.user
 
 	@get '/api/mytodopage', bearer, ->
 		controller.Todo.mylistpage(@request, @response)
-	
+
+	@get '/api/todaylist', bearer, ->
+		controller.Todo.todaylist(@request, @response)
+			
 	@get '/api/myupcomingtodo', bearer, ->
 		controller.Todo.upcominglist(@request, @response)
 		

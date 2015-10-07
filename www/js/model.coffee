@@ -287,7 +287,22 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 			_.each res.results, (value, key) =>
 				res.results[key] = @$parseModel(res.results[key], opts)
 			return res
+
+	# TodayList
+	class TodayList extends PageableCollection
+		$idAttribute: '_id'
+	
+		$urlRoot: "#{env.serverUrl()}/api/todaylist"
 			
+		$parseModel: (res, opts) ->
+			res.dateStart = new Date(Date.parse(res.dateStart))
+			res.dateEnd = new Date(Date.parse(res.dateEnd))
+			return new Todo res
+			
+		$parse: (res, opts) ->
+			_.each res.results, (value, key) =>
+				res.results[key] = @$parseModel(res.results[key], opts)
+			return res			
 
 	class TodoRangeList extends Collection
 		$idAttribute: '_id'
@@ -318,6 +333,7 @@ model = (ActiveRecord, $rootScope, $upload, platform) ->
 	Todo:		Todo
 	MyTodoList:	MyTodoList
 	UpcomingList:	UpcomingList
+	TodayList:	TodayList
 	TodoRangeList: 	TodoRangeList
 				
 config = ->
