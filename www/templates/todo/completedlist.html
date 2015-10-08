@@ -30,7 +30,7 @@
 	            
 	          </ion-item>
 	          <div class="item-accordion" ng-show="isGroupShown(model)">
-	            <button style="width: 30%;" class="button ion-checkmark-round button-clear" on-tap="$event.stopPropagation(); controller.setUnComplete(model);"></button> 
+	            <button style="width: 30%;" class="button ion-close-circled button-clear" on-tap="$event.stopPropagation(); controller.setUnComplete(model);"></button> 
 	            <button style="width: 30%;" class="button ion-edit button-clear" on-tap="$event.stopPropagation(); controller.edit(model);"></button> 
 	            <button style="width: 30%;" class="button ion-trash-a button-clear" on-tap="$event.stopPropagation(); controller.remove(model);"></button>
 	          </div>
