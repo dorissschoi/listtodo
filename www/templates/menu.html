@@ -14,15 +14,11 @@
           Add Task
         </ion-item>
         <ion-item nav-clear menu-close ui-sref="app.todayList">
-          Today
+          Next 7 days
         </ion-item>
-		
-		<ion-item nav-clear menu-close ui-sref="app.mytodopage">
-          My Todo Page
-        </ion-item>
-        
-        <ion-item nav-clear menu-close ui-sref="app.projectTodo">
-          Project todo
+       
+        <ion-item nav-clear menu-close ui-sref="app.completedList">
+          Completed list
         </ion-item>    
 
         <ion-item nav-clear menu-close ng-if="env.isNative()" ng-click="navigator.app.exitApp()">

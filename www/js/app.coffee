@@ -26,8 +26,7 @@ module.config ($stateProvider, $urlRouterProvider) ->
 		views:
 			'menuContent':
 				templateUrl: "templates/search.html"
-	
-    
+   
     # My todo list page
 	$stateProvider.state 'app.mytodopage',
 		url: "/todo/mytodopage"
@@ -36,15 +35,6 @@ module.config ($stateProvider, $urlRouterProvider) ->
 			'menuContent':
 				templateUrl: "templates/todo/mylistpage.html"
 				controller: 'MyTodoListPageCtrl'
-    		
-	# My upcoming todo list
-	$stateProvider.state 'app.upcomingList',
-		url: "/todo/upcomingList"
-		cache: false
-		views:
-			'menuContent':
-				templateUrl: "templates/todo/upcominglist.html"
-				controller: 'UpcomingListCtrl'
 
 	$stateProvider.state 'app.createTodo',
 		url: "/todo/create"
@@ -106,14 +96,19 @@ module.config ($stateProvider, $urlRouterProvider) ->
 		views:
 			'menuContent':
 				templateUrl: "templates/todo/todaylist.html"
-				controller: 'TodayListCtrl'				
+				controller: 'TodayListCtrl'
+
+	# My todo completed
+	$stateProvider.state 'app.completedList',
+		url: "/todo/completedList"
+		cache: false
+		views:
+			'menuContent':
+				templateUrl: "templates/todo/completedlist.html"
+				controller: 'CompletedListCtrl'									
 	
 	$urlRouterProvider.otherwise('/todo/todayList')				
-	#$urlRouterProvider.otherwise('/todo/project')
-	#$urlRouterProvider.otherwise('/todo/week')	
-	#$urlRouterProvider.otherwise('/todo/today')						
-	#$urlRouterProvider.otherwise('/todo/cal')														
-	#$urlRouterProvider.otherwise('/todo/upcomingList')
+	#$urlRouterProvider.otherwise('/todo/completedList')
 	#$urlRouterProvider.otherwise('/todo/mytodopage')
 	
 	

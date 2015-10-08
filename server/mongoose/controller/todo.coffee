@@ -21,8 +21,10 @@ class Todo
 		if req.query.order_by and lib.field(req.query.order_by) in model.Todo.ordering_fields() 
 			order_by = lib.order_by req.query.order_by
 
-		
-		cond = { $and: [ { dateEnd: { $lte: req.query.toDate } }, { createdBy: req.user }, { completed: false } ] }
+		if _.isUndefined(req.query.completed)
+			cond = { $and: [ { dateEnd: { $lte: req.query.toDate } }, { createdBy: req.user }, { completed: false } ] }
+		else	
+			cond = { $and: [ { createdBy: req.user }, { completed: true } ] }
 		
 		model.Todo.find(cond, null, opts).populate('resource createdBy').sort(order_by).exec (err, todos) ->				
 			if err

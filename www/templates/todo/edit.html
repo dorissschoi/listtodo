@@ -13,7 +13,20 @@
   </ion-header-bar>
   <ion-content padding="true">
 	<div class="list">
-		
+		<label class="item item-input">
+	  		<input type="text" placeholder="Project..." ng-model="model.newproject">
+	  	</label>
+	  	<label class="item item-input">
+	  		<input type="text" ng-model="model.newtask" ng-disabled="button" 
+			 required name="taskname">
+	  	</label>
+	  	<label class="item item-input">
+	  		<input type="text" placeholder="Notes..." ng-model="model.newnotes">
+	  	</label>
+	  	<label class="item item-input">
+	  		<input type="text" placeholder="Location..." ng-model="model.newlocation">
+	  	</label>
+	  			
 		<div class="row">
 			<div class="col col-50"><span class="input-label">Start date</span> 
 				<ionic-datepicker input-obj="datepickerObjectStart">
@@ -49,19 +62,7 @@
 			</div>				  
 	  	</div>
 	  	
-		<label class="item item-input">
-	  		<input type="text" placeholder="Project..." ng-model="model.newproject">
-	  	</label>
-	  	<label class="item item-input">
-	  		<input type="text" ng-model="model.newtask" ng-disabled="button" 
-			 required name="taskname">
-	  	</label>
-	  	<label class="item item-input">
-	  		<input type="text" placeholder="Notes..." ng-model="model.newnotes">
-	  	</label>
-	  	<label class="item item-input">
-	  		<input type="text" placeholder="Location..." ng-model="model.newlocation">
-	  	</label>	  	
+			  	
 	</div>	    	
   </ion-content>
   </form>

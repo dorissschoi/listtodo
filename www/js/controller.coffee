@@ -699,9 +699,7 @@ TodayListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, m
 
 		remove: (todo) ->
 			@collection.remove(todo)
-			
 			$state.go($state.current, {}, { reload: true })	
-			
 			
 		read: (selectedModel) ->
 			$state.go 'app.readTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.todayList' }, { reload: true }
@@ -711,22 +709,27 @@ TodayListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, m
 
 		setComplete: (selectedModel) ->
 			@model = selectedModel
-			@model.completed = Boolean('true')
+			@model.completed = 'true'
 			@model.$save().then =>
 				$scope.getTodayListView()
-	
-	
-	#intersect (StartA < EndB)  and  (EndA > StartB)
-	$scope.inside = (fromDT, toDT, element) ->
-		
-		#angular.forEach $scope.collection.models, (element) ->
-		#    if ((element.dateStart <= $scope.dayEnd) and (element.dateEnd >= $scope.dayStart))
-		if ((element.dateStart <= toDT) and (element.dateEnd >= fromDT))    
-		#if ((fromDT <= element.dateEnd) and (element.dateStart >= toDT))
-			return true
-		else
-			return false
 
+		$scope.formatDate = (inDate, format) ->
+			inDate = new Date(parseInt(inDate))
+			today = new Date()
+			today = new Date(today.setHours(0,0,0,0))
+			oneDay = 24*60*60*1000
+			if (today.getTime() > inDate.getTime()) 
+				diffDays = Math.round(-Math.abs((today.getTime() - inDate.getTime())/(oneDay)))
+			else	
+				diffDays = Math.round(Math.abs((today.getTime() - inDate.getTime())/(oneDay)))
+			
+			if diffDays < 0
+				return Math.abs(diffDays) + " days before"
+			else if diffDays == 0
+				return "Today"
+			else if diffDays == 1
+				return "Tomorrow"
+			else return $filter("date")(inDate, format)		 	
 
 	$scope.isGroupShown = (item) ->
 		$scope.shownGroup == item
@@ -741,56 +744,125 @@ TodayListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, m
 	$scope.getTodayListView = ->
 		#start
 		$scope.collection = new model.TodayList()
-		$scope.collection.$fetch({params: {fmDate: $scope.fmDate, toDate: $scope.weektoDate}}).then ->
+		$scope.collection.$fetch({params: {toDate: $scope.toDate}}).then ->
 			$scope.$apply ->
 				$scope.reorder()
 		#end		
 
 	$scope.reorder = ->
 				$scope.collection.todos = $scope.collection.models
-				#Divide groups
-				
-				$scope.groupTod = []
-				$scope.groupTmr = []
-				$scope.groupUpc = []
-				$scope.groupOve = []
-					
+				groupTodo = []	
 				angular.forEach $scope.collection.models, (element) ->
-					if $scope.inside($scope.fmDate, $scope.fmDateEn, element)
-						$scope.groupTod.push element
-					else if $scope.inside($scope.toDateSt, $scope.toDate, element) 	
-						$scope.groupTmr.push element
-					else if element.dateEnd < $scope.fmDate
-						$scope.groupOve.push element
-					else $scope.groupUpc.push element	
+					edate = new Date(element.dateEnd)
+					edate = new Date(edate.setHours(0,0,0,0))
+					@newmodel = new model.Todo element
+					@newmodel.edate = edate 
+					groupTodo.push @newmodel	
+				#new groupby
+				$scope.groupedByDate = _.groupBy(groupTodo, (item) ->
+					item.edate.setHours(0,0,0,0)
+				)
 				$scope.controller = new TodayListView collection: $scope.collection
-			
-	#start here
+				
 	$scope.loadMore = ->
-		$scope.collection.$fetch({params: {fmDate: $scope.fmDate, toDate: $scope.weektoDate}})
+		$scope.collection.$fetch({params: {toDate: $scope.toDate}})
 			.then ->
 				$scope.$broadcast('scroll.infiniteScrollComplete')
 				$scope.$apply ->
 					$scope.reorder()
 			.catch alert
-
-
 				
 	#$scope.today = new Date()
 	$scope.fmDate = new Date()
 	$scope.fmDate = new Date($scope.fmDate.setHours(0,0,0,0))
-	$scope.fmDateEn = new Date()
-	$scope.fmDateEn = new Date($scope.fmDateEn.setHours(23,59,0,0))
 	$scope.toDate = new Date()
-	$scope.toDate = new Date($scope.toDate.setDate($scope.toDate.getDate()+1))
+	$scope.toDate = new Date($scope.toDate.setDate($scope.toDate.getDate()+6))
 	$scope.toDate = new Date($scope.toDate.setHours(23,59,0,0))
-	$scope.toDateSt = new Date($scope.toDate)
-	$scope.toDateSt = new Date($scope.toDateSt.setHours(0,0,0,0))
-	$scope.weektoDate = new Date($scope.toDate)
-	$scope.weektoDate = new Date($scope.weektoDate.setDate($scope.weektoDate.getDate()+7))
-	$scope.weektoDate = new Date($scope.weektoDate.setHours(23,59,0,0))
 	$scope.getTodayListView()
 
+CompletedListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, model) ->
+	class CompletedListView
+		constructor: (opts = {}) ->
+			_.each @events, (handler, event) =>
+				$scope.$on event, @[handler]
+			@collection = opts.collection
+
+		remove: (todo) ->
+			@collection.remove(todo)
+			$state.go($state.current, {}, { reload: true })	
+			
+		read: (selectedModel) ->
+			$state.go 'app.readTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.todayList' }, { reload: true }
+
+		edit: (selectedModel) ->
+			$state.go 'app.editTodo', { SelectedTodo: selectedModel, myTodoCol: null, backpage: 'app.todayList' }, { reload: true }
+
+		setUnComplete: (selectedModel) ->
+			@model = selectedModel
+			@model.completed = 'false'
+			@model.$save().then =>
+				$scope.getCompletedListView()
+
+		$scope.formatDate = (inDate, format) ->
+			inDate = new Date(parseInt(inDate))
+			today = new Date()
+			today = new Date(today.setHours(0,0,0,0))
+			oneDay = 24*60*60*1000
+			if (today.getTime() > inDate.getTime()) 
+				diffDays = Math.round(-Math.abs((today.getTime() - inDate.getTime())/(oneDay)))
+			else	
+				diffDays = Math.round(Math.abs((today.getTime() - inDate.getTime())/(oneDay)))
+			
+			if diffDays < 0
+				return Math.abs(diffDays) + " days before"
+			else if diffDays == 0
+				return "Today"
+			else if diffDays == 1
+				return "Tomorrow"
+			else return $filter("date")(inDate, format)		 	
+
+	$scope.isGroupShown = (item) ->
+		$scope.shownGroup == item
+
+	$scope.toggleGroup = (item) ->
+		if $scope.isGroupShown(item)
+			$scope.shownGroup = null
+		else
+			$scope.shownGroup = item
+		return
+	  				
+	$scope.getCompletedListView = ->
+		#start
+		$scope.collection = new model.TodayList()
+		$scope.collection.$fetch({params: {completed: Boolean('true'),toDate: $scope.toDate}}).then ->
+			$scope.$apply ->
+				$scope.reorder()
+		#end		
+
+	$scope.reorder = ->
+				$scope.collection.todos = $scope.collection.models
+				groupTodo = []	
+				angular.forEach $scope.collection.models, (element) ->
+					edate = new Date(element.dateEnd)
+					edate = new Date(edate.setHours(0,0,0,0))
+					@newmodel = new model.Todo element
+					@newmodel.edate = edate 
+					groupTodo.push @newmodel	
+				#new groupby
+				$scope.groupedByDate = _.groupBy(groupTodo, (item) ->
+					item.edate.setHours(0,0,0,0)
+				)
+				$scope.controller = new CompletedListView collection: $scope.collection
+				
+	$scope.loadMore = ->
+		$scope.collection.$fetch({params: {completed: Boolean('true'),toDate: $scope.toDate}})
+			.then ->
+				$scope.$broadcast('scroll.infiniteScrollComplete')
+				$scope.$apply ->
+					$scope.reorder()
+			.catch alert
+				
+	$scope.getCompletedListView()
 										
 TodosFilter = ->
 	(todos, search) ->
@@ -857,6 +929,7 @@ angular.module('starter.controller').controller 'WeekCtrl', ['$rootScope', '$sco
 angular.module('starter.controller').controller 'TodayCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$filter', 'model', TodayCtrl]
 
 angular.module('starter.controller').controller 'TodayListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$filter', 'model', TodayListCtrl]
+angular.module('starter.controller').controller 'CompletedListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$location', '$filter', 'model', CompletedListCtrl]
 
 angular.module('starter.controller').filter 'todosFilter', TodosFilter
 
