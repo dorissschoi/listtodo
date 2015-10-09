@@ -26,31 +26,15 @@
 			<label class="item item-input">
 				<input type="text" placeholder="Location..." name="location" ng-model="todo.location" >
 			</label>
+			
 			<div class="row">
-				<div class="col col-50"><span class="input-label">Start date</span> 
-					<ionic-datepicker input-obj="datepickerObjectStart">
-		  			<button class="button button-block button-positive"> 
-		  			{{datepickerObjectStart.inputDate | date:'dd - MMMM - yyyy'}}</button>
-					</ionic-datepicker>
-				</div>
-				<div class="col"><span class="input-label">Start time</span>
-					
-					<ionic-timepicker input-obj="timePickerStartObject">
-					  <button class="button button-block button-positive overflowShow">
-    					<standard-time-meridian etime='timePickerStartObject.inputEpochTime'></standard-time-meridian>
-					  </button>
-					</ionic-timepicker>
-					
-				</div>      
-			</div>   
-			<div class="row">
-				<div class="col col-50"><span class="input-label">End date</span>
+				<div class="col col-50"><span class="input-label">Date</span>
 					<ionic-datepicker input-obj="datepickerObjectEnd">
 		  			<button class="button button-block button-positive"> 
-		  			{{datepickerObjectEnd.inputDate | date:'dd - MMMM - yyyy'}}</button>
+		  			{{datepickerObjectEnd.date | date:'dd - MMMM - yyyy'}}</button>
 					</ionic-datepicker>		
 				</div>
-				<div class="col"><span class="input-label">End time</span>
+				<div class="col"><span class="input-label">Time</span>
 
 					<ionic-timepicker input-obj="timePickerEndObject">
 					  <button class="button button-block button-positive overflowShow">

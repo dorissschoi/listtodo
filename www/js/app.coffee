@@ -1,6 +1,6 @@
 module = angular.module('starter', ['ionic', 'starter.controller', 'http-auth-interceptor', 'ngTagEditor', 'ActiveRecord', 'angularFileUpload', 'ngTouch', 'ngAnimate', 'ionic-datepicker', 'ionic-timepicker', 'mwl.calendar'])
 
-module.run ($ionicPlatform, $location, $http, authService) ->
+module.run ($rootScope, platform, $ionicPlatform, $location, $http, authService) ->
 	$ionicPlatform.ready ->
 		if (window.cordova && window.cordova.plugins.Keyboard)
 			cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true)
@@ -12,21 +12,25 @@ module.run ($ionicPlatform, $location, $http, authService) ->
 			data = $.deparam $location.url().split("/")[1]
 			$http.defaults.headers.common.Authorization = "Bearer #{data.access_token}"
 			authService.loginConfirmed()
-		
+	
+	# set authorization header once mobile authentication completed
+	fulfill = (data) ->
+		if data?
+			$http.defaults.headers.common.Authorization = "Bearer #{data.access_token}"
+			authService.loginConfirmed()
+	
+	$rootScope.$on 'event:auth-forbidden', ->
+		platform.auth().then fulfill, alert
+	$rootScope.$on 'event:auth-loginRequired', ->
+		platform.auth().then fulfill, alert
+				
 module.config ($stateProvider, $urlRouterProvider) ->
-	    
+
 	$stateProvider.state 'app',
 		url: ""
 		abstract: true
-		controller: 'AppCtrl'
 		templateUrl: "templates/menu.html"
-		
-	$stateProvider.state 'app.search',
-		url: "/search"
-		views:
-			'menuContent':
-				templateUrl: "templates/search.html"
-   
+	
     # My todo list page
 	$stateProvider.state 'app.mytodopage',
 		url: "/todo/mytodopage"
@@ -55,7 +59,7 @@ module.config ($stateProvider, $urlRouterProvider) ->
 				
 	$stateProvider.state 'app.editTodo',
 		url: "/todo/edit"
-		params: SelectedTodo: null, myTodoCol: null, backpage: null
+		params: SelectedTodo: null, backpage: null
 		cache: false
 		views:
 			'menuContent':

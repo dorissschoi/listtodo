@@ -22,7 +22,7 @@ class Todo
 			order_by = lib.order_by req.query.order_by
 
 		if _.isUndefined(req.query.completed)
-			cond = { $and: [ { dateEnd: { $lte: req.query.toDate } }, { createdBy: req.user }, { completed: false } ] }
+			cond = { $and: [ { $or: [{dateEnd: {$lte: req.query.toDate}},{dateEnd: null}]}, { createdBy: req.user }, { completed: false } ] }
 		else	
 			cond = { $and: [ { createdBy: req.user }, { completed: true } ] }
 		

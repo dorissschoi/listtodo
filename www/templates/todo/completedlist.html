@@ -14,7 +14,23 @@
 		    <input type="search" placeholder="Search" ng-model="search.task">
 		</label>
       <ion-list>
-        
+        <div class="item item-divider font17 font-bold" >No schedule</div>
+		<div ng-repeat="model in groupTodoA | filter:search">
+			<ion-item class="item-stable"
+                    ng-click="toggleGroup(model)"
+                    ng-class="{active: isGroupShown(model)}">
+              <div class='row'>
+	            <div class="col-10"><i class="icon" ng-class="isGroupShown(model) ? 'ion-compose' : ''"></i></div>
+	            <div class="col-50">{{model.task}} </div>
+	            <div class="col-40">Project: {{model.project}}</div>
+            </div>
+          </ion-item>
+          <div class="item-accordion" ng-show="isGroupShown(model)">
+	            <button style="width: 30%;" class="button ion-checkmark-round button-clear" on-tap="$event.stopPropagation(); controller.setComplete(model);"></button> 
+	            <button style="width: 30%;" class="button ion-edit button-clear" on-tap="$event.stopPropagation(); controller.edit(model);"></button> 
+	            <button style="width: 30%;" class="button ion-trash-a button-clear" on-tap="$event.stopPropagation(); controller.remove(model);"></button>
+          </div>
+		</div>
         <div class="daterow" ng-repeat="(edate, lTasks) in groupedByDate | orderBy:['edate']">
 			<div class="item item-divider font17 font-bold" >{{formatDate(edate, "EEEE")}} 
 				<span class="h2_date">{{edate | date: 'd MMM'}}</span></div>

@@ -22,10 +22,11 @@
 				<div class='row'>
 					<div class='col'>
 						<div class="col-md-3 nowrap">
-							<span>{{model.dateStart | date:'EEE' }} {{model.dateStart | date:'d MMM' }}	{{model.dateStart | date:'hh:mm' }}</span>
-						
 							
-							<span> - {{model.dateEnd | date:'d MMM' }} {{model.dateEnd | date:'hh:mm' }}</span>
+							<span ng-show="model.dateEnd != null">  
+								
+								<span> {{model.dateEnd | date:'d MMM' }} {{model.dateEnd | date:'hh:mm' }}</span>
+							</span>
 						</div>
 						<div class="col-md-9 nowrap">
 							<span ng-show="model.project">{{model.project}}, </span>
