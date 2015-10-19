@@ -5,22 +5,19 @@
 
   <ion-side-menu side="left" ng-controller="MenuCtrl">
     <ion-header-bar class="bar-stable">
-      <h1 class="title">Menu</h1>
+      <h1 class="title">{{'menu' | translate}}</h1>
     </ion-header-bar>
     <ion-content>
       <ion-list>
        
         <ion-item nav-clear menu-close ui-sref="app.createTodo">
-          Add Task
+          {{'addtask' | translate}}
         </ion-item>
         <ion-item nav-clear menu-close ui-sref="app.todayList">
-          Next 7 days
+          {{'next7dlist' | translate}}
         </ion-item>
-		<ion-item nav-clear menu-close ui-sref="app.mytodopage">
-          My Todo Page
-        </ion-item>       
         <ion-item nav-clear menu-close ui-sref="app.completedList">
-          Completed list
+          {{'compledlist'| translate}} 
         </ion-item>    
 
         <ion-item nav-clear menu-close ng-if="env.isNative()" ng-click="navigator.app.exitApp()">

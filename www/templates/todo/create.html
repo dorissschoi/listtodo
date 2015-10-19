@@ -4,7 +4,7 @@
 	<ion-header-bar class="item-input-inset" align-title="left">
 	    <button class="button ion-close-round" ui-sref="app.todayList"></button>
 	    <div class="buttons" ng-init="isDisabled = false">
-			<h1 class="title">Create Todo</h1>
+			<h1 class="title">{{'addtask' | translate}}</h1>
 			<button class="button button-clear button-positive" 
     		ng-click="controller.add()"
     		ng-disabled="myForm.taskname.$error.required">Save</button>	        

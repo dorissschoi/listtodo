@@ -1,7 +1,7 @@
 <ion-header-bar class="item-input-inset">
     <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
     </button>
-    <h1 class='title'>Completed task</h1>
+    <h1 class='title'>{{'compledlist'| translate}}</h1>
     
     
     <button class="button ion-plus-round button-clear" ui-sref="app.createTodo"></button>  
@@ -14,7 +14,7 @@
 		    <input type="search" placeholder="Search" ng-model="search.task">
 		</label>
       <ion-list>
-        <div class="item item-divider font17 font-bold" >No schedule</div>
+        <div class="item item-divider font17 font-bold" >{{'noschedule' | translate}}</div>
 		<div ng-repeat="model in groupTodoA | filter:search">
 			<ion-item class="item-stable"
                     ng-click="toggleGroup(model)"

@@ -464,7 +464,7 @@ TodayListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, m
 	$scope.toDate = new Date($scope.toDate.setHours(23,59,0,0))
 	$scope.getTodayListView()
 
-CompletedListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, model) ->
+CompletedListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, model ) ->
 	class CompletedListView
 		constructor: (opts = {}) ->
 			_.each @events, (handler, event) =>
@@ -551,6 +551,7 @@ CompletedListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filte
 			.catch alert
 				
 	$scope.getCompletedListView()
+	
 										
 TodosFilter = ->
 	(todos, search) ->
