@@ -1,0 +1,18 @@
+{
+    "next7dlist":	"7天項目",
+    "compledlist":	"已完成項目",
+    "addtask":		"添加項目",
+    "edittask":		"編輯項目",
+    "menu":			"菜單",
+    "noschedule":	"沒有時間表",
+	"Mon":			"週一",
+	"Tue":			"週二",
+	"Wed":			"週三",
+	"Thu":			"週四",
+	"Fri":			"週五",
+	"Sat":			"週六",
+	"Sun":			"週日",
+	"Today":		"今天",
+	"Tomorrow":		"明天",
+	"days before": "日前"
+}

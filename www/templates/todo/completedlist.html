@@ -32,7 +32,7 @@
           </div>
 		</div>
         <div class="daterow" ng-repeat="(edate, lTasks) in groupedByDate | orderBy:['edate']">
-			<div class="item item-divider font17 font-bold" >{{formatDate(edate, "EEEE")}} 
+			<div class="item item-divider font17 font-bold" >{{formatDays(edate) | translate}}{{formatDate(edate, "EEE") | translate}}  
 				<span class="h2_date">{{edate | date: 'd MMM'}}</span></div>
 			<div ng-repeat="model in lTasks | filter:search">
 				<ion-item class="item-stable"

@@ -1,0 +1,18 @@
+{
+    "next7dlist":		"7 days task",
+    "compledlist":		"Completed list",
+    "addtask":			"Create task",
+    "edittask":			"Edit task",
+    "menu":				"Menu",
+    "noschedule":		"No schedule",
+	"Mon":				"Mon",
+	"Tue":				"Tue",
+	"Wed":				"Wed",
+	"Thu":				"Thu",
+	"Fri":				"Fri",
+	"Sat":				"Sat",
+	"Sun":				"Sun",
+	"Today":			"Today",
+	"Tomorrow":			"Tomorrow",
+	"days before": 	" days before"
+}

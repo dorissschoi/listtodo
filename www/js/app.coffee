@@ -1,29 +1,4 @@
-module = angular.module('starter', ['ionic', 'starter.controller', 'http-auth-interceptor', 'ngTagEditor', 'ActiveRecord', 'angularFileUpload', 'ngTouch', 'ngAnimate', 'ionic-datepicker', 'ionic-timepicker', 'mwl.calendar', 'pascalprecht.translate'])
-
-module.constant 'LOCALES',
-  'locales':
-    'ru_RU': 'Русский'
-    'en_US': 'English'
-  'preferredLocale': 'en_US'
- 
-
-module.config ($translateProvider) ->
-	###
-	$translateProvider.translations('en_US',
-    	compledlist: 'Next 7 days'
-    	next7dlist: 'Completed list').translations 'zh-HK',
-    		next7dlist: '接下來7天'
-    		compledlist: '已完成項目'
-	###
-	$translateProvider.useStaticFilesLoader
-		prefix: 'locale-'
-		suffix: '.json'
-	
-	#$translateProvider.preferredLanguage 'en_US'
-	$translateProvider.preferredLanguage 'zh-HK'
-	#$translateProvider.useLocalStorage()
-	return
-	
+module = angular.module('starter', ['ionic', 'starter.controller', 'http-auth-interceptor', 'ngTagEditor', 'ActiveRecord', 'angularFileUpload', 'ngTouch', 'ngAnimate', 'ionic-datepicker', 'ionic-timepicker', 'mwl.calendar', 'pascalprecht.translate', 'locale'])
 
 module.run ($rootScope, platform, $ionicPlatform, $location, $http, authService) ->
 	$ionicPlatform.ready ->

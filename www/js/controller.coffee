@@ -404,12 +404,25 @@ TodayListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filter, m
 				diffDays = Math.round(Math.abs((today.getTime() - inDate.getTime())/(oneDay)))
 			
 			if diffDays < 0
-				return Math.abs(diffDays) + " days before"
+				return "days before"
 			else if diffDays == 0
 				return "Today"
 			else if diffDays == 1
 				return "Tomorrow"
 			else return $filter("date")(inDate, format)		 	
+
+		$scope.formatDays = (inDate) ->
+			inDate = new Date(parseInt(inDate))
+			today = new Date()
+			today = new Date(today.setHours(0,0,0,0))
+			oneDay = 24*60*60*1000
+			if (today.getTime() > inDate.getTime()) 
+				diffDays = Math.round(-Math.abs((today.getTime() - inDate.getTime())/(oneDay)))
+			else	
+				diffDays = Math.round(Math.abs((today.getTime() - inDate.getTime())/(oneDay)))
+			
+			if diffDays < 0
+				return Math.abs(diffDays)		 	
 
 	$scope.isGroupShown = (item) ->
 		$scope.shownGroup == item
@@ -498,12 +511,25 @@ CompletedListCtrl = ($rootScope, $scope, $state, $stateParams, $location, $filte
 				diffDays = Math.round(Math.abs((today.getTime() - inDate.getTime())/(oneDay)))
 			
 			if diffDays < 0
-				return Math.abs(diffDays) + " days before"
+				return "days before"
 			else if diffDays == 0
 				return "Today"
 			else if diffDays == 1
 				return "Tomorrow"
 			else return $filter("date")(inDate, format)		 	
+
+		$scope.formatDays = (inDate) ->
+			inDate = new Date(parseInt(inDate))
+			today = new Date()
+			today = new Date(today.setHours(0,0,0,0))
+			oneDay = 24*60*60*1000
+			if (today.getTime() > inDate.getTime()) 
+				diffDays = Math.round(-Math.abs((today.getTime() - inDate.getTime())/(oneDay)))
+			else	
+				diffDays = Math.round(Math.abs((today.getTime() - inDate.getTime())/(oneDay)))
+			
+			if diffDays < 0
+				return Math.abs(diffDays)		 	
 
 	$scope.isGroupShown = (item) ->
 		$scope.shownGroup == item
