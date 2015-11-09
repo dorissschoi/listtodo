@@ -71,33 +71,6 @@ module.config ($stateProvider, $urlRouterProvider, $translateProvider) ->
 				controller: 'TodoEditCtrl'				
 
 	# My todo day
-	$stateProvider.state 'app.today',
-		url: "/todo/today"
-		cache: false
-		views:
-			'menuContent':
-				templateUrl: "templates/todo/today.html"
-				controller: 'TodayCtrl'
-					
-	# My todo week
-	$stateProvider.state 'app.week',
-		url: "/todo/week"
-		cache: false
-		views:
-			'menuContent':
-				templateUrl: "templates/todo/week.html"
-				controller: 'WeekCtrl'											
-	
-	# My todo group by project
-	$stateProvider.state 'app.projectTodo',
-		url: "/todo/project"
-		cache: false
-		views:
-			'menuContent':
-				templateUrl: "templates/todo/project.html"
-				controller: 'ProjectTodoCtrl'
-
-	# My todo day
 	$stateProvider.state 'app.todayList',
 		url: "/todo/todayList"
 		cache: false
